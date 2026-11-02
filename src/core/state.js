@@ -7,7 +7,7 @@
 
   const KEY = 'huanglong.v3.1';
   const PAGES = ['home', 'tour', 'services', 'mine'];
-  const PANELS = ['station', 'fac', 'route'];
+  const PANELS = ['station', 'fac', 'route', 'water'];
   const MAP_MODES = ['vector', 'satellite', 'schematic'];
 
   const defaults = () => ({
@@ -18,11 +18,23 @@
     facFocus: null,                 // 地图上高亮的设施
     mapMode: 'vector',              // 地图底图：vector 地图 / satellite 卫星 / schematic 示意图
     plan: { hours: 6, pace: '平衡', mode: '观光核心', cable: false }, // 游线规划的条件，见 features/planner.js
+    water: { active: 'flow', chapters: null, badgeAt: null }, // 水滴四章进度，见 features/water.js（chapters 由 sanitize 补全）
     off: [],                        // 只路过、不停留的站（地图上为空心点）
     visited: [],                    // 已打卡的站
     wish: [],                       // 想去的景点
     want: [],                       // 想要的文创
   });
+
+  /* 水滴四章：交给 v1 的状态机校验（vendor/huanglong-water/follow-state.js）。
+     解锁依据只有到站打卡 visited；没有依据的章节进度会被丢弃，这和 v1 的规则一致。 */
+  function sanitizeWater(w, visited) {
+    const src = w && typeof w === 'object' ? w : {};
+    const stamps = Object.fromEntries(visited.map(id => [id, '2026-01-01T00:00:00.000Z']));
+    const s = window.HuanglongJournal.restore(JSON.stringify({
+      version: 5, stamps, chapters: src.chapters, activeChapter: src.active, chapterBadgeAt: src.badgeAt,
+    }), HL.data.stations.map(x => x.id));
+    return { active: s.activeChapter, chapters: s.chapters, badgeAt: s.chapterBadgeAt };
+  }
 
   /* 读进来的数据可能来自旧版本或被手改过，逐项校正。 */
   function sanitize(v) {
@@ -41,6 +53,7 @@
       hours: pick(p.hours, HL.PLAN.hours, d.hours), pace: pick(p.pace, HL.PLAN.pace, d.pace),
       mode: pick(p.mode, HL.PLAN.mode, d.mode), cable: p.cable === true,
     };
+    v.water = sanitizeWater(v.water, v.visited);
     return v;
   }
 
@@ -49,7 +62,7 @@
       const v = JSON.parse(localStorage.getItem(KEY));
       if (v && typeof v === 'object') return sanitize({ ...defaults(), ...v });
     } catch (e) { /* 存储不可用或内容损坏，用默认值 */ }
-    return defaults();
+    return sanitize(defaults());
   }
 
   /* HL.S 始终是同一个对象，各模块可以放心地 const S = HL.S。 */
@@ -69,6 +82,6 @@
     /* 撤销用：先 snapshot()，出错或用户点撤销时 restore(快照)。 */
     snapshot: () => JSON.parse(JSON.stringify(S)),
     restore(snap) { replace(sanitize(snap)); HL.store.save(); HL.renderAll(); },
-    reset(extra = {}) { replace({ ...defaults(), ...extra }); HL.store.save(); },
+    reset(extra = {}) { replace(sanitize({ ...defaults(), ...extra })); HL.store.save(); },
   };
 })();

@@ -34,7 +34,7 @@ def load_data(name):
 
 
 # 卡片 go 字段可用的内部去向，与 src/features/details.js 的 GO 保持一致。
-GO = {"", "home", "tour", "services", "mine", "facilities", "medical", "guide"}
+GO = {"", "home", "tour", "services", "mine", "facilities", "medical", "guide", "water"}
 FAC_TYPES = {"toilet", "supply", "medical", "transit", "visitor"}
 CARD_FIELDS = ["id", "kind", "title", "subtitle", "body", "go", "cta", "url", "author"]
 

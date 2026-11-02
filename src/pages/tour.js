@@ -1,11 +1,12 @@
-/* 游览页下半部分：「本站攻略 / 沿途设施 / 我的路线」三个面板，以及跳转到游览页的公共入口。
+/* 游览页下半部分：「本站攻略 / 沿途设施 / 我的路线 / 一滴水」四个面板，以及跳转到游览页的公共入口。
+   「一滴水」面板和章节页在 features/water.js。
    地图在 tour-map.js。面板切换时地图跟着切换显示景点或设施。 */
 (() => {
   'use strict';
   const { $, esc, icon, S, idx, data: D } = HL;
   const ST = D.stations, FAC = D.facilities;
 
-  const PANELS = [['station', '本站攻略'], ['fac', '沿途设施'], ['route', '我的路线']];
+  const PANELS = [['station', '本站攻略'], ['fac', '沿途设施'], ['route', '我的路线'], ['water', '一滴水']];
 
   function renderPanelTabs() {
     $('#panel-tabs').innerHTML = `<div class="seg" role="tablist" aria-label="游览内容">${PANELS.map(([k, t]) =>
@@ -29,6 +30,7 @@
         <div><b>${HL.effortDots(s.effort)}</b>体力</div>
         <div><b>${esc(s.category)}</b>类型</div>
       </div>
+      ${HL.waterHint(s)}
       ${off ? `<div class="empty" style="margin-top:14px">按你的路线，这一站只路过看一眼。<br><button class="btn btn-ghost" type="button" data-act="toggle-stop" data-id="${s.id}">改成停下细看</button></div>` : ''}
       <div class="guide-block"><h3>看什么</h3><p>${esc(s.viewing)}</p></div>
       ${s.highlights.length ? `<ul class="highlights">${s.highlights.map(h => `<li>${esc(h)}</li>`).join('')}</ul>` : ''}
@@ -109,7 +111,7 @@
       <p class="note">停留时间来自${esc(D.meta.source.pois)}，只作安排参考。</p>`;
   }
 
-  const PANEL_RENDER = { station: stationPanel, fac: facPanel, route: routePanel };
+  const PANEL_RENDER = { station: stationPanel, fac: facPanel, route: routePanel, water: () => HL.waterPanel() };
 
   /* 地图需要容器尺寸，所以只在游览页可见时绘制。 */
   function render() {
@@ -184,7 +186,9 @@
     const id = el.dataset.id, before = HL.store.snapshot(), had = S.visited.includes(id);
     S.visited = had ? S.visited.filter(x => x !== id) : [...S.visited, id];
     HL.store.save(); HL.renderAll();
+    const fresh = had ? [] : HL.newChapters(before.visited);
     if (had) HL.toast(`已撤回「${idx.station[id].name}」的印章`, { label: '撤销', fn: () => HL.store.restore(before) });
+    else if (fresh.length) HL.toast(`收下印章，解锁一滴水「${fresh[0].label}」`, { label: '去看看', fn: () => HL.openWater(fresh[0].id) });
     else HL.toast(`收下「${idx.station[id].name}」印章`, { label: '去护照', fn: () => HL.setPage('mine') });
   });
 

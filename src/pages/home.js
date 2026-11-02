@@ -48,7 +48,7 @@
 
       <section class="sec" aria-labelledby="h-inspire">
         <h2 class="sr" id="h-inspire">游玩灵感</h2>
-        <button class="inspire" type="button" data-act="tab" data-page="${D.cards.inspire.go}">
+        <button class="inspire" type="button" data-act="card-go" data-id="${esc(D.cards.inspire.id)}">
           <div><b>${esc(D.cards.inspire.title)}</b><span>${esc(D.cards.inspire.subtitle)}</span><em>${esc(D.cards.inspire.cta)}</em></div>
           ${HL.dropArt()}
         </button>

@@ -57,6 +57,8 @@ src/
   pages/              四个页面，各管各的渲染和动作
     home.js  tour-map.js  tour-map-tencent.js  tour.js  services.js  mine.js
   config.example.js   本机配置模板（地图 Key）；复制为 config.local.js 后填写，后者不进仓库
+vendor/
+  huanglong-water/    从 v1 原样搬来的水滴四章状态机与三维场景（不要直接改，见其中 README）
   styles/             样式：base 是设计令牌与通用组件，其余按区域分文件
   main.js             启动与事件分发（最后加载）
 tools/
@@ -81,6 +83,8 @@ docs/
 | 接入真实的数字人问答 | 替换 `HL.guide.provider`，见 `src/features/guide.js` 顶部说明 |
 | 本机显示腾讯地图 | 复制 `src/config.example.js` 为 `src/config.local.js` 并填 Key（不进仓库），见开发指南「地图」 |
 | 改地图上画的内容 | `src/pages/tour-map-tencent.js`；示意图在 `src/pages/tour-map.js` |
+| 改游线规划的估算数字 | `src/features/planner.js` 顶部 |
+| 改水滴四章的文案、按钮、样式 | `src/features/water.js`、`src/styles/water.css`；玩法和模型在 v1 改，见 `vendor/huanglong-water/README.md` |
 
 每次改完运行 `python tools/check.py`。详细字段说明和示例见 [docs/开发指南.md](docs/开发指南.md)。
 
@@ -102,7 +106,7 @@ python tools/check.py
 
 ## 与前两版的关系
 
-- **第一版**（[Crithei/huanglong-poi-route-prototype](https://github.com/Crithei/huanglong-poi-route-prototype)）有真实高德地图、POI 目录、游线规则、到站打卡、Three.js 小游戏、彩池实验室、护照与手账。本骨架的景点和设施数据来自第一版的 `data/`，其他功能没有迁移。
+- **第一版**（[Crithei/huanglong-poi-route-prototype](https://github.com/Crithei/huanglong-poi-route-prototype)）有真实高德地图、POI 目录、游线规则、到站打卡、Three.js 小游戏、彩池实验室、护照与手账。已迁入：景点与设施数据、景点完整介绍、游线规划（改为细看 / 路过）、水滴四章（三维场景与状态机原样使用）。尚未迁入：彩池实验室、护照章图、数字手账。
 - **第二版**（可编辑展示原型 `prototype.html`）确定了四页结构、服务分组和卡片内容，并带浏览器内编辑器和 HTML / JSON 导出。本骨架沿用它的卡片字段（`cta / url / author` 等），但**没有移植浏览器内编辑器**，原因和后续选项见 [docs/现状与待办.md](docs/现状与待办.md)。
 - **第二版设计稿**（`huanglong-v2-design`）是本骨架的视觉来源，页面效果与它保持一致。
 

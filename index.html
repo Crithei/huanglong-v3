@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="src/styles/services.css">
 <link rel="stylesheet" href="src/styles/mine.css">
 <link rel="stylesheet" href="src/styles/guide.css">
+<link rel="stylesheet" href="src/styles/water.css">
 </head>
 <body>
 <!-- 图标 sprite：HL.icon('名称') 引用 #i-名称。新增图标照现有写法加一个 symbol（24×24 线条）。 -->
@@ -49,6 +50,13 @@
     <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3.5s6 6.4 6 10.5a6 6 0 0 1-12 0c0-4.1 6-10.5 6-10.5z"/></symbol>
     <symbol id="i-pool" viewBox="0 0 24 24"><path d="M3 10q4.5-3 9 0t9 0M3 14.5q4.5-3 9 0t9 0"/><path d="M3 19h18"/></symbol>
     <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14"/><path d="M5 19 13 11"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></symbol>
+    <symbol id="i-rotl" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4.5v4h4"/></symbol>
+    <symbol id="i-rotr" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3"/><path d="M19.5 4.5v4h-4"/></symbol>
+    <symbol id="i-zoom" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4M11 8.5v5M8.5 11h5"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 9V5h4M20 9V5h-4M4 15v4h4M20 15v4h-4"/><circle cx="12" cy="12" r="2.5"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M9 6v12M15 6v12"/></symbol>
+    <symbol id="i-resume" viewBox="0 0 24 24"><path d="m8 5.5 11 6.5-11 6.5z"/></symbol>
     <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 4.5h11a2 2 0 0 1 2 2V20H7a2 2 0 0 1-2-2z"/><path d="M5 18a2 2 0 0 1 2-2h11"/></symbol>
   </defs>
 </svg>
@@ -82,6 +90,9 @@
       <button type="button" data-act="tab" data-page="mine"><span class="pip"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg></span>我的</button>
     </nav>
 
+    <!-- 一滴水章节页：盖住游览页和底部导航，内容由 src/features/water.js 生成 -->
+    <section class="water-view" id="water-view" hidden></section>
+
     <div class="layer" id="layer" hidden></div>
   </div>
 </div>
@@ -95,6 +106,7 @@
 <script src="src/data/cards.js"></script>
 <script src="src/core/model.js"></script>
 <script src="src/features/planner.js"></script>
+<script src="vendor/huanglong-water/follow-state.js"></script>
 <script src="src/core/state.js"></script>
 <script src="src/core/router.js"></script>
 <script src="src/ui/art.js"></script>
@@ -102,6 +114,7 @@
 <script src="src/ui/sheet.js"></script>
 <script src="src/features/details.js"></script>
 <script src="src/features/guide.js"></script>
+<script src="src/features/water.js"></script>
 <script src="src/pages/home.js"></script>
 <script src="src/pages/tour-map.js"></script>
 <script src="src/pages/tour-map-tencent.js"></script>
