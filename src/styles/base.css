@@ -1,0 +1,119 @@
+/* 黄龙景区综合服务系统 · 设计令牌与通用组件
+   配色取自两张参考照片：水下钙华白、彩池碧蓝、钙华金、针叶深绿。
+   新颜色先加成令牌，再在页面样式里引用，不要在页面里写新的色值。 */
+:root {
+  --ink: #17332d;        /* 针叶：正文与深色面 */
+  --ink-2: #4a625b;      /* 次要文字 */
+  --deep: #12666d;       /* 池影：主操作、焦点 */
+  --pool: #4cc3c2;       /* 彩池：强调填充 */
+  --gold: #c9a04b;       /* 钙华：印章、进度 */
+  --base: #edf3ef;       /* 池底：页面底色 */
+  --surface: #fafcfa;    /* 雾：抬起的面 */
+  --rim: #f4ecd4;        /* 池沿：钙华边 */
+  --line: rgba(23, 51, 45, .13);
+  --serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", STSong, SimSun, serif;
+  --sans: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+  --tab-h: 62px;
+  --map-share: 44%;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  font: 15px/1.65 var(--sans);
+  color: var(--ink);
+  background: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+img { display: block; max-width: 100%; }
+svg.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+:focus-visible { outline: 2.5px solid var(--deep); outline-offset: 2px; border-radius: 6px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- 通用排版 ---------- */
+.page-head { padding: 22px 20px 6px; }
+.page-head h1 { font: 600 26px/1.3 var(--serif); margin: 0; letter-spacing: .02em; }
+.page-head p { margin: 4px 0 0; color: var(--ink-2); font-size: 14px; }
+.sec { padding: 26px 20px 0; }
+.sec-h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.sec-h h2 { font: 600 19px/1.35 var(--serif); margin: 0; }
+.sec-h .aside { font-size: 13px; color: var(--ink-2); }
+.link-btn { font-size: 13.5px; color: var(--deep); font-weight: 600; padding: 6px 2px; }
+
+/* ---------- 按钮 ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 44px; padding: 0 18px; border-radius: 999px;
+  font-weight: 600; font-size: 15px; white-space: nowrap;
+}
+.btn .i { width: 19px; height: 19px; }
+.btn-primary { background: var(--deep); color: #fff; }
+.btn-primary:active { background: #0d5258; }
+.btn-ghost { background: rgba(18, 102, 109, .09); color: var(--deep); }
+.btn-light { background: rgba(255, 255, 255, .94); color: var(--ink); }
+.btn-glass { background: rgba(255, 255, 255, .16); color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .55); }
+.btn[disabled] { opacity: .5; cursor: not-allowed; }
+.btn.is-on { background: var(--gold); color: var(--ink); }
+.icon-btn {
+  width: 44px; height: 44px; border-radius: 999px;
+  display: inline-grid; place-items: center;
+  background: rgba(18, 102, 109, .09); color: var(--deep);
+}
+.icon-btn[aria-pressed="true"] { color: #b4553f; background: rgba(180, 85, 63, .1); }
+.icon-btn[aria-pressed="true"] .i { fill: currentColor; }
+
+.chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 2px 0; }
+.chip {
+  flex: none; min-height: 36px; padding: 0 14px; border-radius: 999px;
+  font-size: 14px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line);
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.chip .i { width: 17px; height: 17px; }
+.chip[aria-pressed="true"] { background: var(--ink); color: #fff; box-shadow: none; }
+
+/* 钙华池沿：首页主视觉与游览面板的上缘 */
+.rim { display: block; width: 100%; height: 26px; }
+.rim path { fill: var(--base); }
+.rim .lip { fill: none; stroke: var(--rim); stroke-width: 3; }
+
+/* 沿途色带：每段宽度按建议停留时间，颜色取自景点（首页、路线面板共用） */
+.strata { display: flex; gap: 2px; height: 48px; border-radius: 10px; overflow: hidden; }
+.strata button {
+  position: relative; min-width: 8px; height: 100%;
+  background: var(--c);
+  box-shadow: inset 0 3px 0 rgba(244, 236, 212, .95);
+}
+.strata button:focus-visible { outline-offset: -3px; border-radius: 4px; }
+.strata button.is-visited::after {
+  content: ""; position: absolute; left: 50%; bottom: 7px; width: 6px; height: 6px;
+  margin-left: -3px; border-radius: 50%; background: var(--ink);
+}
+
+/* ---------- 列表行（服务、设施、收藏共用） ---------- */
+.rows { list-style: none; margin: 0; padding: 0; }
+.rows li + li { border-top: 1px solid var(--line); }
+.row {
+  width: 100%; display: flex; align-items: center; gap: 12px;
+  padding: 12px 0; text-align: left; min-height: 56px;
+}
+.row .ico { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: rgba(18, 102, 109, .09); color: var(--deep); flex: none; }
+.row .ico .i { width: 21px; height: 21px; }
+.row .t { flex: 1; min-width: 0; }
+.row .t b { display: block; font-weight: 600; font-size: 15px; line-height: 1.4; }
+.row .t span { display: block; font-size: 13px; color: var(--ink-2); line-height: 1.45; }
+.row .end { font-size: 13px; color: var(--ink-2); white-space: nowrap; }
+.row .chev { color: rgba(23, 51, 45, .35); width: 18px; height: 18px; }
+.row.is-focus .t b { color: var(--deep); }
+.fac-toilet { --fc: #3c8fa0; } .fac-supply { --fc: #b98a2f; } .fac-medical { --fc: #c0584a; } .fac-transit { --fc: #5d6fa8; } .fac-visitor { --fc: #2f7d5b; }
+.row .ico.fac { background: color-mix(in srgb, var(--fc) 14%, transparent); color: var(--fc); }
+
+.note { margin: 14px 0 0; font-size: 12px; color: var(--ink-2); line-height: 1.55; }
+.credit { font-size: 11px; color: var(--ink-2); margin-top: 4px; }
+.empty { padding: 16px; border-radius: 16px; background: rgba(23, 51, 45, .04); font-size: 13.5px; color: var(--ink-2); }
+.empty .btn { margin-top: 10px; min-height: 38px; font-size: 14px; }
+.effort { display: inline-flex; gap: 3px; vertical-align: middle; margin-left: 2px; }
+.effort i { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
+.effort i.off { background: rgba(23, 51, 45, .15); }

@@ -1,0 +1,14 @@
+# 生成物：python tools/build-single.py
+dist/
+
+# 系统与编辑器
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+__pycache__/
+
+# 密钥、地图 Key 不要提交
+.env
+*.local.*

@@ -1,0 +1,22 @@
+/* 数字人导游对话弹层 */
+.sheet.guide { height: 82%; }
+.guide-tag { font-size: 11.5px; padding: 2px 8px; border-radius: 999px; background: rgba(201, 160, 75, .22); color: #7a5c17; font-weight: 600; white-space: nowrap; }
+.chat { display: flex; flex-direction: column; gap: 10px; }
+.msg { max-width: 86%; padding: 10px 14px; border-radius: 18px; font-size: 14.5px; line-height: 1.6; }
+.msg.me { align-self: flex-end; background: var(--deep); color: #fff; border-bottom-right-radius: 6px; }
+.msg.bot { align-self: flex-start; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); border-bottom-left-radius: 6px; }
+.msg.bot p { margin: 0; }
+.msg.bot p + p { margin-top: 6px; }
+.msg .acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.msg .acts .btn { min-height: 36px; padding: 0 14px; font-size: 13.5px; }
+.diff { margin: 8px 0 0; padding: 8px 10px; border-radius: 12px; background: rgba(23, 51, 45, .05); font-size: 13px; }
+.diff s { color: #9b4a3c; }
+.guide-input { flex: none; padding: 10px 14px calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: var(--base); }
+.guide-input .chips { margin-bottom: 10px; }
+.guide-input form { display: flex; gap: 8px; }
+.guide-input input {
+  flex: 1; min-width: 0; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 0;
+  font: inherit; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); color: var(--ink);
+}
+.guide-input input:focus-visible { outline: 2.5px solid var(--deep); outline-offset: 0; }
+.guide-input .icon-btn { background: var(--deep); color: #fff; }

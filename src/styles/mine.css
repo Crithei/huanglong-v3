@@ -1,0 +1,23 @@
+/* 我的：进度环、本次路线、山水护照、收藏、旅行记录 */
+.mine-head { padding: 22px 20px 0; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.mine-head h1 { font: 600 26px/1.3 var(--serif); margin: 0; }
+.mine-head p { margin: 4px 0 0; color: var(--ink-2); font-size: 14px; }
+.progress-ring { width: 68px; height: 68px; flex: none; }
+.progress-ring circle { fill: none; stroke-width: 6; }
+.progress-ring text { font: 700 17px var(--serif); fill: var(--ink); }
+.stamps { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 14px 8px; }
+.stamp { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+.stamp svg { width: 62px; height: 62px; }
+.stamp span { font-size: 12px; line-height: 1.35; color: var(--ink-2); }
+.stamp.is-got span { color: var(--ink); font-weight: 600; }
+.plan-card {
+  display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 18px;
+  background: var(--surface); box-shadow: inset 0 0 0 1px var(--line);
+}
+.plan-card .t { flex: 1; }
+.plan-card b { display: block; font: 600 17px var(--serif); }
+.plan-card span { font-size: 13px; color: var(--ink-2); }
+.mini-strata { display: flex; gap: 1px; height: 8px; border-radius: 3px; overflow: hidden; margin-top: 8px; }
+.mini-strata i { background: var(--c); }
+.mini-strata i.off { background: rgba(23, 51, 45, .1); }
+.danger-link { display: block; margin: 30px auto 0; font-size: 13px; color: #9b4a3c; padding: 10px; }
