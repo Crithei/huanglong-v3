@@ -84,6 +84,21 @@ if stations is not None:
         loc = s.get("loc")
         if isinstance(loc, list) and not (len(loc) == 2 and 103 < loc[0] < 104.5 and 32 < loc[1] < 33.5):
             warn("%s：坐标 %s 不在黄龙沟附近，确认是不是写反了经纬度" % (where, loc))
+        # v1 并入的内容字段（2026-11-02）
+        if s.get("collection") not in ("pond", "waterfall", "landform", "culture"):
+            err("%s：collection 应为 pond / waterfall / landform / culture 之一" % where)
+        if not isinstance(s.get("rank"), int):
+            err("%s：rank 应为整数（越大越优先细看）" % where)
+        for f in ("aliases", "highlights", "story"):
+            if not (isinstance(s.get(f), list) and all(isinstance(x, str) and x for x in s[f])):
+                err("%s：%s 应为文字列表（没有就写 []）" % (where, f))
+        for f in ("intro", "tradeoff", "expectation", "checkedAt"):
+            if not isinstance(s.get(f), str):
+                err("%s：缺少字段 %s（没有就写空字符串）" % (where, f))
+        for j, src in enumerate(s.get("sources") or []):
+            if not src.get("title"):
+                err("%s：sources[%d] 缺少 title" % (where, j))
+            check_url(src.get("url", ""), "%s sources[%d]" % (where, j))
         if s.get("photo"):
             if not s["photo"].get("credit"):
                 err("%s：照片必须写 credit（作者与授权）" % where)

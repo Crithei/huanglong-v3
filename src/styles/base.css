@@ -111,6 +111,18 @@ svg.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-widt
 .row .ico.fac { background: color-mix(in srgb, var(--fc) 14%, transparent); color: var(--fc); }
 
 .note { margin: 14px 0 0; font-size: 12px; color: var(--ink-2); line-height: 1.55; }
+
+/* 景点看点与「背后的故事」：本站攻略和景点详情共用 */
+.highlights { margin: 10px 0 12px; padding: 0; list-style: none; display: grid; gap: 6px; }
+.highlights li { position: relative; padding-left: 14px; font-size: 13.5px; line-height: 1.55; color: var(--ink); }
+.highlights li::before { content: ""; position: absolute; left: 2px; top: .62em; width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
+.story { margin-top: 16px; border-top: 1px solid var(--line); padding-top: 4px; }
+.story summary { cursor: pointer; padding: 10px 0; font: 600 14.5px var(--serif); color: var(--deep); list-style-position: inside; }
+.story p { margin: 0 0 10px; font-size: 14px; line-height: 1.7; }
+.sources { margin: 4px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.sources li { font-size: 13px; line-height: 1.5; }
+.sources a { color: var(--deep); text-underline-offset: 3px; }
+.sources span { display: block; font-size: 12px; color: var(--ink-2); }
 .credit { font-size: 11px; color: var(--ink-2); margin-top: 4px; }
 .empty { padding: 16px; border-radius: 16px; background: rgba(23, 51, 45, .04); font-size: 13.5px; color: var(--ink-2); }
 .empty .btn { margin-top: 10px; min-height: 38px; font-size: 14px; }

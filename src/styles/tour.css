@@ -78,7 +78,24 @@
 .stop .name { flex: 1; min-width: 0; text-align: left; padding: 8px 0; }
 .stop .name b { display: block; font-weight: 600; font-size: 15px; line-height: 1.35; }
 .stop .name span { font-size: 12.5px; color: var(--ink-2); }
-.stop.is-off .name b { color: var(--ink-2); text-decoration: line-through; text-decoration-color: rgba(23, 51, 45, .35); }
+/* 只路过的站：仍在路线上，只是不停留，所以变淡而不划掉 */
+.stop.is-off .name b { color: var(--ink-2); font-weight: 500; }
+.stop.is-off .sw { opacity: .35; }
+
+/* 按条件排路线 */
+.plan { margin: 2px 0 18px; padding: 14px; border-radius: 18px; background: var(--surface); box-shadow: 0 0 0 1px var(--line); }
+.plan-row { display: grid; grid-template-columns: 56px 1fr; align-items: center; gap: 8px; margin-bottom: 8px; }
+.plan-row > span { font-size: 13px; color: var(--ink-2); }
+.plan-seg button { min-height: 34px; font-size: 13px; }
+.plan-seg button[aria-checked="true"] { background: var(--surface); color: var(--ink); font-weight: 600; box-shadow: 0 1px 4px rgba(15, 38, 33, .14); }
+.plan .chips { margin: 4px -14px 0; padding: 2px 14px; }
+.plan .chip { min-height: 34px; font-size: 13px; white-space: nowrap; }
+.plan-result { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+.plan-result b { display: block; font: 600 17px/1.4 var(--serif); }
+.plan-result span { display: block; margin-top: 2px; font-size: 12.5px; color: var(--ink-2); }
+.plan-result p { margin: 8px 0 0; font-size: 13.5px; line-height: 1.6; }
+.plan-result .btn { width: 100%; margin-top: 12px; }
+.plan-result .plan-same { color: var(--deep); font-weight: 600; }
 .toggle {
   width: 44px; height: 44px; flex: none; display: grid; place-items: center; border-radius: 12px;
 }

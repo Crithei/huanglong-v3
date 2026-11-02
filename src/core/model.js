@@ -30,7 +30,7 @@
     fmtMin: m => m < 60 ? `${m} 分钟` : `${Math.floor(m / 60)} 小时${m % 60 ? ` ${m % 60} 分钟` : ''}`,
     indexOf: id => ST.findIndex(s => s.id === id),
     sumMin: list => list.reduce((n, s) => n + s.minutes, 0),
-    /* 当前路线里的站（去掉被移出的） */
+    /* 停下细看的站（去掉只路过的） */
     active: () => ST.filter(s => !HL.S.off.includes(s.id)),
     /* 离某站最近的某类设施：{ f, d } */
     nearest: (type, from) => FAC.filter(f => f.type === type)

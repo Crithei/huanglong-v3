@@ -17,7 +17,8 @@
     fac: 'all',                     // 设施筛选
     facFocus: null,                 // 地图上高亮的设施
     mapMode: 'vector',              // 地图底图：vector 地图 / satellite 卫星 / schematic 示意图
-    off: [],                        // 移出路线的站
+    plan: { hours: 6, pace: '平衡', mode: '观光核心', cable: false }, // 游线规划的条件，见 features/planner.js
+    off: [],                        // 只路过、不停留的站（地图上为空心点）
     visited: [],                    // 已打卡的站
     wish: [],                       // 想去的景点
     want: [],                       // 想要的文创
@@ -34,6 +35,12 @@
     if (!HL.FAC_TYPES.some(t => t[0] === v.fac)) v.fac = 'all';
     if (!idx.facility[v.facFocus]) v.facFocus = null;
     if (!MAP_MODES.includes(v.mapMode)) v.mapMode = 'vector';
+    const p = v.plan && typeof v.plan === 'object' ? v.plan : {}, d = defaults().plan;
+    const pick = (val, list, dflt) => (list.some(o => o[0] === val) ? val : dflt);
+    v.plan = {
+      hours: pick(p.hours, HL.PLAN.hours, d.hours), pace: pick(p.pace, HL.PLAN.pace, d.pace),
+      mode: pick(p.mode, HL.PLAN.mode, d.mode), cable: p.cable === true,
+    };
     return v;
   }
 

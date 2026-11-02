@@ -29,12 +29,15 @@
         <div><b>${HL.effortDots(s.effort)}</b>体力</div>
         <div><b>${esc(s.category)}</b>类型</div>
       </div>
-      ${off ? `<div class="empty" style="margin-top:14px">这一站不在你的路线里。<br><button class="btn btn-ghost" type="button" data-act="toggle-stop" data-id="${s.id}">加回路线</button></div>` : ''}
+      ${off ? `<div class="empty" style="margin-top:14px">按你的路线，这一站只路过看一眼。<br><button class="btn btn-ghost" type="button" data-act="toggle-stop" data-id="${s.id}">改成停下细看</button></div>` : ''}
       <div class="guide-block"><h3>看什么</h3><p>${esc(s.viewing)}</p></div>
+      ${s.highlights.length ? `<ul class="highlights">${s.highlights.map(h => `<li>${esc(h)}</li>`).join('')}</ul>` : ''}
+      ${s.tradeoff ? `<div class="guide-block"><h3>怎么取舍</h3><p>${esc(s.tradeoff)}</p></div>` : ''}
       <div class="guide-block"><h3>怎么拍</h3><p>${esc(s.photoTip)}</p></div>
-      <div class="guide-block"><h3>留意</h3><p>${esc(s.tip)}</p></div>
+      <div class="guide-block"><h3>留意</h3><p>${esc(s.tip)}${s.expectation ? ' ' + esc(s.expectation) : ''}</p></div>
       ${HL.media(s, 'station-photo')}
       <p class="credit">${s.photo ? esc(s.photo.credit) : '示意图，实景照片待替换'}</p>
+      ${HL.storyBlock(s)}
       <div class="station-actions">
         <button class="btn ${visited ? 'is-on' : 'btn-primary'}" type="button" data-act="visit" data-id="${s.id}" aria-pressed="${visited}">${icon(visited ? 'check' : 'stamp')}${visited ? '已收下印章' : '到站打卡'}</button>
         <button class="icon-btn" type="button" data-act="wish" data-id="${s.id}" aria-pressed="${wished}" aria-label="收藏到想去的景点">${icon('heart')}</button>
@@ -58,10 +61,34 @@
       <p class="note">${esc(D.meta.source.facilities)}。距离为直线估算，实际走法以栈道和现场指引为准。</p>`;
   }
 
-  function routePanel() {
-    const act = HL.active();
+  /* 「按条件排」：选时间、节奏、偏好、索道，算出建议，和当前路线不同时才出现「按建议调整」。 */
+  function planner() {
+    const p = S.plan, r = HL.plan(p, S.visited);
+    const same = r.deferred.length === S.off.length && r.deferred.every(s => S.off.includes(s.id));
+    const seg = (k, opts) => `<div class="seg plan-seg" role="radiogroup">${opts.map(([v, t]) =>
+      `<button type="button" role="radio" aria-checked="${p[k] === v}" data-act="plan-pref" data-k="${k}" data-v="${v}">${t}</button>`).join('')}</div>`;
     return `
-      <div class="route-sum"><b>${act.length} 站，停留约 ${HL.fmtMin(HL.sumMin(act))}</b><span>不含步行时间</span></div>
+      <section class="plan" aria-label="按条件排路线">
+        <div class="plan-row"><span>可用时间</span>${seg('hours', HL.PLAN.hours)}</div>
+        <div class="plan-row"><span>节奏</span>${seg('pace', HL.PLAN.pace)}</div>
+        <div class="chips" role="radiogroup" aria-label="偏好">${HL.PLAN.mode.map(([v, t]) =>
+          `<button class="chip" type="button" role="radio" aria-checked="${p.mode === v}" aria-pressed="${p.mode === v}" data-act="plan-pref" data-k="mode" data-v="${v}">${t}</button>`).join('')}
+          <button class="chip" type="button" role="switch" aria-checked="${p.cable}" aria-pressed="${p.cable}" data-act="plan-pref" data-k="cable" data-v="${!p.cable}">${icon('cable')}坐索道上行</button></div>
+        <div class="plan-result">
+          <b>细看 ${r.kept.length} 站，路过 ${r.deferred.length} 站</b>
+          <span>估算约 ${HL.fmtMin(r.minutes)}（含步行约 ${r.km} 公里），留出缓冲 ${r.buffer} 分钟</span>
+          <p>${esc(r.reason)}</p>
+          ${same ? '<p class="plan-same">当前路线就是这个安排。</p>'
+            : `<button class="btn btn-primary" type="button" data-act="plan-apply">${icon('check')}按这个安排调整路线</button>`}
+        </div>
+      </section>`;
+  }
+
+  function routePanel() {
+    const act = HL.active(), est = HL.routeEstimate(act, S.plan);
+    return `
+      ${planner()}
+      <div class="route-sum"><b>细看 ${act.length} 站，约 ${HL.fmtMin(est.minutes)}</b><span>含步行估算</span></div>
       <div class="strata" style="height:22px;margin:10px 0 8px">${HL.strata(true)}</div>
       <ul class="rows">
         ${ST.map((s, i) => {
@@ -70,14 +97,14 @@
             <span class="no">${i + 1}</span><span class="sw" style="--c:${s.tint}"></span>
             <button class="name" type="button" data-act="select" data-id="${s.id}">
               <b>${esc(s.name)}${S.visited.includes(s.id) ? '<span class="visited-tag">已打卡</span>' : ''}</b>
-              <span>${s.minutes} 分钟，${esc(s.area)}</span></button>
-            <button class="toggle" type="button" role="checkbox" aria-checked="${on}" data-act="toggle-stop" data-id="${s.id}" aria-label="把${esc(s.name)}${on ? '移出' : '加入'}路线"><span>${on ? icon('check') : ''}</span></button>
+              <span>${on ? `停留 ${s.minutes} 分钟` : '路过看一眼'}，${esc(s.area)}</span></button>
+            <button class="toggle" type="button" role="checkbox" aria-checked="${on}" data-act="toggle-stop" data-id="${s.id}" aria-label="${esc(s.name)}：${on ? '改成只路过' : '改成停下细看'}"><span>${on ? icon('check') : ''}</span></button>
           </li>`;
         }).join('')}
       </ul>
       <div class="station-actions">
         <button class="btn btn-ghost" type="button" data-act="ask" data-q="走不动了，少走一点">${icon('chat')}请导游帮我减站</button>
-        ${S.off.length ? `<button class="btn btn-ghost" type="button" data-act="restore-route">恢复全部</button>` : ''}
+        ${S.off.length ? `<button class="btn btn-ghost" type="button" data-act="restore-route">全部细看</button>` : ''}
       </div>
       <p class="note">停留时间来自${esc(D.meta.source.pois)}，只作安排参考。</p>`;
   }
@@ -133,12 +160,25 @@
     const id = el.dataset.id, before = HL.store.snapshot(), on = S.off.includes(id);
     S.off = on ? S.off.filter(x => x !== id) : [...S.off, id];
     HL.store.save(); HL.renderAll();
-    HL.toast(`${on ? '已加回' : '已移出'}「${idx.station[id].name}」`, { label: '撤销', fn: () => HL.store.restore(before) });
+    HL.toast(`「${idx.station[id].name}」${on ? '改成停下细看' : '改成只路过'}`, { label: '撤销', fn: () => HL.store.restore(before) });
   });
+  HL.act('plan-pref', el => {
+    const k = el.dataset.k, raw = el.dataset.v;
+    S.plan[k] = k === 'hours' ? Number(raw) : k === 'cable' ? raw === 'true' : raw;
+    HL.store.save(); render();
+  });
+  /* 应用规划建议：只改「哪些站路过」，已打卡的站不动；可撤销。数字人以后也走这里。 */
+  HL.applyPlan = () => {
+    const r = HL.plan(S.plan, S.visited), before = HL.store.snapshot();
+    S.off = r.deferred.map(s => s.id);
+    HL.store.save(); HL.renderAll();
+    HL.toast(`已调整：细看 ${r.kept.length} 站，路过 ${r.deferred.length} 站`, { label: '撤销', fn: () => HL.store.restore(before) });
+  };
+  HL.act('plan-apply', () => HL.applyPlan());
   HL.act('restore-route', () => {
     const before = HL.store.snapshot();
     S.off = []; HL.store.save(); HL.renderAll();
-    HL.toast('已恢复全部站点', { label: '撤销', fn: () => HL.store.restore(before) });
+    HL.toast('全部改回停下细看', { label: '撤销', fn: () => HL.store.restore(before) });
   });
   HL.act('visit', el => {
     const id = el.dataset.id, before = HL.store.snapshot(), had = S.visited.includes(id);

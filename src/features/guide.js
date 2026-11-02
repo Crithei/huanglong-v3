@@ -19,18 +19,19 @@
   const context = () => ({ station: idx.station[S.current], route: HL.active(), visited: S.visited.slice() });
 
   /* ---------- 内置规则回答 ---------- */
+  /* 减站：用游线规划（features/planner.js）按「轻松」节奏重算，只调整当前站之后、还在细看的站，最多 3 个。 */
   function adjustReply() {
     const ci = HL.indexOf(S.current), finale = D.meta.finale;
-    const rest = ST.filter((s, i) => i > ci && !S.off.includes(s.id) && !S.visited.includes(s.id) && s.id !== finale);
-    const drop = rest.filter(s => s.effort >= 2).sort((a, b) => b.minutes - a.minutes).slice(0, 3);
+    const plan = HL.plan({ ...S.plan, pace: '轻松' }, S.visited);
+    const drop = plan.deferred.filter(s => HL.indexOf(s.id) > ci && !S.off.includes(s.id) && s.id !== finale).slice(0, 3);
     if (!drop.length) {
       return { html: `<p>剩下的站已经比较轻松了。可以在附近的补给点坐一会儿，再决定要不要继续。</p>`, acts: [{ k: 'filter:supply', label: '看附近补给点', primary: true }] };
     }
     const keep = !S.off.includes(finale) && !S.visited.includes(finale);
     pending = drop.map(s => s.id);
     return {
-      html: `<p>可以去掉后面体力消耗较大的几站${keep ? `，保留${esc(idx.station[finale].name)}` : ''}：</p>
-        <div class="diff">去掉 ${drop.map(s => `<s>${esc(s.name)}</s>`).join('、')}<br>少停约 ${HL.fmtMin(HL.sumMin(drop))}，路线剩 ${HL.active().length - drop.length} 站</div>
+      html: `<p>后面体力消耗较大的几站可以只路过、不停留${keep ? `，${esc(idx.station[finale].name)}照样细看` : ''}：</p>
+        <div class="diff">路过 ${drop.map(s => `<s>${esc(s.name)}</s>`).join('、')}<br>少停约 ${HL.fmtMin(HL.sumMin(drop))}，细看的站剩 ${HL.active().length - drop.length} 个</div>
         <p>确认后才会修改路线，之后也能恢复。</p>`,
       acts: [{ k: 'adjust-yes', label: '确认调整', primary: true }, { k: 'adjust-no', label: '先不改' }],
     };
@@ -113,7 +114,7 @@
     if (k === 'adjust-yes' && pending) {
       const before = HL.store.snapshot();
       S.off = [...new Set([...S.off, ...pending])]; pending = null; HL.store.save(); HL.renderAll();
-      chat.push({ who: 'bot', html: `<p>已调整，路线现在是 ${HL.active().length} 站，停留约 ${HL.fmtMin(HL.sumMin(HL.active()))}。</p>`, acts: [{ k: 'route', label: '查看路线', primary: true }] });
+      chat.push({ who: 'bot', html: `<p>已调整，现在细看 ${HL.active().length} 站，停留约 ${HL.fmtMin(HL.sumMin(HL.active()))}。</p>`, acts: [{ k: 'route', label: '查看路线', primary: true }] });
       renderChat();
       HL.toast('路线已调整', { label: '撤销', fn: () => HL.store.restore(before) });
       return;
