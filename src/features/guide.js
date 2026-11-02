@@ -6,7 +6,7 @@
    回答对象：{ html: '<p>…</p>', acts?: [{ k, label, primary? }], note?: '回答上方的小字说明' }
    acts 的 k 可用：station（打开本站攻略）、route（看路线）、altitude（高原反应服务）、
    fac:<设施id>（在地图上定位）、filter:<设施类型>（筛选设施）、goto:<景点id>（打开某站）、
-   water:<章节id>（打开一滴水章节）、panel:<面板>（打开游览页面板）、persona:<角色>（换数字人）、
+   water:<章节id>（打开一滴水章节）、panel:<面板>（打开游览页面板）、lab:<预设>（打开彩池实验室）、persona:<角色>（换数字人）、
    adjust-yes / adjust-no（确认减站）、plan-yes（应用云端给的规划条件）。
    注意：html 会原样插入页面，接入外部回答时必须先转义或做白名单过滤。 */
 (() => {
@@ -170,6 +170,7 @@
     if (k.startsWith('goto:')) HL.selectStation(k.slice(5));
     else if (k.startsWith('water:')) HL.openWater(k.slice(6));
     else if (k.startsWith('panel:')) HL.goTour(k.slice(6));
+    else if (k.startsWith('lab:')) HL.openLab(k.slice(4) || undefined);
     else if (k === 'station') HL.selectStation(S.current);
     else if (k === 'route') HL.goTour('route');
     else if (k === 'altitude') HL.openCard('service-altitude');
@@ -183,6 +184,14 @@
     chat.push(welcome());
     HL.openGuide();
   }
+
+  /* 从其他页面直接向某位角色提问（例如彩池实验室把此刻的状态问给华屿） */
+  HL.askGuide = (question, personaId) => {
+    if (personaId && HL.data.guide && HL.data.guide.personas[personaId] && personaId !== S.persona) {
+      S.persona = personaId; HL.store.save(); chat.push(welcome());
+    }
+    HL.openGuide(question);
+  };
 
   HL.act('guide', () => HL.openGuide());
   HL.act('guide-persona', el => switchPersona(el.dataset.id));

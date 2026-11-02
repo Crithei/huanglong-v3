@@ -34,7 +34,7 @@ def load_data(name):
 
 
 # 卡片 go 字段可用的内部去向，与 src/features/details.js 的 GO 保持一致。
-GO = {"", "home", "tour", "services", "mine", "facilities", "medical", "guide", "water"}
+GO = {"", "home", "tour", "services", "mine", "facilities", "medical", "guide", "water", "lab"}
 FAC_TYPES = {"toilet", "supply", "medical", "transit", "visitor"}
 CARD_FIELDS = ["id", "kind", "title", "subtitle", "body", "go", "cta", "url", "author"]
 
@@ -99,6 +99,8 @@ if stations is not None:
             if not src.get("title"):
                 err("%s：sources[%d] 缺少 title" % (where, j))
             check_url(src.get("url", ""), "%s sources[%d]" % (where, j))
+        if s.get("stamp"):
+            check_asset(s["stamp"], where + " stamp")
         if s.get("photo"):
             if not s["photo"].get("credit"):
                 err("%s：照片必须写 credit（作者与授权）" % where)
@@ -180,6 +182,22 @@ if guide is not None:
             check_asset(pr["avatar"], where)
         if not (isinstance(pr.get("chips"), list) and pr["chips"]):
             err("%s：chips 至少要有一个常用问题" % where)
+
+# ---------- 徽章 data/badges.js ----------
+badges = load_data("badges")
+if badges is not None and stations is not None:
+    for i in badges.get("main", []):
+        if i not in station_ids:
+            err("badges.main：没有 id 为「%s」的景点" % i)
+    for b in badges.get("themes", []) + badges.get("stickers", []):
+        where = "badges %s" % b.get("id", "?")
+        if b.get("img"):
+            check_asset(b["img"], where)
+        else:
+            err("%s：缺少 img" % where)
+        for i in b.get("poiIds", []):
+            if i not in station_ids:
+                err("%s：poiIds 里没有景点「%s」" % (where, i))
 
 # ---------- 首页配置 ----------
 if meta is not None and stations is not None:

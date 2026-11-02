@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="src/styles/mine.css">
 <link rel="stylesheet" href="src/styles/guide.css">
 <link rel="stylesheet" href="src/styles/water.css">
+<link rel="stylesheet" href="src/styles/lab.css">
 </head>
 <body>
 <!-- 图标 sprite：HL.icon('名称') 引用 #i-名称。新增图标照现有写法加一个 symbol（24×24 线条）。 -->
@@ -92,6 +93,8 @@
 
     <!-- 一滴水章节页：盖住游览页和底部导航，内容由 src/features/water.js 生成 -->
     <section class="water-view" id="water-view" hidden></section>
+    <!-- 彩池实验室：同样盖住整页，内容由 src/features/lab.js 生成 -->
+    <section class="water-view lab-view" id="lab-view" hidden></section>
 
     <div class="layer" id="layer" hidden></div>
   </div>
@@ -105,9 +108,12 @@
 <script src="src/data/facilities.js"></script>
 <script src="src/data/cards.js"></script>
 <script src="src/data/guide.js"></script>
+<script src="src/data/badges.js"></script>
 <script src="src/core/model.js"></script>
 <script src="src/features/planner.js"></script>
 <script src="vendor/huanglong-water/follow-state.js"></script>
+<script src="vendor/huanglong-pool/pool-lab-state.js"></script>
+<script src="vendor/huanglong-pool/pool-lab-scene.js"></script>
 <script src="src/core/state.js"></script>
 <script src="src/core/router.js"></script>
 <script src="src/ui/art.js"></script>
@@ -117,6 +123,7 @@
 <script src="src/features/guide.js"></script>
 <script src="src/features/guide-cloud.js"></script>
 <script src="src/features/water.js"></script>
+<script src="src/features/lab.js"></script>
 <script src="src/pages/home.js"></script>
 <script src="src/pages/tour-map.js"></script>
 <script src="src/pages/tour-map-tencent.js"></script>

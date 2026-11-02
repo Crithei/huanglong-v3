@@ -91,7 +91,10 @@
 
   HL.dropArt = () => `<svg class="art" viewBox="0 0 92 112" aria-hidden="true"><path d="M46 6s34 36 34 62a34 34 0 0 1-68 0C12 42 46 6 46 6z" fill="#12666d"/><clipPath id="dc"><path d="M46 6s34 36 34 62a34 34 0 0 1-68 0C12 42 46 6 46 6z"/></clipPath><g clip-path="url(#dc)"><path d="M0 62q23-10 46 0t46 0V112H0z" fill="#4cc3c2"/><path d="M0 78q23-10 46 0t46 0V112H0z" fill="#9ee1d8"/><path d="M0 94q23-10 46 0t46 0V112H0z" fill="#f4ecd4"/><path d="M0 62q23-10 46 0t46 0M0 78q23-10 46 0t46 0" stroke="#f4ecd4" stroke-width="2.5" fill="none"/></g></svg>`;
 
-  HL.stampArt = (st, got) => got
+  /* 印章：有 v1 手绘章（stations.js 的 stamp）就用图，未收下时由样式变灰；其余用代码画的圆章 */
+  HL.stampArt = (st, got) => st.stamp
+    ? `<img class="stamp-art${got ? '' : ' is-locked'}" src="${HL.esc(st.stamp)}" alt="" loading="lazy" decoding="async">`
+    : got
     ? `<svg viewBox="0 0 62 62" aria-hidden="true"><circle cx="31" cy="31" r="28" fill="none" stroke="#c9a04b" stroke-width="2.5"/><circle cx="31" cy="31" r="24" fill="${st.tint}"/><path d="M15 27q8-6 16 0t16 0M15 35q8-6 16 0t16 0M17 43q7-5 14 0t14 0" stroke="#fafcfa" stroke-width="2.2" fill="none"/><circle cx="31" cy="31" r="24" fill="none" stroke="rgba(23,51,45,.35)" stroke-width="1"/></svg>`
     : `<svg viewBox="0 0 62 62" aria-hidden="true"><circle cx="31" cy="31" r="27" fill="none" stroke="rgba(23,51,45,.28)" stroke-width="1.6" stroke-dasharray="3 4"/><path d="M18 30q6.5-5 13 0t13 0M18 38q6.5-5 13 0t13 0" stroke="rgba(23,51,45,.16)" stroke-width="2" fill="none"/></svg>`;
 

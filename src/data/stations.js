@@ -44,6 +44,7 @@ HL.data.stations = [
       }
     ],
     "checkedAt": "2026-09-20",
+    "stamp": "assets/stamps/welcome-pond.svg",
     "photo": {
       "src": "assets/welcome-ponds.jpg",
       "credit": "Kounosu，CC BY-SA 3.0，Wikimedia Commons"
@@ -101,6 +102,7 @@ HL.data.stations = [
       }
     ],
     "checkedAt": "2026-09-20",
+    "stamp": "assets/stamps/flying-waterfall.svg",
     "photo": null
   },
   {
@@ -145,6 +147,7 @@ HL.data.stations = [
       }
     ],
     "checkedAt": "2026-09-20",
+    "stamp": null,
     "photo": null
   },
   {
@@ -189,6 +192,7 @@ HL.data.stations = [
       }
     ],
     "checkedAt": "2026-09-20",
+    "stamp": null,
     "photo": null
   },
   {
@@ -233,6 +237,7 @@ HL.data.stations = [
       }
     ],
     "checkedAt": "2026-09-20",
+    "stamp": "assets/stamps/jinsha-pudi.svg",
     "photo": null
   },
   {
@@ -287,6 +292,7 @@ HL.data.stations = [
       }
     ],
     "checkedAt": "2026-09-20",
+    "stamp": "assets/stamps/bonsai-pond.svg",
     "photo": null
   },
   {
@@ -333,6 +339,7 @@ HL.data.stations = [
       }
     ],
     "checkedAt": "2026-09-20",
+    "stamp": null,
     "photo": null
   },
   {
@@ -384,6 +391,7 @@ HL.data.stations = [
       }
     ],
     "checkedAt": "2026-09-20",
+    "stamp": null,
     "photo": null
   },
   {
@@ -429,6 +437,7 @@ HL.data.stations = [
       }
     ],
     "checkedAt": "2026-09-20",
+    "stamp": "assets/stamps/zhengyan-chi.svg",
     "photo": null
   },
   {
@@ -476,6 +485,7 @@ HL.data.stations = [
       }
     ],
     "checkedAt": "2026-09-20",
+    "stamp": null,
     "photo": null
   },
   {
@@ -520,6 +530,7 @@ HL.data.stations = [
       }
     ],
     "checkedAt": "2026-09-20",
+    "stamp": null,
     "photo": null
   },
   {
@@ -568,6 +579,7 @@ HL.data.stations = [
       }
     ],
     "checkedAt": "2026-09-20",
+    "stamp": null,
     "photo": null
   },
   {
@@ -618,6 +630,7 @@ HL.data.stations = [
       }
     ],
     "checkedAt": "2026-09-20",
+    "stamp": null,
     "photo": null
   },
   {
@@ -663,6 +676,7 @@ HL.data.stations = [
       }
     ],
     "checkedAt": "2026-09-20",
+    "stamp": "assets/stamps/five-color-pond.svg",
     "photo": {
       "src": "assets/five-colored-pond.jpg",
       "credit": "Kounosu，CC BY-SA 3.0，Wikimedia Commons"

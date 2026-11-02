@@ -1,0 +1,94 @@
+/* 彩池演化实验室：沿用一滴水章节页的全屏框架（.water-view / .water-top / .water-body），控件用全站的卡片、分段、芯片样式 */
+.lab-top .lab-title { flex: 1; min-width: 0; }
+.lab-title b { display: block; font: 600 17px/1.3 var(--serif); }
+.lab-title span { font-size: 12px; color: var(--ink-2); }
+.lab-ask { flex: none; min-height: 38px; padding: 0 12px; font-size: 13.5px; }
+.lab-lead { margin: 12px 16px 10px; font-size: 14px; line-height: 1.6; color: var(--ink-2); }
+
+/* 画布：v1 的 720×700 画幅 */
+.lab-stage { position: relative; margin: 0 16px; border-radius: 18px; overflow: hidden; background: #e9ebdc; box-shadow: 0 0 0 1px var(--line); isolation: isolate; }
+.lab-canvas-wrap { position: relative; }
+#labCanvas { display: block; width: 100%; height: auto; aspect-ratio: 720 / 700; cursor: crosshair; touch-action: pan-y; }
+#labCanvas.is-comparing { cursor: ew-resize; }
+.lab-fallback { margin: 0; padding: 40px 20px; text-align: center; font-size: 13px; color: var(--ink-2); }
+.lab-stage-top { position: absolute; z-index: 1; top: 10px; left: 10px; right: 10px; display: flex; justify-content: space-between; pointer-events: none; }
+.lab-stage-top span { padding: 4px 10px; border-radius: 999px; background: rgba(250, 252, 250, .88); font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.lab-live.is-running { color: var(--deep); font-weight: 600; }
+.lab-compare-labels { position: absolute; left: 10px; right: 10px; bottom: 10px; display: flex; justify-content: space-between; pointer-events: none; }
+.lab-compare-labels[hidden] { display: none; }
+.lab-compare-labels span { padding: 3px 8px; border-radius: 8px; background: rgba(250, 252, 250, .9); font-size: 11.5px; color: var(--deep); }
+.lab-stage-bottom { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; padding: 0 12px; background: rgba(250, 252, 250, .85); border-top: 1px solid var(--line); font-size: 12px; color: var(--ink-2); }
+.lab-stage-bottom button { min-height: 36px; padding: 0 12px; border-radius: 999px; font-size: 13px; color: var(--deep); font-weight: 600; }
+.lab-stage-bottom button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.lab-compare-tools { padding: 10px 12px 12px; background: rgba(250, 252, 250, .85); border-top: 1px solid var(--line); }
+.lab-compare-tools[hidden] { display: none; }
+.lab-compare-tools label { display: block; font-size: 12px; color: var(--ink-2); }
+.lab-compare-tools .btn { margin-top: 6px; min-height: 36px; font-size: 13px; }
+
+/* 播放、步进、速度、复位 */
+/* 窄屏两行：播放 + 推演一段；速度 + 复位 */
+.lab-transport { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 12px 16px 0; }
+.lab-transport .btn { min-height: 42px; padding: 0 14px; font-size: 14px; }
+.lab-transport .btn-primary { flex: 1 1 140px; }
+.lab-transport .btn-ghost { flex: 1 1 100px; }
+.lab-speed { margin-left: auto; }
+.lab-transport .btn-primary[hidden] { display: none; }
+.lab-speed { flex: none; }
+.lab-speed button { min-height: 36px; padding: 0 9px; font-size: 13px; }
+.lab-speed button[aria-checked="true"], .lab-pools button[aria-checked="true"] { background: var(--surface); color: var(--ink); font-weight: 600; box-shadow: 0 1px 3px rgba(23, 51, 45, .14); }
+.lab-transport .icon-btn { flex: none; background: rgba(23, 51, 45, .07); color: var(--ink); }
+.lab-note { margin: 8px 16px 0; }
+
+/* 条件滑杆 */
+.lab-inputs { display: grid; gap: 12px; margin: 14px 16px 0; padding: 14px; border-radius: 18px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+.lab-control { display: block; }
+.lab-control > span { display: flex; justify-content: space-between; align-items: baseline; }
+.lab-control b { font-size: 14.5px; }
+.lab-control output { font-size: 12.5px; color: var(--deep); font-weight: 600; }
+.lab-control small { display: block; font-size: 12px; color: var(--ink-2); line-height: 1.5; }
+.lab-view input[type="range"] { width: 100%; height: 32px; margin: 2px 0; background: transparent; accent-color: var(--deep); touch-action: pan-y; }
+.lab-presets { margin: 12px 16px 0; padding: 2px 0; }
+.lab-view > .water-body > .note { margin-left: 16px; margin-right: 16px; }
+
+/* 此刻发生了什么 */
+.lab-insight { margin: 16px 16px 0; padding: 14px; border-radius: 18px; background: rgba(76, 195, 194, .1); }
+.lab-pools button { min-height: 36px; font-size: 13px; }
+.lab-insight h3 { margin: 12px 0 4px; font: 600 17px/1.4 var(--serif); }
+.lab-insight > p { margin: 0; font-size: 14px; line-height: 1.7; }
+.lab-signals { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.lab-signals span { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px; background: var(--surface); font-size: 12px; color: var(--ink-2); }
+.lab-signals i { width: 7px; height: 7px; border-radius: 50%; }
+.sig-water { background: #76b9b2; } .sig-flow { background: var(--deep); } .sig-rim { background: var(--gold); }
+.lab-insight .lab-next { margin-top: 8px; font-size: 13px; color: var(--deep); }
+.lab-section svg { width: 100%; height: auto; display: block; }
+
+/* 观察卡与贴纸 */
+.lab-record-bar { display: flex; align-items: center; gap: 10px; margin: 16px 16px 0; font-size: 12px; color: var(--ink-2); }
+.lab-record-bar .btn { flex: none; }
+.lab-feedback { display: block; }
+.lab-feedback[hidden] { display: none; }
+.lab-records { display: grid; gap: 10px; margin: 12px 16px 0; }
+.lab-records > .note { margin: 0; }
+.lab-record { padding: 12px 14px; border-radius: 16px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+.lab-record .top { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-2); }
+.lab-record b { display: block; margin: 6px 0 2px; font: 600 15px/1.4 var(--serif); }
+.lab-record p { margin: 0; font-size: 13px; line-height: 1.6; color: var(--ink-2); }
+.lab-record .acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.lab-record .acts .btn { min-height: 36px; padding: 0 12px; font-size: 13px; }
+.lab-collection { margin: 16px 16px 0; padding: 14px; border-radius: 18px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+.lab-sticker { display: flex; align-items: center; gap: 12px; }
+.lab-sticker img { width: 64px; height: 64px; object-fit: contain; filter: grayscale(1); opacity: .4; }
+.lab-sticker.is-got img { filter: none; opacity: 1; }
+.lab-sticker b { display: block; font: 600 16px/1.35 var(--serif); }
+.lab-sticker span { font-size: 12.5px; color: var(--ink-2); }
+.lab-goals { margin: 12px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.lab-goals li { display: flex; gap: 10px; align-items: flex-start; font-size: 12.5px; line-height: 1.5; color: var(--ink-2); }
+.lab-goals li .i { flex: none; width: 18px; height: 18px; margin-top: 1px; color: rgba(23, 51, 45, .35); }
+.lab-goals li b { display: block; font-size: 14px; color: var(--ink); }
+.lab-goals li.is-done .i { color: var(--deep); }
+.lab-collection .chips { margin-top: 12px; }
+.lab-view .story { margin: 16px 16px 0; }
+
+/* 一滴水面板里的实验室入口 */
+.water-hint.lab-link { width: 100%; text-align: left; }
+.water-hint.lab-link .chev { flex: none; width: 18px; height: 18px; color: rgba(23, 51, 45, .35); }

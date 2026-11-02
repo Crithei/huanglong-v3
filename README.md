@@ -59,6 +59,7 @@ src/
   config.example.js   本机配置模板（地图 Key）；复制为 config.local.js 后填写，后者不进仓库
 vendor/
   huanglong-water/    从 v1 原样搬来的水滴四章状态机与三维场景（不要直接改，见其中 README）
+  huanglong-pool/     从 v1 原样搬来的彩池实验室模型与画面（不要直接改，见其中 README）
   workbuddy/          数字人云端问答 SDK（来自数字人交接包）
   styles/             样式：base 是设计令牌与通用组件，其余按区域分文件
   main.js             启动与事件分发（最后加载）
@@ -107,7 +108,7 @@ python tools/check.py
 
 ## 与前两版的关系
 
-- **第一版**（[Crithei/huanglong-poi-route-prototype](https://github.com/Crithei/huanglong-poi-route-prototype)）有真实高德地图、POI 目录、游线规则、到站打卡、Three.js 小游戏、彩池实验室、护照与手账。已迁入：景点与设施数据、景点完整介绍、游线规划（改为细看 / 路过）、水滴四章（三维场景与状态机原样使用）。尚未迁入：彩池实验室、护照章图、数字手账。
+- **第一版**（[Crithei/huanglong-poi-route-prototype](https://github.com/Crithei/huanglong-poi-route-prototype)）有真实高德地图、POI 目录、游线规则、到站打卡、Three.js 小游戏、彩池实验室、护照与手账。已迁入：景点与设施数据、景点完整介绍、游线规划（改为细看 / 路过）、水滴四章（三维场景与状态机原样使用）、彩池实验室、手绘印章与徽章。尚未迁入：数字手账。
 - **第二版**（可编辑展示原型 `prototype.html`）确定了四页结构、服务分组和卡片内容，并带浏览器内编辑器和 HTML / JSON 导出。本骨架沿用它的卡片字段（`cta / url / author` 等），但**没有移植浏览器内编辑器**，原因和后续选项见 [docs/现状与待办.md](docs/现状与待办.md)。
 - **第二版设计稿**（`huanglong-v2-design`）是本骨架的视觉来源，页面效果与它保持一致。
 
@@ -115,5 +116,6 @@ python tools/check.py
 
 - `assets/five-colored-pond.jpg`、`assets/welcome-ponds.jpg`：Kounosu，CC BY-SA 3.0，来自 Wikimedia Commons。使用时保留署名。
 - 设施数据：高德地图 Web Service v3/place/around，查询于 2026-09-18。
+- `assets/stamps/`、`assets/badges/`：印章、徽章与贴纸，来自 v1 `assets/passport/`（原创 SVG）。
 - `assets/guide/`：四位数字人头像，来自「黄龙数字人网页端交接包 20261102」。
 - 其余插图（景点示意图、文创占位图、印章）由代码生成。

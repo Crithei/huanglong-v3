@@ -14,6 +14,7 @@
     medical: { label: '查看最近的医疗点', icon: 'cross', run: () => HL.focusFacility(HL.nearest('medical', idx.station[S.current]).f.id) },
     guide: { label: '问问导游', icon: 'guide', run: () => HL.openGuide() },
     water: { label: '开始一滴水的旅程', icon: 'drop', run: () => HL.goTour('water') },
+    lab: { label: '打开彩池实验室', icon: 'pool', run: () => HL.openLab() },
   };
   HL.GO = GO;
 

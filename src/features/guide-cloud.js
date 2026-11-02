@@ -59,6 +59,10 @@
         const c = CHAPTERS.find(x => x.id === a.chapter); if (!c) return null;
         return { acts: [{ k: 'water:' + c.id, label: `打开一滴水「${c.label}」`, primary: true }] };
       }
+      case 'openLab': {
+        const p = HL.LAB_PRESETS[a.preset];
+        return { acts: [{ k: 'lab:' + (p ? a.preset : ''), label: p ? `打开彩池实验室（${p.label}）` : '打开彩池实验室', primary: true }] };
+      }
       case 'openPanel':
         return PANELS[a.panel] ? { acts: [{ k: 'panel:' + a.panel, label: `打开${PANELS[a.panel]}` }] } : null;
       case 'planRoute': {
@@ -87,6 +91,7 @@
       `planRoute(hours, pace, mode, cable) 按条件重排路线（哪些站细看、哪些路过）。hours：${HL.PLAN.hours.map(o => o[0]).join(' / ')}；pace：轻松 / 平衡 / 深度；mode：观光核心 / 科普研学 / 摄影 / 低负担；cable：true / false。只填游客提到的条件。游客说累、走不动、时间不够时用它。`,
       `openWater(chapter) 打开「一滴水」互动小游戏，用动画演示水的旅程：flow=水流（径流、下渗）、dissolution=溶解（CO₂ 溶解石灰岩）、emergence=出露（地下水、泉水出露）、deposition=沉积（钙华池沿生长、彩池形成）。游客想看演示、动画、互动，或讲到这些过程时，推荐对应的一章。`,
       'openPanel(panel) 打开游览页面板：station 本站攻略 / fac 沿途设施 / route 我的路线 / water 一滴水',
+      'openLab(preset) 打开彩池演化实验室：四池相连的池群，可改来水、溶解钙、CO₂ 逸散、光照，看蓄水、溢流、池沿沉积怎样连续变化。preset 可选：steady 补给充足 / low 来水减少 / grow 增强沉积条件 / shade 柔光观察（可省略）。游客想动手试试水量、沉积、水色的关系时推荐。',
     ].join('\n');
   }
 
@@ -101,7 +106,8 @@
       `已到站打卡：${S.visited.length ? S.visited.map(id => idx.station[id].name).join('、') : '还没有'}。`,
       `规划条件：可用 ${S.plan.hours} 小时，${S.plan.pace}节奏，偏好${S.plan.mode}，${S.plan.cable ? '坐' : '不坐'}索道上行。`,
       `一滴水互动：${done.length ? '已完成' + done.join('、') : '还没有完成的章节'}。`,
-    ].join('\n');
+      HL.labSituation ? HL.labSituation() : '',
+    ].filter(Boolean).join('\n');
   }
 
   /* 与交接包 buildSystem 相同的结构，后面加上游客状态和页面命令 */

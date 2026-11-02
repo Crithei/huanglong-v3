@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="920" viewBox="0 0 800 920" role="img" aria-labelledby="title desc">
+  <title id="title">五彩池 · 水的见证者 — 黄龙旅行纪念章</title>
+  <desc id="desc">原创矢量纪念章。暖金与墨绿的盾形边框内，雪山、针叶林与青绿彩池层叠展开。顶部是一滴水，底部题字五彩池、水的见证者。景观为艺术化表现。</desc>
+  <defs>
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f1ddb0"/><stop offset=".35" stop-color="#caa366"/><stop offset=".7" stop-color="#f5dfac"/><stop offset="1" stop-color="#aa7d44"/></linearGradient>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#bad4c9"/><stop offset="1" stop-color="#e7e9ce"/></linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#92d0b6"/><stop offset=".48" stop-color="#4ca49b"/><stop offset="1" stop-color="#26766f"/></linearGradient>
+    <linearGradient id="deep" x2=".7" y2="1"><stop stop-color="#67afa7"/><stop offset="1" stop-color="#175c62"/></linearGradient>
+    <linearGradient id="pale" x2=".4" y2="1"><stop stop-color="#cbd99f"/><stop offset="1" stop-color="#83bcb0"/></linearGradient>
+    <clipPath id="landscape"><path d="M400 155C483 155 574 176 645 220V596Q645 632 617 651Q400 762 183 651Q155 632 155 596V220C226 176 317 155 400 155Z"/></clipPath>
+    <g id="pine"><path d="M0-68L-15-40H-9L-23-17H-14L-30 9H30L14-17H23L9-40H15Z" fill="currentColor"/><path d="M0-52V20" stroke="#d2d9b4" stroke-opacity=".35" stroke-width="2"/></g>
+    <g id="spark" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M0-8V8M-8 0H8"/><path d="M-4-4L4 4M4-4L-4 4" stroke-width="1"/></g>
+    <g id="ripple" fill="none" stroke="#e1eed0" stroke-linecap="round"><path d="M-32 0Q-4 6 24 0" stroke-width="2"/><path d="M-15 7Q-2 10 10 7" stroke-width="1.2"/></g>
+  </defs>
+  <!-- Enamel-like silhouette, transparent outside the medallion. -->
+  <path d="M400 64C495 64 574 111 668 145L714 230V647L660 739L460 844Q400 878 340 844L140 739L86 647V230L132 145C226 111 305 64 400 64Z" fill="#133e38"/>
+  <path d="M400 77C494 77 568 124 658 157L701 233V642L649 729L454 832Q400 862 346 832L151 729L99 642V233L142 157C232 124 306 77 400 77Z" fill="url(#rim)" stroke="#af884c" stroke-width="2"/>
+  <path d="M400 91C490 91 568 138 649 168L687 238V638L639 718L449 820Q400 848 351 820L161 718L113 638V238L151 168C232 138 310 91 400 91Z" fill="#f5edd6" stroke="#274e43" stroke-width="3"/>
+  <path d="M400 108C482 108 561 151 639 180L674 241V634L629 708L443 807Q400 832 357 807L171 708L126 634V241L161 180C239 151 318 108 400 108Z" fill="none" stroke="#b2945c" stroke-width="1.5"/>
+  <!-- Fine edge engraving. -->
+  <g stroke="#a6834d" stroke-width="1.3" fill="none" opacity=".75"><path d="M133 276V586M667 276V586"/><path d="M138 288L143 295L138 302M138 318L143 325L138 332M138 348L143 355L138 362M138 378L143 385L138 392M138 408L143 415L138 422M138 438L143 445L138 452M138 468L143 475L138 482M138 498L143 505L138 512M138 528L143 535L138 542M138 558L143 565L138 572"/><path d="M662 288L657 295L662 302M662 318L657 325L662 332M662 348L657 355L662 362M662 378L657 385L662 392M662 408L657 415L662 422M662 438L657 445L662 452M662 468L657 475L662 482M662 498L657 505L662 512M662 528L657 535L662 542M662 558L657 565L662 572"/></g>
+  <g clip-path="url(#landscape)">
+    <path d="M130 140H670V750H130Z" fill="url(#sky)"/>
+    <circle cx="531" cy="235" r="38" fill="#f8f0d2" stroke="#d5c693" stroke-width="1.5"/>
+    <circle cx="531" cy="235" r="46" fill="none" stroke="#f4ebcc" stroke-width="1"/>
+    <g fill="none" stroke="#edf0d9" stroke-width="2" opacity=".8"><path d="M182 229H287M215 220H306M555 291H650M576 281H661"/></g>
+    <!-- Snow mountain: faceted rock and sharp ivory snow ridges. -->
+    <path d="M124 391L217 272L266 318L350 213L390 258L438 191L531 309L565 277L689 409Z" fill="#759990"/>
+    <path d="M228 395L350 213L361 290L390 258L438 191L455 298L493 321L527 408Z" fill="#436f69"/>
+    <path d="M350 213L283 298L323 283L336 297L350 263L364 280L382 268Z" fill="#faf5df"/>
+    <path d="M438 191L382 269L410 254L424 265L439 230L459 269L470 259L501 282Z" fill="#fbf6e0"/>
+    <path d="M217 272L181 318L204 308L216 320L224 297L243 297Z" fill="#eaf0dc"/>
+    <path d="M565 277L538 313L558 303L571 316L580 298Z" fill="#eef0d9"/>
+    <g fill="none" stroke="#b7c9b1" stroke-width="2" opacity=".7"><path d="M337 306L301 359L266 383M430 282L397 344L408 384M459 303L477 357L506 380M226 334L203 359"/></g>
+    <path d="M139 389Q243 326 329 360Q437 314 532 367Q586 334 670 366V466H139Z" fill="#567e68"/>
+    <path d="M126 424Q248 367 355 394Q445 352 549 400L676 381V476H126Z" fill="#325f50"/>
+    <g color="#366554"><use href="#pine" transform="translate(178 388) scale(.65)"/><use href="#pine" transform="translate(216 380) scale(.55)"/><use href="#pine" transform="translate(253 388) scale(.75)"/><use href="#pine" transform="translate(289 378) scale(.48)"/><use href="#pine" transform="translate(535 388) scale(.65)"/><use href="#pine" transform="translate(576 392) scale(.8)"/><use href="#pine" transform="translate(619 383) scale(.9)"/></g>
+    <!-- A winding chain of travertine terraces. Each basin has its own contour. -->
+    <path d="M370 358C406 350 461 355 481 373C503 394 477 407 447 415C495 422 548 411 574 437C604 469 542 490 503 493C569 493 638 509 658 542C687 588 599 627 555 638C498 652 507 693 563 739H134V431C199 417 272 434 314 415C347 400 331 369 370 358Z" fill="#b59356"/>
+    <path d="M370 355C406 347 461 352 481 370C503 388 475 400 441 407C490 417 547 405 574 430C604 456 542 476 499 485C565 484 638 500 658 531C687 574 591 613 551 624C487 642 502 685 563 727H134V420C202 405 271 423 314 404C347 389 331 366 370 355Z" fill="#efe0b1" stroke="#faf0ce" stroke-width="4"/>
+    <path d="M373 362C404 355 450 359 466 370C479 380 450 389 411 393C379 396 350 385 354 376C357 370 365 365 373 362Z" fill="url(#pale)" stroke="#8ba684" stroke-width="1.5"/>
+    <path d="M354 399C387 411 412 407 445 412C489 419 539 413 554 431C568 448 517 462 471 467C422 473 361 458 328 460C284 463 260 446 283 429C303 415 329 411 354 399Z" fill="url(#water)" stroke="#6d9c8c" stroke-width="2"/>
+    <path d="M147 432C182 421 221 428 253 436C267 440 264 455 242 465C212 479 173 467 147 483Z" fill="url(#pale)" stroke="#85a086" stroke-width="2"/>
+    <path d="M330 468C383 473 426 481 470 477C512 480 517 494 487 507C450 523 387 510 363 531C341 551 289 554 261 538C237 524 275 514 287 499C300 483 310 477 330 468Z" fill="url(#deep)" stroke="#69978a" stroke-width="2"/>
+    <path d="M156 493C188 479 223 478 251 485C279 494 262 509 236 518C201 531 177 527 147 547V502Z" fill="url(#water)" stroke="#7b9d85" stroke-width="2"/>
+    <path d="M531 497C564 497 617 512 633 535C648 556 601 575 563 581C519 588 481 578 440 590C407 599 377 584 398 562C418 541 458 535 487 523C507 515 515 505 531 497Z" fill="url(#water)" stroke="#619084" stroke-width="2"/>
+    <path d="M249 551C278 557 308 569 345 559C367 553 385 553 380 567C374 585 352 586 351 601C350 623 307 637 270 630C231 623 190 637 166 626C143 615 147 590 177 578C207 566 226 566 249 551Z" fill="url(#pale)" stroke="#7a9a80" stroke-width="2"/>
+    <path d="M436 604C475 588 507 600 546 591C577 585 577 601 548 613C496 635 473 659 502 688C517 704 485 716 444 709C410 703 372 692 337 699C300 705 267 684 289 665C314 644 352 650 373 632C391 617 413 614 436 604Z" fill="url(#deep)" stroke="#699889" stroke-width="2"/>
+    <path d="M159 650C192 637 230 643 252 651C272 660 251 677 267 691L294 713L248 733L161 685Z" fill="url(#water)"/>
+    <!-- Ivory mineral lips and thin overflowing threads. -->
+    <g fill="none" stroke="#fff3cf" stroke-linecap="round"><path d="M354 394Q394 411 441 402" stroke-width="4"/><path d="M286 456Q342 475 383 468T469 474Q526 469 559 452" stroke-width="5"/><path d="M265 544Q307 565 353 546" stroke-width="4"/><path d="M406 592Q446 600 478 591T563 587Q611 578 638 558" stroke-width="5"/><path d="M168 631Q205 645 244 635T291 640Q332 641 351 618" stroke-width="4"/><path d="M300 697Q323 711 353 706T423 714Q476 730 504 707" stroke-width="5"/></g>
+    <g fill="none" stroke="#e9f2d5" stroke-linecap="round" opacity=".9"><path d="M422 395Q418 406 426 420M430 398Q426 410 434 421M482 470Q477 483 483 492M489 470Q484 482 489 491M360 548Q363 558 355 571M368 546Q371 555 363 567M529 589Q524 601 514 609M537 589Q532 603 521 612" stroke-width="2.2"/></g>
+    <g opacity=".68"><use href="#ripple" transform="translate(412 375) scale(.65)"/><use href="#ripple" transform="translate(433 439)"/><use href="#ripple" transform="translate(339 517) scale(.7)"/><use href="#ripple" transform="translate(547 549) scale(1.1)"/><use href="#ripple" transform="translate(271 603)"/><use href="#ripple" transform="translate(414 669) scale(1.2)"/></g>
+    <!-- Foreground forest frames the pools, rather than covering the water. -->
+    <g color="#204b3c"><use href="#pine" transform="translate(163 551) scale(1.3)"/><use href="#pine" transform="translate(190 559) scale(.8)"/><use href="#pine" transform="translate(619 646) scale(1.15)"/><use href="#pine" transform="translate(648 633) scale(1.7)"/></g>
+    <g color="#d2b778"><use href="#spark" x="315" y="431" transform="translate(0 0)"/><use href="#spark" transform="translate(588 534) scale(.7)"/><use href="#spark" transform="translate(456 646) scale(.65)"/></g>
+  </g>
+  <path d="M400 155C483 155 574 176 645 220V596Q645 632 617 651Q400 762 183 651Q155 632 155 596V220C226 176 317 155 400 155Z" fill="none" stroke="#214d43" stroke-width="5"/>
+  <!-- Crown drop; one small character anchors the collection. -->
+  <path d="M352 113L366 91L400 82L434 91L448 113L435 151L400 172L365 151Z" fill="#224f45" stroke="#e8d2a0" stroke-width="3"/>
+  <path d="M400 98C395 110 380 122 380 134A20 20 0 00420 134C420 122 405 110 400 98Z" fill="#93c9b4" stroke="#f1e7c7" stroke-width="2"/>
+  <path d="M400 101L390 134Q387 143 399 151Q382 149 382 135C382 125 396 109 400 101Z" fill="#d4e5c9"/>
+  <path d="M397 145Q403 148 408 142" fill="none" stroke="#2b6659" stroke-width="1.5" stroke-linecap="round"/>
+  <g fill="#274f43" font-family="'Microsoft YaHei','Noto Sans CJK SC',sans-serif" text-anchor="middle">
+    <text x="265" y="169" font-size="12" letter-spacing="4" transform="rotate(-15 265 169)">HUANGLONG</text>
+    <text x="536" y="169" font-size="12" letter-spacing="4" transform="rotate(15 536 169)">TRAVEL SEAL</text>
+  </g>
+  <!-- Lower title band. -->
+  <path d="M177 638Q400 710 623 638L608 707Q400 797 192 707Z" fill="#153f36" stroke="#e3c994" stroke-width="2"/>
+  <g fill="#f3e4bd" text-anchor="middle">
+    <text x="400" y="728" font-family="'Microsoft YaHei','Noto Sans CJK SC',sans-serif" font-size="48" font-weight="600" letter-spacing="12">五彩池</text>
+  </g>
+  <path d="M243 754L278 768M557 754L522 768" stroke="#b59961" stroke-width="1.5"/>
+  <g fill="#3d5e4c" text-anchor="middle" font-family="'Microsoft YaHei','Noto Sans CJK SC',sans-serif">
+    <text x="400" y="778" font-size="18" letter-spacing="6">水的见证者</text>
+  </g>
+  <g fill="#b5975d"><circle cx="219" cy="727" r="3"/><circle cx="581" cy="727" r="3"/><path d="M400 817L404 823L400 829L396 823Z"/></g>
+</svg>

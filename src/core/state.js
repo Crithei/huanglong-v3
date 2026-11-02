@@ -20,6 +20,7 @@
     plan: { hours: 6, pace: '平衡', mode: '观光核心', cable: false }, // 游线规划的条件，见 features/planner.js
     water: { active: 'flow', chapters: null, badgeAt: null }, // 水滴四章进度，见 features/water.js（chapters 由 sanitize 补全）
     persona: 'huaxi',               // 数字人导游当前角色，见 data/guide.js
+    lab: null,                      // 彩池实验室：池群状态、对照起点、观察卡、发现与贴纸，见 features/lab.js（由 sanitize 补全）
     off: [],                        // 只路过、不停留的站（地图上为空心点）
     visited: [],                    // 已打卡的站
     wish: [],                       // 想去的景点
@@ -35,6 +36,20 @@
       version: 5, stamps, chapters: src.chapters, activeChapter: src.active, chapterBadgeAt: src.badgeAt,
     }), HL.data.stations.map(x => x.id));
     return { active: s.activeChapter, chapters: s.chapters, badgeAt: s.chapterBadgeAt };
+  }
+
+  /* 彩池实验室：池群状态交给 v1 模型校验（vendor/huanglong-pool/pool-lab-state.js），恢复后一律暂停。 */
+  const LAB_GOALS = ['connected', 'low-water', 'rim-grown'];
+  function sanitizeLab(l) {
+    const M = window.HuanglongPoolModel, src = l && typeof l === 'object' ? l : {};
+    const pool = n => (Number.isInteger(n) && n >= 0 && n < 4 ? n : 3);
+    const world = M.restore(src.world); world.running = false;
+    const baseline = src.baseline ? M.restore(src.baseline) : M.snapshot(world); baseline.running = false;
+    const records = (Array.isArray(src.records) ? src.records : []).filter(r => r && r.world && r.world.version === 1)
+      .slice(-6).map(r => ({ world: Object.assign(M.restore(r.world), { running: false }), selected: pool(r.selected) }));
+    const found = LAB_GOALS.filter(g => Array.isArray(src.found) && src.found.includes(g));
+    const stickerAt = found.length === 3 && typeof src.stickerAt === 'string' ? src.stickerAt : null;
+    return { world, baseline, records, selected: pool(src.selected), speed: [1, 3, 6].includes(src.speed) ? src.speed : 3, found, stickerAt };
   }
 
   /* 读进来的数据可能来自旧版本或被手改过，逐项校正。 */
@@ -56,6 +71,7 @@
     };
     v.water = sanitizeWater(v.water, v.visited);
     if (!(HL.data.guide && HL.data.guide.personas[v.persona])) v.persona = 'huaxi';
+    v.lab = sanitizeLab(v.lab);
     return v;
   }
 

@@ -31,6 +31,7 @@
   const stationName = id => idx.station[id].name;
 
   HL.chaptersFor = stationId => E.CHAPTERS.filter(c => c.poiIds.includes(stationId));
+  HL.waterDone = () => E.CHAPTERS.filter(c => progress(c.id).earnedAt).length;
   /* 这次打卡新解锁的章节：打卡前的 visited 与现在比较 */
   HL.newChapters = before => E.CHAPTERS.filter(c => !isOpen(c.id, before) && isOpen(c.id));
 
@@ -52,6 +53,11 @@
         </button>`;
       }).join('')}</div>
       ${S.water.badgeAt ? `<p class="water-badge">${icon('stamp')}四章集齐，收下「山水同行者」。</p>` : ''}
+      <button class="water-hint lab-link" type="button" data-act="lab-open">
+        <span class="ico">${icon('pool')}</span>
+        <span class="t"><b>彩池演化实验室</b><span>一片池群，改来水和沉积条件，看它连续演化${S.lab.stickerAt ? ' · 已收下「池群观察者」' : ` · 发现 ${S.lab.found.length} / 3`}</span></span>
+        ${icon('chev', 'i chev')}
+      </button>
       <p class="note">模型与动画是科普示意：地下剖面不是现场测绘，演示时间不对应真实年限。到站打卡是手动记录，不核验位置。</p>`;
   };
 

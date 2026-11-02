@@ -1,4 +1,4 @@
-/* 我的：进度环 → 本次路线 → 山水护照 → 想去的景点 → 想要的文创 → 旅行记录。
+/* 我的：进度环 → 本次路线 → 山水护照 → 徽章与贴纸（含一滴水入口） → 想去的景点 → 想要的文创 → 旅行记录。
    除「旅行记录」来自 cards.js 的 mine，其余都由本机状态即时生成。 */
 (() => {
   'use strict';
@@ -11,6 +11,7 @@
     const pct = act.length ? got / act.length : 0;
     const C = 2 * Math.PI * 28;
     const next = act.find(s => !S.visited.includes(s.id));
+    const badges = HL.badgeStatus();
     $('#p-mine').innerHTML = `
       <header class="mine-head">
         <div><h1>我的黄龙</h1><p>把旅程，留成自己的故事</p></div>
@@ -41,6 +42,16 @@
         </div>
       </section>
 
+      <section class="sec" aria-labelledby="h-badges">
+        <div class="sec-h"><h2 id="h-badges">徽章与贴纸</h2><span class="aside">收下 ${badges.filter(b => b.got).length} / ${badges.length}</span></div>
+        <div class="badges">${badges.map(b => `
+          <button class="badge${b.got ? ' is-got' : ''}" type="button" data-act="badge" data-id="${b.id}" aria-label="${esc(b.reward)}，${b.got ? '已获得' : esc(b.progress)}">
+            <img src="${esc(b.img)}" alt="" loading="lazy" decoding="async"><b>${esc(b.reward)}</b><span>${b.got ? '已获得' : esc(b.progress)}</span></button>`).join('')}
+        </div>
+        <ul class="rows" style="margin-top:12px">${HL.row({ act: 'go-tour', id: '', icon: 'drop', title: '一滴水的旅程',
+          sub: `${HL.waterDone()} / 4 章${S.water.badgeAt ? ' · 已收下「山水同行者」' : ' · 到关联景点打卡后解锁'}` }).replace('data-act="go-tour"', 'data-act="go-tour" data-panel="water"')}</ul>
+      </section>
+
       <section class="sec" aria-labelledby="h-wish">
         <div class="sec-h"><h2 id="h-wish">想去的景点</h2></div>
         ${S.wish.length ? `<ul class="rows">${S.wish.map(id => idx.station[id]).map(s => HL.row({
@@ -64,6 +75,30 @@
 
       <button class="danger-link" type="button" data-act="reset">清空本机记录</button>`;
   }
+
+  /* 徽章与贴纸是否获得（规则见 data/badges.js）：主题徽章按六枚主章计数，「细节发现者」还要一枚实验贴纸。
+     visited 可传打卡前的记录，用来判断这次打卡新得了哪枚。 */
+  HL.badgeStatus = (visited = S.visited) => {
+    const B = D.badges, main = B.main.filter(id => visited.includes(id)).length;
+    const stickers = B.stickers.map(s => ({ ...s, reward: s.title, got: s.id === 'pool' && !!(S.lab && S.lab.stickerAt),
+      progress: s.id === 'pool' ? `实验发现 ${S.lab ? S.lab.found.length : 0} / 3` : '' }));
+    const labs = stickers.filter(s => s.got).length;
+    const themes = B.themes.map(t => ({ ...t, got: main >= t.need && labs >= t.labs,
+      progress: `主章 ${Math.min(main, t.need)} / ${t.need}${t.labs ? ` · 实验贴纸 ${Math.min(labs, t.labs)} / ${t.labs}` : ''}` }));
+    return [...themes, ...stickers];
+  };
+
+  HL.act('badge', el => {
+    const b = HL.badgeStatus().find(x => x.id === el.dataset.id);
+    HL.openSheet({
+      title: b.reward,
+      body: `<div class="sheet-media square badge-media"><img src="${esc(b.img)}" alt="${esc(b.reward)}"${b.got ? '' : ' class="is-locked"'}></div>
+        <p class="lead">${b.got ? '已获得' : esc(b.progress)}</p><p>${esc(b.description)}</p>
+        ${b.goals ? `<ul class="highlights">${b.goals.map(g => `<li>${S.lab.found.includes(g.id) ? '✓ ' : ''}${esc(g.label)}：${esc(g.hint)}</li>`).join('')}</ul>` : ''}
+        <p class="note">打卡是手动记录，不核验位置；徽章只作纪念，不能兑换实物。</p>`,
+      foot: b.id === 'pool' ? `<div class="sheet-foot"><button class="btn btn-primary" type="button" data-act="lab-open">${icon('pool')}打开彩池实验室</button></div>` : '',
+    });
+  });
 
   HL.pages.mine = { render };
 

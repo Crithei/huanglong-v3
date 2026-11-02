@@ -21,3 +21,19 @@
 .mini-strata i { background: var(--c); }
 .mini-strata i.off { background: rgba(23, 51, 45, .1); }
 .danger-link { display: block; margin: 30px auto 0; font-size: 13px; color: #9b4a3c; padding: 10px; }
+
+/* v1 手绘印章：未收下时变灰 */
+.stamp .stamp-art { width: 62px; height: 62px; object-fit: contain; }
+.stamp-art.is-locked, .badge-media img.is-locked { filter: grayscale(1); opacity: .35; }
+
+/* 徽章与贴纸 */
+.badges { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }
+.badge { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 6px 12px; border-radius: 16px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); text-align: center; }
+.badge img { width: 72px; height: 72px; object-fit: contain; filter: grayscale(1); opacity: .35; }
+.badge b { font: 600 14px/1.3 var(--serif); color: var(--ink-2); }
+.badge span { font-size: 11.5px; line-height: 1.4; color: var(--ink-2); }
+.badge.is-got { background: #f6efd9; box-shadow: inset 0 0 0 1px #e2d3a3; }
+.badge.is-got img { filter: none; opacity: 1; }
+.badge.is-got b { color: var(--ink); }
+.badge-media { display: grid; place-items: center; background: #f6efd9; }
+.badge-media img { width: 70%; height: 70%; object-fit: contain; }
