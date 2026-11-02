@@ -53,7 +53,8 @@ src/
   ui/                 跨页面组件：插图、列表行、色带、弹层、提示
   features/           功能：详情弹层（含作品链接）、数字人导游
   pages/              四个页面，各管各的渲染和动作
-    home.js  tour-map.js  tour.js  services.js  mine.js
+    home.js  tour-map.js  tour-map-tencent.js  tour.js  services.js  mine.js
+  config.example.js   本机配置模板（地图 Key）；复制为 config.local.js 后填写，后者不进仓库
   styles/             样式：base 是设计令牌与通用组件，其余按区域分文件
   main.js             启动与事件分发（最后加载）
 tools/
@@ -76,7 +77,8 @@ docs/
 | 新增文创商品 | `cards.js` → `products`；如需专门的占位图，在 `src/ui/art.js` 的 `productArt` 里加一种 |
 | 改某一页的版式 | `src/pages/<页面>.js` 与 `src/styles/<页面>.css` |
 | 接入真实的数字人问答 | 替换 `HL.guide.provider`，见 `src/features/guide.js` 顶部说明 |
-| 接入真实地图 | 替换 `src/pages/tour-map.js` 的 `HL.renderMap` 与 `HL.ping` |
+| 本机显示腾讯地图 | 复制 `src/config.example.js` 为 `src/config.local.js` 并填 Key（不进仓库），见开发指南「地图」 |
+| 改地图上画的内容 | `src/pages/tour-map-tencent.js`；示意图在 `src/pages/tour-map.js` |
 
 每次改完运行 `python tools/check.py`。详细字段说明和示例见 [docs/开发指南.md](docs/开发指南.md)。
 

@@ -8,6 +8,7 @@
   const KEY = 'huanglong.v3.1';
   const PAGES = ['home', 'tour', 'services', 'mine'];
   const PANELS = ['station', 'fac', 'route'];
+  const MAP_MODES = ['vector', 'satellite', 'schematic'];
 
   const defaults = () => ({
     page: 'home',                   // 底部导航当前页
@@ -15,6 +16,7 @@
     panel: 'station',               // 游览面板：station / fac / route
     fac: 'all',                     // 设施筛选
     facFocus: null,                 // 地图上高亮的设施
+    mapMode: 'vector',              // 地图底图：vector 地图 / satellite 卫星 / schematic 示意图
     off: [],                        // 移出路线的站
     visited: [],                    // 已打卡的站
     wish: [],                       // 想去的景点
@@ -31,6 +33,7 @@
     if (!PANELS.includes(v.panel)) v.panel = 'station';
     if (!HL.FAC_TYPES.some(t => t[0] === v.fac)) v.fac = 'all';
     if (!idx.facility[v.facFocus]) v.facFocus = null;
+    if (!MAP_MODES.includes(v.mapMode)) v.mapMode = 'vector';
     return v;
   }
 

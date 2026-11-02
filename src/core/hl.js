@@ -8,6 +8,7 @@
     data: {},     // src/data/*.js 填入的原始内容
     pages: {},    // 页面模块：HL.pages.home = { render() }
     actions: {},  // data-act 名称 → 处理函数，由 HL.act() 登记
+    config: {},   // 本机配置（地图 Key 等），由 src/config.local.js 填入，见 src/config.example.js
   };
 
   HL.$ = (s, r = document) => r.querySelector(s);

@@ -1,10 +1,15 @@
-/* 游览页上半部分：黄龙沟 SVG 示意地图。
-   不是真实底图：横轴大致按纬度展开、并按游线顺序拉开密集段，纵轴按经度。
-   以后接高德/腾讯地图时，替换 HL.renderMap 与 HL.ping 两个函数即可，面板不受影响。 */
+/* 游览页上半部分的地图。对外只有 HL.renderMap() 与 HL.ping(loc)，面板不用管用的是哪种地图。
+
+   #map 里有三层：
+     .map-real       腾讯地图（src/pages/tour-map-tencent.js，即 HL.realMap），配置了 Key 才会出现
+     .map-schematic  内置 SVG 示意图：没有 Key、断网、浏览器不支持 WebGL，或用户选了「示意」时显示
+     .map-tools      右上角的「地图 / 卫星 / 示意」切换
+   示意图不是真实底图：横轴大致按纬度展开、并按游线顺序拉开密集段，纵轴按经度。 */
 (() => {
   'use strict';
   const { $, esc, S, data: D } = HL;
   const ST = D.stations, FAC = D.facilities;
+  const MODES = [['vector', '地图'], ['satellite', '卫星'], ['schematic', '示意']];
 
   /* 把 [经度, 纬度] 归一化到 0–1 平面。传站序号 i 时用路线等距化后的位置。 */
   const GEO = (() => {
@@ -45,8 +50,7 @@
   }
 
   let mapProj = null;
-  HL.renderMap = () => {
-    const el = $('#map');
+  function drawSchematic(el) {
     const w = el.clientWidth, h = el.clientHeight;
     if (!w || !h) return;
     const padL = 26, padR = 30, padT = 58, padB = 46;
@@ -101,16 +105,52 @@
         <g id="ping-layer"></g>
       </svg>
       <div class="north" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><path d="M19 12H5M10 7l-5 5 5 5"/></svg>北<span>示意图</span></div>`;
+  }
+
+  /* 真实地图可用（或正在加载）且用户没选「示意」时用真实地图。 */
+  const realWanted = () => HL.realMap && HL.realMap.status !== 'failed' && S.mapMode !== 'schematic';
+  const realShown = () => realWanted() && HL.realMap.status === 'ready';
+
+  function drawTools(el) {
+    const rm = HL.realMap;
+    if (!rm || rm.status === 'failed') {
+      el.innerHTML = rm && rm.reason !== 'nokey' ? `<span class="map-note">${esc(rm.message)}，显示示意图</span>` : '';
+      return;
+    }
+    el.innerHTML = `<div class="map-mode" role="radiogroup" aria-label="地图显示方式">${MODES.map(([m, t]) =>
+      `<button type="button" role="radio" aria-checked="${S.mapMode === m}" data-act="map-mode" data-mode="${m}">${t}</button>`).join('')}</div>`;
+  }
+
+  HL.renderMap = () => {
+    const el = $('#map');
+    if (!el.clientWidth || !el.clientHeight) return;
+    if (!el.querySelector('.map-schematic')) {
+      el.innerHTML = '<div class="map-real" hidden></div><div class="map-schematic"></div><div class="map-tools"></div>';
+    }
+    const real = el.querySelector('.map-real'), sch = el.querySelector('.map-schematic');
+    /* 先切换显隐再画：腾讯地图要在容器可见、有尺寸时创建 */
+    real.hidden = !realShown();
+    sch.hidden = realShown();
+    if (realWanted()) HL.realMap.render(real);
+    if (!sch.hidden) drawSchematic(sch);
+    drawTools(el.querySelector('.map-tools'));
   };
 
-  /* 在地图上对某个坐标闪一下，提示“在这里”。 */
+  /* 在地图上提示「在这里」：真实地图平移过去，示意图闪一下。 */
   HL.ping = loc => {
+    if (realShown()) { HL.realMap.ping(loc); return; }
     if (!mapProj || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const i = ST.findIndex(s => s.loc === loc);
     const [x, y] = mapProj(loc, i < 0 ? undefined : i);
     const layer = $('#ping-layer');
     if (layer) layer.innerHTML = `<circle class="ping" cx="${x}" cy="${y}" r="9"/>`;
   };
+
+  HL.act('map-mode', el => {
+    S.mapMode = el.dataset.mode; HL.store.save();
+    if (HL.realMap) HL.realMap.setMode(S.mapMode);
+    HL.renderMap();
+  });
 
   let rt;
   window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (S.page === 'tour') HL.renderMap(); }, 120); });

@@ -162,11 +162,17 @@ styles = re.findall(r'<link rel="stylesheet" href="([^"]+)"', index_html)
 for rel in scripts + styles:
     if not os.path.isfile(os.path.join(ROOT, rel)):
         err("index.html 引用了不存在的文件 %s" % rel)
+# 本机配置由 tour-map-tencent.js 按需加载，不能写进 index.html，否则单文件打包会把 Key 带出去
+LOCAL_CONFIG = {"src/config.example.js", "src/config.local.js"}
+for rel in LOCAL_CONFIG & set(scripts):
+    err("index.html 不能直接引用 %s（含本机 Key，由地图模块按需加载）" % rel)
+if os.path.isfile(os.path.join(ROOT, "src/config.example.js")) and re.search(r"tmapKey\s*=\s*'[^']+'", read("src/config.example.js")):
+    err("src/config.example.js 里不能填真实 Key，请写在 src/config.local.js")
 for folder, ext, listed in (("src", ".js", scripts), ("src/styles", ".css", styles)):
     for dirpath, _, files in os.walk(os.path.join(ROOT, folder)):
         for fn in files:
             rel = os.path.relpath(os.path.join(dirpath, fn), ROOT).replace("\\", "/")
-            if fn.endswith(ext) and rel not in listed:
+            if fn.endswith(ext) and rel not in listed and rel not in LOCAL_CONFIG:
                 err("%s 没有在 index.html 里引用" % rel)
 if scripts and scripts[0] != "src/core/hl.js":
     err("index.html：src/core/hl.js 必须第一个加载")
