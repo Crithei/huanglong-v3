@@ -156,6 +156,31 @@ if cards is not None:
     for k, c in enumerate(cards.get("mine", [])):
         check_card(c, "cards.mine[%d] %s" % (k, c.get("id", "?")))
 
+# ---------- 数字人导游 data/guide.js ----------
+guide = load_data("guide")
+if guide is not None:
+    cloud = guide.get("cloud", {})
+    key = cloud.get("publishableKey", "")
+    if key and not key.startswith("wbpk_"):
+        err("guide.cloud.publishableKey：只能放 wbpk_ 开头的公开只读密钥，服务端 / 写权限密钥不能进前端")
+    if cloud.get("sdk") and not os.path.isfile(os.path.join(ROOT, cloud["sdk"])):
+        err("guide.cloud.sdk：文件 %s 不存在" % cloud["sdk"])
+    personas = guide.get("personas", {})
+    for k in guide.get("order", []):
+        if k not in personas:
+            err("guide.order：没有角色「%s」" % k)
+    for k, pr in personas.items():
+        where = "guide.personas.%s" % k
+        for f in ("name", "tag", "board", "welcome", "persona", "scope", "boundary", "avatar"):
+            if not isinstance(pr.get(f), str) or not pr.get(f):
+                err("%s：缺少 %s" % (where, f))
+        if pr.get("board") not in ("public", "karst", "orchid", "biodiv"):
+            err("%s：board 应为 public / karst / orchid / biodiv（与云端知识库分区一致）" % where)
+        if pr.get("avatar"):
+            check_asset(pr["avatar"], where)
+        if not (isinstance(pr.get("chips"), list) and pr["chips"]):
+            err("%s：chips 至少要有一个常用问题" % where)
+
 # ---------- 首页配置 ----------
 if meta is not None and stations is not None:
     for i in meta.get("featured", []):

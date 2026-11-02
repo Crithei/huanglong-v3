@@ -59,6 +59,7 @@ src/
   config.example.js   本机配置模板（地图 Key）；复制为 config.local.js 后填写，后者不进仓库
 vendor/
   huanglong-water/    从 v1 原样搬来的水滴四章状态机与三维场景（不要直接改，见其中 README）
+  workbuddy/          数字人云端问答 SDK（来自数字人交接包）
   styles/             样式：base 是设计令牌与通用组件，其余按区域分文件
   main.js             启动与事件分发（最后加载）
 tools/
@@ -80,7 +81,7 @@ docs/
 | 换首页精选景观 | `src/data/meta.js` → `featured` |
 | 新增文创商品 | `cards.js` → `products`；如需专门的占位图，在 `src/ui/art.js` 的 `productArt` 里加一种 |
 | 改某一页的版式 | `src/pages/<页面>.js` 与 `src/styles/<页面>.css` |
-| 接入真实的数字人问答 | 替换 `HL.guide.provider`，见 `src/features/guide.js` 顶部说明 |
+| 改数字人的人设、欢迎语、常用问题 | `src/data/guide.js`；问答流程在 `src/features/guide-cloud.js`，见开发指南「数字人导游」 |
 | 本机显示腾讯地图 | 复制 `src/config.example.js` 为 `src/config.local.js` 并填 Key（不进仓库），见开发指南「地图」 |
 | 改地图上画的内容 | `src/pages/tour-map-tencent.js`；示意图在 `src/pages/tour-map.js` |
 | 改游线规划的估算数字 | `src/features/planner.js` 顶部 |
@@ -114,4 +115,5 @@ python tools/check.py
 
 - `assets/five-colored-pond.jpg`、`assets/welcome-ponds.jpg`：Kounosu，CC BY-SA 3.0，来自 Wikimedia Commons。使用时保留署名。
 - 设施数据：高德地图 Web Service v3/place/around，查询于 2026-09-18。
+- `assets/guide/`：四位数字人头像，来自「黄龙数字人网页端交接包 20261102」。
 - 其余插图（景点示意图、文创占位图、印章）由代码生成。

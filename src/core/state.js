@@ -19,6 +19,7 @@
     mapMode: 'vector',              // 地图底图：vector 地图 / satellite 卫星 / schematic 示意图
     plan: { hours: 6, pace: '平衡', mode: '观光核心', cable: false }, // 游线规划的条件，见 features/planner.js
     water: { active: 'flow', chapters: null, badgeAt: null }, // 水滴四章进度，见 features/water.js（chapters 由 sanitize 补全）
+    persona: 'huaxi',               // 数字人导游当前角色，见 data/guide.js
     off: [],                        // 只路过、不停留的站（地图上为空心点）
     visited: [],                    // 已打卡的站
     wish: [],                       // 想去的景点
@@ -54,6 +55,7 @@
       mode: pick(p.mode, HL.PLAN.mode, d.mode), cable: p.cable === true,
     };
     v.water = sanitizeWater(v.water, v.visited);
+    if (!(HL.data.guide && HL.data.guide.personas[v.persona])) v.persona = 'huaxi';
     return v;
   }
 

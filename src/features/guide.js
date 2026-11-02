@@ -1,10 +1,13 @@
 /* 数字人导游：对话弹层 + 回答来源。
-   现在的回答来自内置规则（演示回答，未接入 AI）。接入真实问答时，只需替换
-   HL.guide.provider.reply(问题, 上下文)：可以返回回答对象，也可以返回 Promise。
+   回答来源是 HL.guide.provider.reply(问题, 上下文, onStream?)：可以返回回答对象，也可以返回 Promise；
+   onStream(html) 用来边生成边显示。默认来源是本文件的内置规则；features/guide-cloud.js 加载后
+   换成云端问答（WorkBuddy），云端失败时它会回头调用这里的 HL.guide.rules。
 
-   回答对象：{ html: '<p>…</p>', acts?: [{ k, label, primary? }] }
+   回答对象：{ html: '<p>…</p>', acts?: [{ k, label, primary? }], note?: '回答上方的小字说明' }
    acts 的 k 可用：station（打开本站攻略）、route（看路线）、altitude（高原反应服务）、
-   fac:<设施id>（在地图上定位）、filter:<设施类型>（筛选设施）、adjust-yes / adjust-no（确认减站）。
+   fac:<设施id>（在地图上定位）、filter:<设施类型>（筛选设施）、goto:<景点id>（打开某站）、
+   water:<章节id>（打开一滴水章节）、panel:<面板>（打开游览页面板）、persona:<角色>（换数字人）、
+   adjust-yes / adjust-no（确认减站）、plan-yes（应用云端给的规划条件）。
    注意：html 会原样插入页面，接入外部回答时必须先转义或做白名单过滤。 */
 (() => {
   'use strict';
@@ -66,36 +69,65 @@
   HL.guide = { provider: rules, rules, context };
 
   /* ---------- 对话界面 ---------- */
+  let busy = false;
+  const persona = () => HL.guide.provider.persona && HL.guide.provider.persona();
+
   function renderChat() {
     const box = $('#chat');
     if (!box) return;
     box.innerHTML = chat.map((m, i) => m.who === 'me'
       ? `<div class="msg me">${esc(m.text)}</div>`
-      : `<div class="msg bot">${m.html}${m.acts ? `<div class="acts">${m.acts.map(a =>
+      : `<div class="msg bot${m.pending ? ' is-pending' : ''}">${m.who === 'bot' && m.name ? `<span class="who">${esc(m.name)}</span>` : ''}${m.note ? `<p class="note-line">${esc(m.note)}</p>` : ''}${m.html || '<p class="typing" aria-label="正在回答"><i></i><i></i><i></i></p>'}${m.acts && !m.pending ? `<div class="acts">${m.acts.map(a =>
         `<button class="btn ${a.primary ? 'btn-primary' : 'btn-ghost'}" type="button" data-act="guide-act" data-k="${esc(a.k)}" data-m="${i}" ${m.used ? 'disabled' : ''}>${esc(a.label)}</button>`).join('')}</div>` : ''}</div>`).join('');
     const body = box.closest('.sheet-body');
     body.scrollTop = body.scrollHeight;
   }
 
+  /* 先放一个「正在回答」气泡，回答来源可以边生成边填进去 */
   function ask(q) {
     if (!$('#chat')) return HL.openGuide(q);
+    if (busy) return;
+    busy = true;
+    const p = persona();
     chat.push({ who: 'me', text: q });
+    const msg = { who: 'bot', pending: true, html: '', name: p ? p.name : '' };
+    chat.push(msg);
     renderChat();
     const wait = new Promise(r => setTimeout(r, 380));
-    Promise.all([Promise.resolve().then(() => HL.guide.provider.reply(q, context())), wait])
+    const onStream = html => { msg.html = html; renderChat(); };
+    Promise.all([Promise.resolve().then(() => HL.guide.provider.reply(q, context(), onStream)), wait])
       .then(([a]) => a, () => ({ html: '<p>暂时没能回答，请稍后再试。</p>' }))
-      .then(a => { chat.push({ who: 'bot', ...a }); renderChat(); });
+      .then(a => { Object.assign(msg, a, { pending: false }); busy = false; renderChat(); });
+  }
+
+  function welcome() {
+    const p = persona();
+    return p
+      ? { who: 'bot', name: p.name, html: p.welcome.split('\n').map(l => `<p>${esc(l)}</p>`).join('') + '<p class="note-line">回答由 AI 依据黄龙知识库生成，仅供参考；价格、开放时间以景区当天公告为准。需要改路线、找设施时，我会给出按钮，你点了才生效。</p>' }
+      : { who: 'bot', html: `<p>我是黄龙的数字人导游，可以讲景点、找设施，也能帮你调整路线。</p><p>现在是演示版本，回答来自内置景点资料，还没有接入真实问答。</p>` };
+  }
+
+  /* 四位角色切换条（只有云端问答时显示） */
+  function personaBar() {
+    const G = HL.data.guide;
+    if (!persona() || !G) return '';
+    return `<div class="personas" role="radiogroup" aria-label="选择数字人">${G.order.map(k => {
+      const p = G.personas[k];
+      return `<button type="button" role="radio" aria-checked="${S.persona === k}" data-act="guide-persona" data-id="${k}">
+        <img src="${esc(p.avatar)}" alt="" width="36" height="36"><span><b>${esc(p.name)}</b><small>${esc(p.tag)}</small></span></button>`;
+    }).join('')}</div>`;
   }
 
   HL.openGuide = question => {
-    if (!chat.length) {
-      chat.push({ who: 'bot', html: `<p>我是黄龙的数字人导游，可以讲景点、找设施，也能帮你调整路线。</p><p>现在是演示版本，回答来自内置景点资料，还没有接入真实问答。</p>` });
-    }
+    if (!chat.length) chat.push(welcome());
+    const p = persona();
+    const quick = p ? [...p.chips.slice(0, 4), '最近的厕所', '走不动了，少走一点'] : QUICK;
     HL.openSheet({
-      title: '数字人导游', cls: 'guide', tag: '<span class="guide-tag">演示回答</span>',
-      body: `<div class="chat" id="chat" aria-live="polite"></div>`,
+      title: p ? `数字人导游 · ${p.name}` : '数字人导游', cls: 'guide',
+      tag: `<span class="guide-tag">${esc(HL.guide.provider.label || '演示回答')}</span>`,
+      body: `${personaBar()}<div class="chat" id="chat" aria-live="polite"></div>`,
       foot: `<div class="guide-input">
-        <div class="chips">${QUICK.map(q => `<button class="chip" type="button" data-act="ask" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div>
+        <div class="chips">${quick.map(q => `<button class="chip" type="button" data-act="ask" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div>
         <form id="guide-form"><label class="sr" for="guide-q">输入问题</label>
           <input id="guide-q" autocomplete="off" maxlength="60" placeholder="问问附近的设施、景点或路线">
           <button class="icon-btn" type="submit" aria-label="发送">${icon('send')}</button></form></div>`,
@@ -119,17 +151,41 @@
       HL.toast('路线已调整', { label: '撤销', fn: () => HL.store.restore(before) });
       return;
     }
-    if (k === 'adjust-no') { pending = null; chat.push({ who: 'bot', html: '<p>好的，路线保持原样。</p>' }); renderChat(); return; }
+    if (k === 'plan-yes') {
+      const prefs = HL.guide.provider.takePlan && HL.guide.provider.takePlan();
+      if (!prefs) return;
+      const before = HL.store.snapshot();
+      S.plan = prefs; HL.store.save();
+      HL.applyPlan();
+      const r = HL.plan(S.plan, S.visited);
+      chat.push({ who: 'bot', html: `<p>已按新条件调整：细看 ${r.kept.length} 站，路过 ${r.deferred.length} 站。</p>`, acts: [{ k: 'route', label: '查看路线', primary: true }] });
+      renderChat();
+      HL.toast('路线已调整', { label: '撤销', fn: () => HL.store.restore(before) });
+      return;
+    }
+    if (k === 'adjust-no') { pending = null; if (HL.guide.provider.takePlan) HL.guide.provider.takePlan(); chat.push({ who: 'bot', html: '<p>好的，路线保持原样。</p>' }); renderChat(); return; }
+    if (k.startsWith('persona:')) { switchPersona(k.slice(8)); return; }
     renderChat();
     HL.closeSheet();
-    if (k === 'station') HL.selectStation(S.current);
+    if (k.startsWith('goto:')) HL.selectStation(k.slice(5));
+    else if (k.startsWith('water:')) HL.openWater(k.slice(6));
+    else if (k.startsWith('panel:')) HL.goTour(k.slice(6));
+    else if (k === 'station') HL.selectStation(S.current);
     else if (k === 'route') HL.goTour('route');
     else if (k === 'altitude') HL.openCard('service-altitude');
     else if (k.startsWith('fac:')) HL.focusFacility(k.slice(4));
     else if (k.startsWith('filter:')) { S.fac = k.slice(7); S.facFocus = null; HL.goTour('fac'); }
   }
 
+  function switchPersona(id) {
+    if (!HL.data.guide || !HL.data.guide.personas[id] || id === S.persona) return;
+    S.persona = id; HL.store.save();
+    chat.push(welcome());
+    HL.openGuide();
+  }
+
   HL.act('guide', () => HL.openGuide());
+  HL.act('guide-persona', el => switchPersona(el.dataset.id));
   HL.act('ask', el => ask(el.dataset.q));
   HL.act('guide-act', el => guideAct(el.dataset.k, Number(el.dataset.m)));
 })();
