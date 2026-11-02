@@ -12,6 +12,8 @@
 
 **在线访问：** <https://huanglong.nyxal.site/>（手机打开效果最好）
 
+**汇报演示：** <https://huanglong.nyxal.site/present/>（电脑横屏打开；左边是真实页面，右边是讲解，两边互相跳转；← → 翻页，N 显示 / 隐藏讲解要点）
+
 ## 快速开始
 
 **直接看效果：** 双击 `index.html`，用 Chrome 或 Edge 打开。电脑上会显示手机画幅，手机上全屏显示。

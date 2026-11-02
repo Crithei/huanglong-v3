@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>黄龙 v3 汇报</title>
+<meta name="description" content="黄龙景区综合服务系统 v3 汇报：左边是真实页面，右边是讲解，两边互相跳转。">
+<!-- 汇报页：左边嵌入真实网站（../index.html?demo，用单独的演示存档），右边是讲解。
+     与网站同源，所以能直接读写左侧的 HL 状态：右边翻页 → 左边跳到对应界面；左边操作 → 右边翻到对应讲解。
+     内容写在下方 SLIDES 里：apply(H) 把左侧调成这一页的样子，match(st) 判断左侧当前界面是不是这一页。 -->
+<style>
+  :root {
+    --ink: #17332d; --ink-2: #4a625b; --deep: #12666d; --pool: #4cc3c2; --gold: #c9a04b;
+    --base: #edf3ef; --surface: #fafcfa; --line: rgba(23, 51, 45, .13);
+    --serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", STSong, SimSun, serif;
+    --sans: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { font: 15px/1.7 var(--sans); color: var(--ink); background: radial-gradient(120% 90% at 20% 0%, #24493f 0%, #102a24 70%); display: flex; flex-direction: column; overflow: hidden; }
+  button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+
+  .deck { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(300px, 44%) minmax(0, 1fr); gap: 0; }
+  /* 左：手机画框里的真实网站 */
+  .stage { position: relative; display: grid; place-items: center; padding: 20px; min-height: 0; min-width: 0; overflow: hidden; }
+  .phone { position: relative; width: 390px; height: 844px; border-radius: 40px; overflow: hidden; background: var(--base);
+    box-shadow: 0 0 0 10px #0d221d, 0 0 0 11px rgba(255, 255, 255, .08), 0 30px 80px rgba(0, 0, 0, .5); transform-origin: center; }
+  .phone iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .stage-tip { position: absolute; left: 0; right: 0; bottom: 8px; text-align: center; font-size: 12px; color: rgba(255, 255, 255, .55); }
+
+  /* 右：讲解 */
+  .panel { min-height: 0; min-width: 0; display: flex; flex-direction: column; background: var(--base); border-radius: 28px 0 0 28px; box-shadow: -10px 0 40px rgba(0, 0, 0, .25); }
+  .slide { flex: 1; min-height: 0; overflow-y: auto; padding: 44px 52px 24px; }
+  .kicker { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--deep); font-weight: 600; letter-spacing: .5px; }
+  .kicker .no { padding: 2px 10px; border-radius: 999px; background: rgba(76, 195, 194, .18); font-variant-numeric: tabular-nums; }
+  h1 { margin: 12px 0 10px; font: 600 34px/1.3 var(--serif); }
+  .lead { margin: 0 0 18px; font-size: 17px; color: var(--ink-2); }
+  .points { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+  .points li { position: relative; padding: 12px 16px 12px 40px; border-radius: 16px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+  .points li::before { content: ""; position: absolute; left: 18px; top: 22px; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
+  .points b { color: var(--ink); }
+  .points small { display: block; color: var(--ink-2); font-size: 13.5px; }
+  .tries { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 0; }
+  .tries span { width: 100%; font-size: 12.5px; color: var(--ink-2); }
+  .try { min-height: 38px; padding: 0 16px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 14px; font-weight: 600; }
+  .try:hover { background: var(--deep); }
+  .notes { margin-top: 22px; padding: 14px 18px; border-radius: 16px; background: #f6efd9; color: #5b4618; font-size: 14px; }
+  .notes b { display: block; margin-bottom: 4px; color: #8a6a26; font-size: 12.5px; letter-spacing: .5px; }
+  .notes[hidden] { display: none; }
+  .notes ul { margin: 0; padding-left: 1.2em; }
+
+  .bar { flex: none; display: flex; align-items: center; gap: 12px; padding: 12px 24px 16px 52px; border-top: 1px solid var(--line); }
+  .nav { width: 44px; height: 44px; border-radius: 50%; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); font-size: 18px; }
+  .nav:disabled { opacity: .35; cursor: default; }
+  .toc { flex: 1; min-width: 0; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; padding: 2px; }
+  .toc::-webkit-scrollbar { display: none; }
+  .toc button { flex: none; padding: 6px 12px; border-radius: 999px; font-size: 12.5px; color: var(--ink-2); white-space: nowrap; }
+  .toc button[aria-current="true"] { background: var(--ink); color: #fff; font-weight: 600; }
+  .tools { display: flex; gap: 6px; }
+  .tools button { padding: 6px 12px; border-radius: 999px; font-size: 12.5px; color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line); }
+  .tools button[aria-pressed="true"] { background: #f6efd9; color: #8a6a26; box-shadow: none; }
+  .sync { font-size: 12px; color: var(--ink-2); white-space: nowrap; }
+  .sync.flash { color: var(--deep); font-weight: 600; }
+
+  /* 窄屏：上下排，手机画面在上 */
+  @media (max-width: 860px) {
+    html, body { height: auto; }
+    body { overflow: auto; display: block; }
+    .deck { display: block; }
+    .stage { height: 72vh; }
+    .slide { overflow: visible; }
+    .panel { border-radius: 28px 28px 0 0; }
+    .slide { padding: 28px 20px 16px; }
+    h1 { font-size: 26px; }
+    .bar { padding: 10px 16px 14px; flex-wrap: wrap; }
+    .toc { order: 3; flex-basis: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+  <section class="stage" aria-label="真实页面">
+    <div class="phone" id="phone"><iframe id="app" title="黄龙景区综合服务系统（演示存档）" src="../index.html?demo"></iframe></div>
+    <p class="stage-tip">左边是线上真实页面，可以直接点；右边会跟着翻到对应讲解</p>
+  </section>
+  <section class="panel" aria-label="汇报讲解">
+    <article class="slide" id="slide" aria-live="polite"></article>
+    <div class="bar">
+      <button class="nav" id="prev" type="button" aria-label="上一页">←</button>
+      <button class="nav" id="next" type="button" aria-label="下一页">→</button>
+      <nav class="toc" id="toc" aria-label="目录"></nav>
+      <span class="sync" id="sync"></span>
+      <div class="tools">
+        <button type="button" id="toggleNotes" aria-pressed="true" title="快捷键 N">讲解要点</button>
+        <button type="button" id="resetDemo" title="把左侧演示存档恢复到初始状态">重置演示</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const DEMO_KEY = 'huanglong.v3.demo';
+  /* 演示存档：已在四处打卡，可以展示解锁的章节、印章和徽章；不影响游客自己的进度 */
+  const DEMO_STATE = { page: 'home', visited: ['welcome-pond', 'jinsha-pudi', 'wash-body-viewpoint', 'five-color-pond'], persona: 'huaxi' };
+
+  const app = document.getElementById('app');
+  const win = () => app.contentWindow;
+  const H = () => (win() && win().HL && win().HL.S ? win().HL : null);
+  const $in = s => win().document.querySelector(s);
+
+  /* 左侧界面状态：哪一页、哪个面板、有没有打开弹层 / 章节页 / 实验室 */
+  function appState() {
+    const h = H(); if (!h) return null;
+    const open = id => { const el = $in(id); return !!el && !el.hidden; };
+    const sheet = open('#layer') ? ($in('.sheet.guide') ? 'guide' : 'detail') : null;
+    return { page: h.S.page, panel: h.S.panel, sheet, water: open('#water-view'), lab: open('#lab-view') };
+  }
+  function closeOverlays(h) {
+    h.closeSheet();
+    const w = $in('#water-view'), l = $in('#lab-view');
+    if (w && !w.hidden) $in('[data-act="water-close"]').click();
+    if (l && !l.hidden) $in('[data-act="lab-close"]').click();
+  }
+  const plain = st => !st.sheet && !st.water && !st.lab;
+  const scrollTo = (sel, offset = 0) => setTimeout(() => { const el = $in(sel); if (!el) return; el.scrollIntoView({ block: 'start' }); const box = el.closest('.page, #panel-body, .water-body'); if (box) box.scrollTop -= offset; }, 250);
+
+  /* ---------- 每一页：讲什么、左边调成什么样、怎么认出左边正处在这一页 ---------- */
+  const SLIDES = [
+    { nav: '封面', kicker: '黄龙景区综合服务系统 · v3', title: '一个能拿在手里的黄龙导览',
+      lead: '手机竖屏网页原型，底部四页：首页、游览、服务、我的。线上地址 huanglong.nyxal.site，代码在 GitHub 仓库 Crithei/huanglong-v3。',
+      points: [
+        ['视觉沿用 v2 设计稿', '代码按页面拆成小文件，内容集中在 src/data/，便于多人分工'],
+        ['从 v1 搬入核心功能', '景点完整介绍、游线规划、水滴四章、彩池实验室、手绘印章与徽章'],
+        ['新接入三项服务', '腾讯地图（Key 走代理）、数字人云端问答、Cloudflare 自动部署'],
+      ],
+      notes: ['左边就是线上真实页面，用的是单独的演示存档，可以随便点。', '右边翻页时左边会跟着跳；在左边操作，右边也会自动翻到对应讲解。'],
+      apply: h => { closeOverlays(h); h.setPage('home'); scrollTo('#p-home .hero'); },
+      passive: true, match: st => plain(st) && st.page === 'home' },
+
+    { nav: '首页', kicker: '首页', title: '先看一眼，再决定怎么走',
+      lead: '主视觉、快捷入口、沿途色带和精选景观，让游客在进沟前就对一整条路线有概念。',
+      points: [
+        ['沿途色带', '14 站按游线顺序排成一条色带，每段宽度等于建议停留时间'],
+        ['精选景观换成实景照片', '14 站中 13 站已有 Wikimedia Commons 的 CC 协议照片，每张都写明作者与协议'],
+        ['「跟着一滴水认识黄龙」', '直达游览页的水滴四章互动'],
+      ],
+      tries: [['打开五彩池详情', h => h.openStation('five-color-pond')], ['看沿途色带', h => { closeOverlays(h); h.setPage('home'); scrollTo('#p-home .strata, #p-home [class*="strata"]', 80); }]],
+      notes: ['照片多为 2011 年前后拍摄，正式上线前建议换成景区授权或自己拍的近期照片。'],
+      apply: h => { closeOverlays(h); h.setPage('home'); scrollTo('#p-home .hero'); },
+      match: st => plain(st) && st.page === 'home' },
+
+    { nav: '景点介绍', kicker: '景点内容', title: '每一站都讲清楚：看什么、怎么取舍',
+      lead: '景点详情把 v1 的景点库和景区官网资料合在一起，所有数字都标明出处。',
+      points: [
+        ['介绍依据景区官网重写', '用自己的话写，不照搬；官网没有单独页面的迎宾池、莲台飞瀑、洗身洞只写定性描述'],
+        ['关键数据小标签', '海拔、彩池数、面积等只取官网数字，例如五彩池：海拔 3576 米、693 个彩池'],
+        ['背后的故事与资料来源', '默认收起，点开能看原始出处链接；照片署名可点击到原图页面'],
+      ],
+      tries: [['看黄龙古寺', h => h.openStation('huanglong-ancient-temple')], ['看争艳彩池', h => h.openStation('zhengyan-chi')]],
+      notes: ['官网金沙铺地页有一处「长约 1.3 米」的笔误，按同页「1300 米」处理。'],
+      apply: h => { closeOverlays(h); h.setPage('home'); h.openStation('five-color-pond'); },
+      match: st => st.sheet === 'detail' },
+
+    { nav: '腾讯地图', kicker: '游览 · 地图', title: '真实地图，Key 不进浏览器',
+      lead: '游览页上半部分接入腾讯地图 JS API GL：景点、游线、设施都能在地图上点选，和下方面板联动。',
+      points: [
+        ['地图 / 卫星 / 示意 三种底图', '卫星图能看清真实的彩池与栈道；没有 Key 或断网时自动退回内置示意图'],
+        ['Key 走官方代理转发', 'Cloudflare Worker 在服务端补 Key，线上页面的源码和请求里都看不到；WebService 不转发，防止被借用额度'],
+        ['游线虚线只是示意', '按站序连线，不代表实际栈道走向；景区内时间不用腾讯路线规划估算'],
+      ],
+      tries: [['切到卫星图', h => h.actions['map-mode']({ dataset: { mode: 'satellite' } })], ['切回地图', h => h.actions['map-mode']({ dataset: { mode: 'vector' } })]],
+      notes: ['旧 Key 曾短暂明文暴露，已在控制台停用并换新。'],
+      apply: h => { closeOverlays(h); h.goTour('station'); h.selectStation('five-color-pond'); },
+      match: st => plain(st) && st.page === 'tour' && st.panel === 'station' },
+
+    { nav: '沿途设施', kicker: '游览 · 沿途设施', title: '最近的厕所、医疗点在哪',
+      lead: '51 个沿途设施来自高德 POI，按离当前站的直线距离排序，点一下就在地图上定位。',
+      points: [
+        ['五类设施筛选', '厕所、补给、医疗、索道接驳、游客中心'],
+        ['与数字人联动', '问「附近哪里有厕所」，数字人会给出「在地图上看」的按钮'],
+        ['距离是直线估算', '实际走法以栈道和现场指引为准，页面上已注明'],
+      ],
+      tries: [['只看医疗点', h => h.actions['fac-filter']({ dataset: { id: 'medical' } })], ['看全部', h => h.actions['fac-filter']({ dataset: { id: 'all' } })]],
+      apply: h => { closeOverlays(h); h.goTour('fac'); },
+      match: st => plain(st) && st.page === 'tour' && st.panel === 'fac' },
+
+    { nav: '游线规划', kicker: '游览 · 我的路线', title: '时间有限：哪些站细看，哪些路过',
+      lead: '选可用时间、节奏、偏好、是否坐索道，规划器给出建议，游客确认后才调整路线，可以撤销。',
+      points: [
+        ['放不下的站改成「路过」', '黄龙是一条主栈道，14 站都会经过；v1 的「删掉」改为「路过看一眼」'],
+        ['修正了 v1 规则的三处问题', '去掉重复计算的步行时间、修正偏好加分方向、避免 6 小时只剩 4 站'],
+        ['数字是原型估算', '入沟步行约 128 分钟、坐索道约 93 分钟，需要用实测数据校准'],
+      ],
+      tries: [['按 4.5 小时排', h => { h.actions['plan-pref']({ dataset: { k: 'hours', v: '4.5' } }); }], ['按 8 小时排', h => { h.actions['plan-pref']({ dataset: { k: 'hours', v: '8' } }); }]],
+      apply: h => { closeOverlays(h); h.goTour('route'); },
+      match: st => plain(st) && st.page === 'tour' && st.panel === 'route' },
+
+    { nav: '一滴水', kicker: '游览 · 一滴水', title: '到站解锁的四章互动',
+      lead: '水流、溶解、出露、沉积四章，分别和沿途景点绑定：在关联景点到站打卡后解锁，顺序不限。',
+      points: [
+        ['到站即解锁', '金沙铺地 / 迎宾池 → 水流；洗身洞 → 溶解；飞瀑流辉 / 莲台飞瀑 → 出露；五彩池等 → 沉积'],
+        ['本站攻略与打卡联动', '关联站会提示对应章节，打卡后弹出「去看看」'],
+        ['彩池实验室入口也在这里', '面板底部直达实验室'],
+      ],
+      tries: [['打开沉积章', h => h.openWater('deposition')], ['打开彩池实验室', h => h.openLab()]],
+      apply: h => { closeOverlays(h); h.goTour('water'); },
+      match: st => plain(st) && st.page === 'tour' && st.panel === 'water' },
+
+    { nav: '章节三维', kicker: '一滴水 · 章节页', title: '同一滴水，走完四个过程',
+      lead: '章节页上方是 v1 原样搬来的 Three.js 低多边形场景，下方是互动：三消开路、拖 CO₂ 气团、旋转裂隙、带水滴生成彩池。',
+      points: [
+        ['v1 代码原样复用', '状态机与三维场景放在 vendor/，只在第一次打开时加载约 575 KB'],
+        ['没有三维也能玩', '加载失败、不支持 WebGL 或单文件版，自动换二维示意，照样能通关'],
+        ['科普边界写在页面上', '剖面不是测绘，演示时间不对应真实年限'],
+      ],
+      tries: [['看第一章 水流', h => h.openWater('flow')], ['看第三章 出露', h => h.openWater('emergence')]],
+      apply: h => { closeOverlays(h); h.openWater('deposition'); },
+      match: st => st.water },
+
+    { nav: '彩池实验室', kicker: '服务 · 彩池演化实验室', title: '动手改条件，看池群怎样长',
+      lead: '一片四池相连的池群，改来水、溶解钙、CO₂ 逸散、光照，连续观察蓄水、溢流和池沿沉积。',
+      points: [
+        ['对照与观察卡', '拖动分界线和起点对照，点池子看剖面，留下最多 6 张观察卡'],
+        ['到站后集齐三类发现', '水路连通、水位下降、池沿积累 → 「池群观察者」贴纸'],
+        ['和数字人双向联动', '「问问华屿」带着此刻状态提问；数字人也能提议用某个预设打开实验室'],
+      ],
+      tries: [['推演一段', h => { const b = $in('[data-act="lab-step"]'); if (b) b.click(); }], ['来水减少', h => h.openLab('low')]],
+      apply: h => { closeOverlays(h); h.openLab(); },
+      match: st => st.lab },
+
+    { nav: '数字人', kicker: '数字人导游', title: '会聊天，也能替游客操作页面',
+      lead: '接入 WorkBuddy 云：华汐、华屿、兰蕙、朗嘎四位角色，按知识库检索后流式作答，标注引用。',
+      points: [
+        ['知道游客此刻在哪', '每次提问带上当前站、细看 / 路过、打卡、规划条件、一滴水与实验室进度'],
+        ['回答里的命令变成按钮', '看景点、找设施、重排路线、打开章节或实验室——游客点了才生效，改路线可撤销'],
+        ['云端不通时退回内置回答', '线上域名还需云端所有者加入白名单，目前线上是内置回答'],
+      ],
+      tries: [['问「附近哪里有厕所」', h => { closeOverlays(h); h.openGuide('附近哪里有厕所？'); }], ['问华屿彩池怎么形成', h => { closeOverlays(h); h.askGuide('钙华池沿是怎么一层层长出来的？', 'huayu'); }]],
+      notes: ['在本机 localhost:4191 预览时能看到真实 AI 回答；线上要等白名单。'],
+      apply: h => { closeOverlays(h); h.openGuide(); },
+      match: st => st.sheet === 'guide' },
+
+    { nav: '服务页', kicker: '服务', title: '服务入口：现成的接上，没有的留口',
+      lead: '高原反应服务置顶；游玩必备、听懂黄龙、探索与互动三组入口。组员作品填一个网址就能接入。',
+      points: [
+        ['高原反应服务', '科普说明 + 定位最近医疗点'],
+        ['已接入本项目功能', '数字人导游、一滴水的旅程、彩池演化实验室'],
+        ['作品接入只改数据', 'cards.js 里填 url，详情就出现「进入互动作品」按钮'],
+      ],
+      apply: h => { closeOverlays(h); h.setPage('services'); },
+      match: st => plain(st) && st.page === 'services' },
+
+    { nav: '我的', kicker: '我的', title: '打卡、印章、徽章：把旅程留下来',
+      lead: '山水护照用 v1 手绘的六枚景点章，配合三枚主题徽章和实验贴纸。',
+      points: [
+        ['手绘印章', '迎宾池、飞瀑流辉、金沙铺地、盆景池、争艳彩池、五彩池；未打卡显示为灰色'],
+        ['主题徽章沿用 v1 规则', '山水初见（2 枚主章）、山水同行（3 枚）、细节发现者（2 枚 + 实验贴纸）'],
+        ['记录只存在本机', '打卡是手动记录，不核验位置；徽章只作纪念'],
+      ],
+      tries: [['看护照与徽章', h => { closeOverlays(h); h.setPage('mine'); scrollTo('#h-stamps', 10); }]],
+      apply: h => { closeOverlays(h); h.setPage('mine'); },
+      match: st => plain(st) && st.page === 'mine' },
+
+    { nav: '技术与部署', kicker: '工程', title: '轻量、可分工、推送即上线',
+      lead: '普通 HTML / CSS / JS，不需要构建工具，双击也能打开；内容和代码分开，检查脚本把关。',
+      points: [
+        ['数据与代码分离', '景点、设施、卡片、徽章、数字人人设都在 src/data/，内容组只改这里'],
+        ['tools/check.py', '提交前检查数据格式、引用、图片、链接、密钥；不通过就不部署'],
+        ['Cloudflare Workers', '推送 main 自动构建部署；其他分支只生成预览；地图 Key 存在 Secret'],
+      ],
+      notes: ['有一次推送没有触发自动构建，已手动补部署；以后推送后都会核对线上版本。'],
+      apply: h => { closeOverlays(h); h.setPage('home'); },
+      passive: true, match: st => plain(st) && st.page === 'home' },
+
+    { nav: '下一步', kicker: '待办', title: '接下来要做的',
+      lead: '原型已经能完整走通，接下来是让它可靠、可上线。',
+      points: [
+        ['数字人白名单与账号', '请云端所有者放行 huanglong.nyxal.site，并厘清额度归属；兰花图库授权待补'],
+        ['数据校准与照片', '用实测步行时间校准游线规划；换成景区授权或自拍的近期照片'],
+        ['真机与小程序', '真机、微信内置浏览器测试；搬入数字手账；再决定小程序迁移时机'],
+      ],
+      apply: h => { closeOverlays(h); h.setPage('home'); },
+      passive: true, match: st => plain(st) && st.page === 'home' },
+  ];
+
+  /* ---------- 渲染右侧 ---------- */
+  let cur = 0, notesOn = true, silentUntil = 0;
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const slideEl = document.getElementById('slide'), tocEl = document.getElementById('toc'), syncEl = document.getElementById('sync');
+
+  function render() {
+    const s = SLIDES[cur];
+    slideEl.innerHTML = `
+      <div class="kicker"><span class="no">${String(cur + 1).padStart(2, '0')} / ${SLIDES.length}</span>${esc(s.kicker)}</div>
+      <h1>${esc(s.title)}</h1>
+      <p class="lead">${esc(s.lead)}</p>
+      <ul class="points">${s.points.map(([b, t]) => `<li><b>${esc(b)}</b><small>${esc(t)}</small></li>`).join('')}</ul>
+      ${s.tries ? `<div class="tries"><span>在左边试试：</span>${s.tries.map(([t], i) => `<button class="try" type="button" data-try="${i}">${esc(t)}</button>`).join('')}</div>` : ''}
+      ${s.notes ? `<div class="notes" ${notesOn ? '' : 'hidden'}><b>讲解要点</b><ul>${s.notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul></div>` : ''}`;
+    slideEl.scrollTop = 0;
+    tocEl.innerHTML = SLIDES.map((x, i) => `<button type="button" data-go="${i}" aria-current="${i === cur}">${String(i + 1).padStart(2, '0')} ${esc(x.nav)}</button>`).join('');
+    const active = tocEl.querySelector('[aria-current="true"]'); if (active) active.scrollIntoView({ block: 'nearest', inline: 'center' });
+    document.getElementById('prev').disabled = cur === 0;
+    document.getElementById('next').disabled = cur === SLIDES.length - 1;
+    history.replaceState(null, '', '#' + (cur + 1));
+  }
+
+  /* 右边翻页：渲染讲解，并把左边调成这一页的样子 */
+  function go(i, fromApp = false) {
+    cur = Math.max(0, Math.min(SLIDES.length - 1, i));
+    render();
+    if (!fromApp) { const h = H(); if (h) { silentUntil = Date.now() + 900; try { SLIDES[cur].apply(h); } catch (e) { console.warn(e); } } }
+  }
+  function flash(text) { syncEl.textContent = text; syncEl.classList.add('flash'); clearTimeout(flash.t); flash.t = setTimeout(() => { syncEl.classList.remove('flash'); syncEl.textContent = ''; }, 1600); }
+
+  /* 左边操作：每 0.4 秒看一次左侧界面，当前页对不上就翻到第一页能对上的讲解 */
+  setInterval(() => {
+    if (Date.now() < silentUntil) return;
+    const st = appState(); if (!st) return;
+    if (SLIDES[cur].match(st)) return;
+    const i = SLIDES.findIndex(s => !s.passive && s.match(st)); /* 封面、工程、下一步是被动页：停在上面时左边是首页不算错，但不会被自动翻到 */
+    if (i >= 0 && i !== cur) { go(i, true); flash('已跟随左侧翻到这一页'); }
+  }, 400);
+
+  /* ---------- 交互 ---------- */
+  document.getElementById('prev').onclick = () => go(cur - 1);
+  document.getElementById('next').onclick = () => go(cur + 1);
+  tocEl.onclick = e => { const b = e.target.closest('[data-go]'); if (b) go(Number(b.dataset.go)); };
+  slideEl.onclick = e => {
+    const b = e.target.closest('[data-try]'); if (!b) return;
+    const h = H(); if (!h) return;
+    silentUntil = Date.now() + 900;
+    try { SLIDES[cur].tries[Number(b.dataset.try)][1](h); } catch (err) { console.warn(err); }
+  };
+  const notesBtn = document.getElementById('toggleNotes');
+  const toggleNotes = () => { notesOn = !notesOn; notesBtn.setAttribute('aria-pressed', String(notesOn)); render(); };
+  notesBtn.onclick = toggleNotes;
+  document.getElementById('resetDemo').onclick = () => {
+    try { localStorage.setItem(DEMO_KEY, JSON.stringify(DEMO_STATE)); } catch (e) { /* 存储不可用就只刷新 */ }
+    app.src = '../index.html?demo&r=' + Date.now();
+    flash('演示存档已重置');
+  };
+  document.addEventListener('keydown', e => {
+    if (e.target.closest && e.target.closest('input, textarea')) return;
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go(cur + 1); }
+    if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); go(cur - 1); }
+    if (e.key === 'n' || e.key === 'N') toggleNotes();
+  });
+
+  /* 手机画框按可用空间等比缩放 */
+  function fit() {
+    const stage = document.querySelector('.stage'), phone = document.getElementById('phone');
+    const s = Math.min((stage.clientHeight - 56) / 844, (stage.clientWidth - 40) / 390, 1);
+    phone.style.transform = `scale(${Math.max(.4, s)})`;
+    phone.style.margin = `${(844 * (s - 1)) / 2}px ${(390 * (s - 1)) / 2}px`;
+  }
+  addEventListener('resize', fit); fit();
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(document.querySelector('.stage'));
+
+  /* 首次打开：没有演示存档就写一份，再按地址里的 #页码 定位 */
+  try { if (!localStorage.getItem(DEMO_KEY)) localStorage.setItem(DEMO_KEY, JSON.stringify(DEMO_STATE)); } catch (e) { /* 忽略 */ }
+  const start = Math.max(0, (parseInt(location.hash.slice(1), 10) || 1) - 1);
+  render(); cur = Math.min(start, SLIDES.length - 1); render();
+  app.addEventListener('load', () => { const wait = () => (H() ? go(cur) : setTimeout(wait, 100)); wait(); });
+})();
+</script>
+</body>
+</html>

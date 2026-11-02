@@ -5,7 +5,8 @@
   'use strict';
   const { idx } = HL;
 
-  const KEY = 'huanglong.v3.1';
+  /* 地址带 ?demo 时（汇报页 present/ 里嵌入的就是这种）用单独的演示存档，不碰游客自己的进度 */
+  const KEY = new URLSearchParams(location.search).has('demo') ? 'huanglong.v3.demo' : 'huanglong.v3.1';
   const PAGES = ['home', 'tour', 'services', 'mine'];
   const PANELS = ['station', 'fac', 'route', 'water'];
   const MAP_MODES = ['vector', 'satellite', 'schematic'];
