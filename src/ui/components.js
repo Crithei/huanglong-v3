@@ -10,6 +10,17 @@
     <span class="t"><b>${esc(o.title)}</b><span>${esc(o.sub)}</span></span>
     ${o.end ? `<span class="end">${esc(o.end)}</span>` : ''}${o.chev === false ? '' : icon('chev', 'i chev')}</button></li>`;
 
+  /* 景点照片署名：CC 协议要求署名，有原图页面就做成链接 */
+  HL.photoCredit = s => {
+    if (!s.photo) return '<p class="credit">示意图，实景照片待补充</p>';
+    const url = HL.safeUrl(s.photo.page);
+    return `<p class="credit">照片：${url ? `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(s.photo.credit)}</a>` : esc(s.photo.credit)}</p>`;
+  };
+
+  /* 景点关键数据（海拔、彩池数等，来自官网），一排小标签 */
+  HL.factChips = s => (s.facts && s.facts.length
+    ? `<ul class="fact-chips" aria-label="关键数据">${s.facts.map(([k, v]) => `<li><span>${esc(k)}</span>${esc(v)}</li>`).join('')}</ul>` : '');
+
   /* 景点的「背后的故事与资料来源」，默认收起。本站攻略和景点详情都用它。 */
   HL.storyBlock = s => {
     if (!s.story.length && !s.sources.length) return '';

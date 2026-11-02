@@ -22,14 +22,16 @@ check = subprocess.run([sys.executable, os.path.join(ROOT, "tools", "check.py")]
 if check.returncode:
     sys.exit("检查未通过，没有生成文件。")
 
-# assets/ 下的图片转成 data URI，替换所有文本里的 "assets/文件名"。
+# assets/ 下（含子文件夹：photos、stamps、badges、guide）的图片转成 data URI，替换所有文本里的 "assets/…"。
 assets = {}
-for fn in sorted(os.listdir(os.path.join(ROOT, "assets"))):
-    path = os.path.join(ROOT, "assets", fn)
-    mime = mimetypes.guess_type(fn)[0]
-    if os.path.isfile(path) and mime:
-        with open(path, "rb") as fh:
-            assets["assets/" + fn] = "data:%s;base64,%s" % (mime, base64.b64encode(fh.read()).decode("ascii"))
+for dirpath, _, files in os.walk(os.path.join(ROOT, "assets")):
+    for fn in sorted(files):
+        path = os.path.join(dirpath, fn)
+        mime = mimetypes.guess_type(fn)[0]
+        if mime and mime.startswith("image/"):
+            rel = os.path.relpath(path, ROOT).replace("\\", "/")
+            with open(path, "rb") as fh:
+                assets[rel] = "data:%s;base64,%s" % (mime, base64.b64encode(fh.read()).decode("ascii"))
 
 
 def inline_assets(text):

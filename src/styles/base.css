@@ -129,3 +129,9 @@ svg.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-widt
 .effort { display: inline-flex; gap: 3px; vertical-align: middle; margin-left: 2px; }
 .effort i { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
 .effort i.off { background: rgba(23, 51, 45, .15); }
+
+/* 景点关键数据小标签 */
+.fact-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 0; padding: 0; list-style: none; }
+.fact-chips li { padding: 4px 10px; border-radius: 999px; background: rgba(76, 195, 194, .14); font-size: 12.5px; font-weight: 600; color: var(--ink); }
+.fact-chips li span { margin-right: 4px; font-weight: 400; color: var(--ink-2); }
+.credit a { color: inherit; text-underline-offset: 2px; }

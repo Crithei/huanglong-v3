@@ -25,11 +25,12 @@
       body: `${HL.media(s, 'sheet-media')}
         <p class="lead">${esc(s.tagline)}</p>
         <p>${esc(s.intro || s.summary)}</p>
+        ${HL.factChips(s)}
         ${s.highlights.length ? `<ul class="highlights">${s.highlights.map(h => `<li>${esc(h)}</li>`).join('')}</ul>` : ''}
         <p class="kv"><b>看什么</b>　${esc(s.viewing)}</p>
         ${s.tradeoff ? `<p class="kv"><b>怎么取舍</b>　${esc(s.tradeoff)}</p>` : ''}
         <p class="kv"><b>建议停留</b>　${s.minutes} 分钟，${esc(s.area)}</p>
-        <p class="credit">${s.photo ? esc(s.photo.credit) : '示意图，实景照片待替换'}</p>
+        ${HL.photoCredit(s)}
         ${HL.storyBlock(s)}`,
       foot: `<div class="sheet-foot">
         <button class="icon-btn" type="button" data-act="wish" data-id="${id}" aria-pressed="${wished}" aria-label="收藏到想去的景点">${icon('heart')}</button>

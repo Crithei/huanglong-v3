@@ -101,6 +101,11 @@ if stations is not None:
             check_url(src.get("url", ""), "%s sources[%d]" % (where, j))
         if s.get("stamp"):
             check_asset(s["stamp"], where + " stamp")
+        facts = s.get("facts", [])
+        if not (isinstance(facts, list) and all(isinstance(f, list) and len(f) == 2 and all(isinstance(y, str) and y for y in f) for f in facts)):
+            err("%s：facts 应为 [[名称, 数值], …]" % where)
+        if s.get("photo") and s["photo"].get("page"):
+            check_url(s["photo"]["page"], where + " photo.page")
         if s.get("photo"):
             if not s["photo"].get("credit"):
                 err("%s：照片必须写 credit（作者与授权）" % where)

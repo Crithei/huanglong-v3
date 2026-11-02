@@ -24,7 +24,7 @@ HL.data.stations = [
     ],
     "collection": "pond",
     "rank": 4,
-    "intro": "浅色池沿圈出层层碧水，山林的影子落在水面。迎宾池适合做黄龙彩池的第一课：先看水色，再看看这些小池怎样彼此相连。",
+    "intro": "走进黄龙沟遇到的第一组彩池，因此得名。池子小巧，层层浅池被浅色钙华池沿圈开，林木倒影落在水面上。这里适合先认识黄龙彩池的基本样子：水怎样被池沿托住、再从低处溢向下一层。",
     "highlights": [
       "层叠池沿：顺着水面的高低找层次",
       "山林倒影：把水上与水下放在一起看",
@@ -41,13 +41,20 @@ HL.data.stations = [
         "title": "黄龙景区官网 · 飞瀑流辉",
         "url": "https://www.huanglong.com/cn/jqjs/hljq/spot-detail?pid=4584&id=3706",
         "note": "官网《飞瀑流辉》中的迎宾池与前段游览关系"
+      },
+      {
+        "title": "维基百科 · 黄龙风景名胜区（景点表）",
+        "url": "https://zh.wikipedia.org/wiki/黄龙风景名胜区",
+        "note": "海拔与规模为条目所列参考值，未标注出处，仅作对照"
       }
     ],
-    "checkedAt": "2026-09-20",
+    "checkedAt": "2026-11-02",
+    "facts": [],
     "stamp": "assets/stamps/welcome-pond.svg",
     "photo": {
       "src": "assets/welcome-ponds.jpg",
-      "credit": "Kounosu，CC BY-SA 3.0，Wikimedia Commons"
+      "credit": "Kounosu，CC BY-SA 3.0，Wikimedia Commons",
+      "page": "https://commons.wikimedia.org/wiki/File:Welcome-Ponds_Huanglong_Sichuan_China.jpg"
     }
   },
   {
@@ -72,7 +79,7 @@ HL.data.stations = [
     ],
     "collection": "waterfall",
     "rank": 7,
-    "intro": "这里的主角是一道道分开的水帘。流水掠过金黄色钙华岩壁，露出岩坎的起伏，也把彩池边安静的节奏换成了瀑声。",
+    "intro": "从迎宾池沿栈道上行，林间流来的水在一道高约 10 米、宽 60 余米的岩坎上分成数十道梯级瀑布。瀑布背后的陡崖布满马肺状、片状的金黄色钙华沉积，傍晚被阳光照亮时尤其醒目，「流辉」便由此而来。",
     "highlights": [
       "水帘分合：看细瀑沿岩壁展开",
       "金色岩坎：流水间露出的钙华纹理",
@@ -101,9 +108,23 @@ HL.data.stations = [
         "note": "高德地点坐标 · 2026-09-18 核对"
       }
     ],
-    "checkedAt": "2026-09-20",
+    "checkedAt": "2026-11-02",
+    "facts": [
+      [
+        "岩坎高",
+        "约 10 米"
+      ],
+      [
+        "岩坎宽",
+        "约 60 余米"
+      ]
+    ],
     "stamp": "assets/stamps/flying-waterfall.svg",
-    "photo": null
+    "photo": {
+      "src": "assets/photos/flying-waterfall.jpg",
+      "credit": "rheins，CC BY 3.0，Wikimedia Commons",
+      "page": "https://commons.wikimedia.org/wiki/File:%E9%A3%9E%E7%80%91%E6%B5%81%E8%BE%89_-_Marvellous_Flying_Waterfll_-_2011.10_-_panoramio.jpg"
+    }
   },
   {
     "id": "liantai-fall",
@@ -127,7 +148,7 @@ HL.data.stations = [
     ],
     "collection": "waterfall",
     "rank": 6,
-    "intro": "在前段水景之间，莲台飞瀑适合留给喜欢慢看的游客。把视线收近一点，观察流水、湿润岩面和草木，也听听黄龙除了彩池之外的声音。",
+    "intro": "水流漫过一片层层隆起的钙华体，钙华像一瓣瓣莲台托住水流，水沿着台面分散、跌落，形成一段起伏的瀑布。这里能近看钙华表面的纹理，也能对照上游，看水量多少怎样改变瀑布的形态。",
     "highlights": [
       "流水细节：观察水流怎样分开又汇合",
       "环境声音：用片刻停留听一段水声",
@@ -144,11 +165,21 @@ HL.data.stations = [
         "title": "高德地图 · 莲台飞瀑",
         "url": "https://www.amap.com/search?query=%E8%8E%B2%E5%8F%B0%E9%A3%9E%E7%80%91%20%E9%BB%84%E9%BE%99",
         "note": "高德独立地点与附近休息亭关系；观赏方法为编辑建议"
+      },
+      {
+        "title": "维基百科 · 黄龙风景名胜区（景点表）",
+        "url": "https://zh.wikipedia.org/wiki/黄龙风景名胜区",
+        "note": "海拔与规模为条目所列参考值，未标注出处，仅作对照"
       }
     ],
-    "checkedAt": "2026-09-20",
+    "checkedAt": "2026-11-02",
+    "facts": [],
     "stamp": null,
-    "photo": null
+    "photo": {
+      "src": "assets/photos/liantai-fall.jpg",
+      "credit": "Leungcwd，CC BY-SA 3.0，Wikimedia Commons",
+      "page": "https://commons.wikimedia.org/wiki/File:%E9%BB%83%E9%BE%8D-%E8%93%AE%E5%8F%B0%E9%A3%9B%E7%80%91.JPG"
+    }
   },
   {
     "id": "wash-body-viewpoint",
@@ -172,7 +203,7 @@ HL.data.stations = [
     ],
     "collection": "landform",
     "rank": 5,
-    "intro": "从前段瀑布走向金沙铺地，可以在洗身洞观景台换个角度看水流、岩面与山林。它也是一个适合停下来确认步速、再决定后续安排的节点。",
+    "intro": "一面高大的钙华挂壁下藏着一处溶洞，洞口常有水雾。民间有在此沐浴可去病消灾的说法，「洗身」之名由此而来。观景台看的是挂壁整体：浅色钙华层层垂挂，是理解「水把溶解的碳酸钙留在岩壁上」的好地方。",
     "highlights": [
       "沿线视野：观察水、岩面与树林的组合",
       "景观过渡：从前段瀑布转向中段滩流",
@@ -189,11 +220,26 @@ HL.data.stations = [
         "title": "高德地图 · 洗身洞观景台",
         "url": "https://www.amap.com/search?query=%E6%B4%97%E8%BA%AB%E6%B4%9E%E8%A7%82%E6%99%AF%E5%8F%B0%20%E9%BB%84%E9%BE%99",
         "note": "高德观景台及周边设施坐标；观赏方法为编辑建议"
+      },
+      {
+        "title": "维基百科 · 黄龙风景名胜区（景点表）",
+        "url": "https://zh.wikipedia.org/wiki/黄龙风景名胜区",
+        "note": "海拔与规模为条目所列参考值，未标注出处，仅作对照"
+      },
+      {
+        "title": "携程攻略 · 洗身洞",
+        "url": "https://gs.ctrip.com/html5/you/sight/744/140760.html",
+        "note": "「洗身去病」的民间说法"
       }
     ],
-    "checkedAt": "2026-09-20",
+    "checkedAt": "2026-11-02",
+    "facts": [],
     "stamp": null,
-    "photo": null
+    "photo": {
+      "src": "assets/photos/wash-body-viewpoint.jpg",
+      "credit": "Leungcwd，CC BY-SA 3.0，Wikimedia Commons",
+      "page": "https://commons.wikimedia.org/wiki/File:%E9%BB%83%E9%BE%8D-%E6%B4%97%E8%BA%AB%E6%B4%9E.JPG"
+    }
   },
   {
     "id": "jinsha-pudi",
@@ -217,7 +263,7 @@ HL.data.stations = [
     ],
     "collection": "landform",
     "rank": 7,
-    "intro": "连续的蓝绿彩池之间，金沙铺地忽然展开一片金黄色坡面。薄薄的水顺坡流过钙华，适合把目光放远，看黄龙更舒展的一面。",
+    "intro": "一条长约 1300 米、宽 40 到 122 米的钙华滩流，海拔约 3305 米。这里坡度平缓，碳酸钙沉积不能围成池子，水在坡面上铺开流淌，在水底积出鳞甲般的金黄色钙华滩。官方资料称它是同类地表钙华滩流中规模最大、色彩最艳的一处。",
     "highlights": [
       "金色滩流：看水在坡面上铺展开来",
       "钙华纹理：留意细流与起伏的方向",
@@ -236,9 +282,27 @@ HL.data.stations = [
         "note": "景观与历史资料，经编辑整理"
       }
     ],
-    "checkedAt": "2026-09-20",
+    "checkedAt": "2026-11-02",
+    "facts": [
+      [
+        "海拔",
+        "3305 米"
+      ],
+      [
+        "长",
+        "约 1300 米"
+      ],
+      [
+        "宽",
+        "40–122 米"
+      ]
+    ],
     "stamp": "assets/stamps/jinsha-pudi.svg",
-    "photo": null
+    "photo": {
+      "src": "assets/photos/jinsha-pudi.jpg",
+      "credit": "Kounosu，CC BY-SA 3.0，Wikimedia Commons",
+      "page": "https://commons.wikimedia.org/wiki/File:Golden-Sand-Field_Huanglong_Sichuan_China.jpg"
+    }
   },
   {
     "id": "bonsai-pond",
@@ -262,7 +326,7 @@ HL.data.stations = [
     ],
     "collection": "pond",
     "rank": 7,
-    "intro": "这里适合把风景看小一点：弯曲的池沿绕着树根延伸，草木、石头与池水凑成天然的小景。喜欢植物和近景的人，可以慢下来找自己的那一幅“盆景”。",
+    "intro": "海拔约 3320 米，约 2 万平方米里分布着 330 余个彩池。池堤顺着树根和地势弯转，池中池边长着树木花草，池底呈黄、白、褐、灰多种颜色，远看像一盆盆天然的盆景。",
     "highlights": [
       "池与树根：看池沿如何随地形弯转",
       "小景组合：草木、石头和水彼此映衬",
@@ -291,9 +355,27 @@ HL.data.stations = [
         "note": "附近参考点：盆景池厕所一带，并非彩池精确中心"
       }
     ],
-    "checkedAt": "2026-09-20",
+    "checkedAt": "2026-11-02",
+    "facts": [
+      [
+        "海拔",
+        "3320 米"
+      ],
+      [
+        "彩池",
+        "330 余个"
+      ],
+      [
+        "面积",
+        "约 2 万平方米"
+      ]
+    ],
     "stamp": "assets/stamps/bonsai-pond.svg",
-    "photo": null
+    "photo": {
+      "src": "assets/photos/bonsai-pond.jpg",
+      "credit": "rheins，CC BY 3.0，Wikimedia Commons",
+      "page": "https://commons.wikimedia.org/wiki/File:%E7%9B%86%E6%99%AF%E6%B1%A0_-_Bonsai_Pond_-_2011.10_-_panoramio.jpg"
+    }
   },
   {
     "id": "mirror-pond",
@@ -319,7 +401,7 @@ HL.data.stations = [
     ],
     "collection": "pond",
     "rank": 6,
-    "intro": "明镜倒映池把风景翻到了水面上。天光、树林和山色与池沿交叠；水面平静时看倒影，风起时看颜色被波纹轻轻打散。",
+    "intro": "海拔约 3400 米，3600 余平方米内有 180 个彩池。池面平静，天光、云影、雪峰和树林倒映得十分清晰，拍出来几乎分不清上下。上游 119 米是娑萝映彩池，下游 418 米是盆景池。",
     "highlights": [
       "山林倒影：看真实景物与水中影像",
       "开阔水面：留意天光与池沿的边界",
@@ -338,9 +420,27 @@ HL.data.stations = [
         "note": "景观与历史资料，经编辑整理"
       }
     ],
-    "checkedAt": "2026-09-20",
+    "checkedAt": "2026-11-02",
+    "facts": [
+      [
+        "海拔",
+        "3400 米"
+      ],
+      [
+        "彩池",
+        "180 个"
+      ],
+      [
+        "面积",
+        "3600 余平方米"
+      ]
+    ],
     "stamp": null,
-    "photo": null
+    "photo": {
+      "src": "assets/photos/mirror-pond.jpg",
+      "credit": "Leungcwd，CC BY-SA 3.0，Wikimedia Commons",
+      "page": "https://commons.wikimedia.org/wiki/File:%E9%BB%83%E9%BE%8D-%E6%98%8E%E9%8F%A1%E5%80%92%E6%98%A0%E6%B1%A0.JPG"
+    }
   },
   {
     "id": "suoluo-pond",
@@ -366,7 +466,7 @@ HL.data.stations = [
     ],
     "collection": "pond",
     "rank": 7,
-    "intro": "娑罗映彩池值得把花木和水一起看。杜鹃、树林与蓝绿池水相互映衬，有花时看花色，没有花时也能看枝叶、倒影与池堤。",
+    "intro": "海拔约 3415 米，6840 平方米内有 400 多个彩池。「娑萝」指杜鹃，池群四周杜鹃环绕：春夏花开时碧水、金色池壁与花色相映，秋天红叶倒映池中，冬天冰花与金色池沿相对，四季各有看点。",
     "highlights": [
       "杜鹃与彩池：花木为水景添一层变化",
       "林木倒影：从水里寻找周围的颜色",
@@ -390,9 +490,27 @@ HL.data.stations = [
         "note": "高德地点坐标 · 2026-09-18 核对"
       }
     ],
-    "checkedAt": "2026-09-20",
+    "checkedAt": "2026-11-02",
+    "facts": [
+      [
+        "海拔",
+        "3415 米"
+      ],
+      [
+        "彩池",
+        "400 多个"
+      ],
+      [
+        "面积",
+        "6840 平方米"
+      ]
+    ],
     "stamp": null,
-    "photo": null
+    "photo": {
+      "src": "assets/photos/suoluo-pond.jpg",
+      "credit": "Leungcwd，CC BY-SA 3.0，Wikimedia Commons",
+      "page": "https://commons.wikimedia.org/wiki/File:%E9%BB%83%E9%BE%8D-%E5%A8%91%E8%98%BF%E6%98%A0%E5%BD%A9%E6%B1%A0.JPG"
+    }
   },
   {
     "id": "zhengyan-chi",
@@ -417,7 +535,7 @@ HL.data.stations = [
     ],
     "collection": "pond",
     "rank": 9,
-    "intro": "争艳彩池适合挑细节：有的池沿蜿蜒，有的几层紧挨，水色与植物各有变化。先看整片层次，再选一小组比较形状，会比只拍一张全景更有意思。",
+    "intro": "黄龙沟第二大彩池群，海拔约 3454 米，约 2 万平方米里有 658 个彩池，池堤形态被认为是全沟最丰富的一组。水深不同、堤岸植被不同，阳光下金黄、翠绿、酒红、鲜橙各色并存，「争艳」由此得名。",
     "highlights": [
       "池沿弧线：找形状不同的彩池",
       "深浅色块：比较相邻池水的层次",
@@ -436,9 +554,27 @@ HL.data.stations = [
         "note": "景观与历史资料，经编辑整理"
       }
     ],
-    "checkedAt": "2026-09-20",
+    "checkedAt": "2026-11-02",
+    "facts": [
+      [
+        "海拔",
+        "3454 米"
+      ],
+      [
+        "彩池",
+        "658 个"
+      ],
+      [
+        "面积",
+        "约 2 万平方米"
+      ]
+    ],
     "stamp": "assets/stamps/zhengyan-chi.svg",
-    "photo": null
+    "photo": {
+      "src": "assets/photos/zhengyan-chi.jpg",
+      "credit": "rheins，CC BY 3.0，Wikimedia Commons",
+      "page": "https://commons.wikimedia.org/wiki/File:%E4%BA%89%E8%89%B3%E6%B1%A0%E5%85%A8%E6%99%AF_-_Panorama_of_Beauty-Competing_Pond_-_2011.10_-_panoramio.jpg"
+    }
   },
   {
     "id": "immortal-bridge",
@@ -460,7 +596,7 @@ HL.data.stations = [
     "aliases": [],
     "collection": "culture",
     "rank": 4,
-    "intro": "看过连绵彩池，接仙桥适合换个话题：一座山间桥梁，为什么会被赋予“接仙”的名字？沿着桥与林木的关系看过去，再读一段黄龙的地方传说。",
+    "intro": "黄龙沟内的道教文化遗址之一。传说虔诚的朝拜者走上这座桥，会听见仙乐，过桥后看见仙人在彩池边迎接，引入瑶池仙境，因此叫「接仙桥」。它把前段的彩池与后段的寺庙、五彩池连在一起。",
     "highlights": [
       "桥与山林：观察人造路径如何融入景观",
       "名字来历：了解地方朝拜与遇仙传说",
@@ -484,9 +620,14 @@ HL.data.stations = [
         "note": "高德地点坐标 · 2026-09-18 核对"
       }
     ],
-    "checkedAt": "2026-09-20",
+    "checkedAt": "2026-11-02",
+    "facts": [],
     "stamp": null,
-    "photo": null
+    "photo": {
+      "src": "assets/photos/immortal-bridge.jpg",
+      "credit": "rheins，CC BY 3.0，Wikimedia Commons",
+      "page": "https://commons.wikimedia.org/wiki/File:%E6%8E%A5%E4%BB%99%E6%A1%A5_-_Immortal_Guilding_Bridge_-_2011.10_-_panoramio.jpg"
+    }
   },
   {
     "id": "huanglong-middle-temple",
@@ -510,7 +651,7 @@ HL.data.stations = [
     ],
     "collection": "culture",
     "rank": 5,
-    "intro": "黄龙中寺让目光从池水转向建筑。它位于争艳彩池与黄龙后寺之间，适合看看山林中的寺院外观，再从现场说明里了解当地的信仰与历史。",
+    "intro": "海拔约 3470 米，始建于明代，官网资料记为藏传佛教苯波教寺庙，体现了黄龙一带藏汉宗教文化交融的特点。寺院原有七处殿宇，如今能看到的是观音殿。上距黄龙后寺 676 米，下距争艳彩池 1011 米，周围是红松林与杜鹃林。",
     "highlights": [
       "建筑外观：看屋檐与山林的关系",
       "地方历史：借现场说明认识中寺",
@@ -529,9 +670,27 @@ HL.data.stations = [
         "note": "景观与历史资料，经编辑整理"
       }
     ],
-    "checkedAt": "2026-09-20",
+    "checkedAt": "2026-11-02",
+    "facts": [
+      [
+        "海拔",
+        "3470 米"
+      ],
+      [
+        "始建",
+        "明代"
+      ],
+      [
+        "占地",
+        "约 500 平方米"
+      ]
+    ],
     "stamp": null,
-    "photo": null
+    "photo": {
+      "src": "assets/photos/huanglong-middle-temple.jpg",
+      "credit": "Jmhullot，CC BY 3.0，Wikimedia Commons",
+      "page": "https://commons.wikimedia.org/wiki/File:Huanglong_middle_temple.jpg"
+    }
   },
   {
     "id": "huanglong-ancient-temple",
@@ -559,7 +718,7 @@ HL.data.stations = [
     ],
     "collection": "culture",
     "rank": 7,
-    "intro": "黄龙古寺也叫黄龙后寺，背靠五彩池。建筑、山林和附近的彩池让自然与人文在这里相遇，适合在看水之余，读一读“黄龙”这个名字背后的传说。",
+    "intro": "又称黄龙后寺，有 600 余年历史，属道教宫观，背靠五彩池。据《松潘县志》记载，寺为明代兵备副使马朝觐所建，又名雪山寺。传说黄龙曾助大禹治水，后在此修炼得道，后人建寺纪念。它也是研究少数民族地区道教文化的重要遗址。",
     "highlights": [
       "后寺外观：看建筑与高段山林的关系",
       "黄龙传说：了解山水命名中的地方信仰",
@@ -578,9 +737,27 @@ HL.data.stations = [
         "note": "景观与历史资料，经编辑整理"
       }
     ],
-    "checkedAt": "2026-09-20",
+    "checkedAt": "2026-11-02",
+    "facts": [
+      [
+        "历史",
+        "600 余年"
+      ],
+      [
+        "占地",
+        "1000 余平方米"
+      ],
+      [
+        "距中寺",
+        "676 米"
+      ]
+    ],
     "stamp": null,
-    "photo": null
+    "photo": {
+      "src": "assets/photos/huanglong-ancient-temple.jpg",
+      "credit": "Jmhullot，CC BY 3.0，Wikimedia Commons",
+      "page": "https://commons.wikimedia.org/wiki/File:Huanglong_ancient_temple.jpg"
+    }
   },
   {
     "id": "huanglong-cave",
@@ -605,7 +782,7 @@ HL.data.stations = [
     ],
     "collection": "landform",
     "rank": 4,
-    "intro": "黄龙洞又称归真洞、佛爷洞，位于黄龙后寺附近。它的资料把黄龙的故事延伸到洞穴与地方信仰；这一站先按周边观看与知识拓展安排。",
+    "intro": "黄龙沟最大的钙华溶洞，又称归真洞、佛爷洞，海拔约 3568 米，在黄龙后寺左侧约 10 米。进洞约 10 米是一座高约 30 米、长约 50 米的大厅，遍布钟乳石；厅内有明代三尊坐佛，身上披满钙华结晶。冬季洞内会出现冰林、冰笋、冰幔。",
     "highlights": [
       "钙华洞穴：了解彩池之外的沉积形态",
       "名称故事：从归真洞、佛爷洞认识地方文化",
@@ -629,7 +806,17 @@ HL.data.stations = [
         "note": "高德地点坐标 · 2026-09-18 核对"
       }
     ],
-    "checkedAt": "2026-09-20",
+    "checkedAt": "2026-11-02",
+    "facts": [
+      [
+        "海拔",
+        "3568 米"
+      ],
+      [
+        "洞厅",
+        "高 30 米 · 长 50 米"
+      ]
+    ],
     "stamp": null,
     "photo": null
   },
@@ -656,7 +843,7 @@ HL.data.stations = [
     ],
     "collection": "pond",
     "rank": 10,
-    "intro": "密集的池沿层层展开，蓝绿水色穿插其间。五彩池适合先看池群的整体图案，再挑几处小池细看；如果它是此行重点，别把停留时间都用在赶到附近。",
+    "intro": "黄龙沟最大的一组彩池群，海拔 3576 米，2.1 万平方米内有 693 个彩池，官方资料称它是世界上规模最大、海拔最高的露天钙华彩池群之一。池堤有弧形、扇形、裙边形，层叠错落；沉积物、池坝颜色、光线和水深共同决定了池水的颜色。",
     "highlights": [
       "整片池群：看层叠池沿构成的图案",
       "局部色彩：比较不同小池的深浅与轮廓",
@@ -675,11 +862,26 @@ HL.data.stations = [
         "note": "景观与历史资料，经编辑整理"
       }
     ],
-    "checkedAt": "2026-09-20",
+    "checkedAt": "2026-11-02",
+    "facts": [
+      [
+        "海拔",
+        "3576 米"
+      ],
+      [
+        "彩池",
+        "693 个"
+      ],
+      [
+        "面积",
+        "2.1 万平方米"
+      ]
+    ],
     "stamp": "assets/stamps/five-color-pond.svg",
     "photo": {
       "src": "assets/five-colored-pond.jpg",
-      "credit": "Kounosu，CC BY-SA 3.0，Wikimedia Commons"
+      "credit": "Kounosu，CC BY-SA 3.0，Wikimedia Commons",
+      "page": "https://commons.wikimedia.org/wiki/File:Water-of-Five-colored-Pond_Huanglong_Sichuan_China.jpg"
     }
   }
 ];

@@ -30,6 +30,7 @@
         <div><b>${HL.effortDots(s.effort)}</b>体力</div>
         <div><b>${esc(s.category)}</b>类型</div>
       </div>
+      ${HL.factChips(s)}
       ${HL.waterHint(s)}
       ${off ? `<div class="empty" style="margin-top:14px">按你的路线，这一站只路过看一眼。<br><button class="btn btn-ghost" type="button" data-act="toggle-stop" data-id="${s.id}">改成停下细看</button></div>` : ''}
       <div class="guide-block"><h3>看什么</h3><p>${esc(s.viewing)}</p></div>
@@ -38,7 +39,7 @@
       <div class="guide-block"><h3>怎么拍</h3><p>${esc(s.photoTip)}</p></div>
       <div class="guide-block"><h3>留意</h3><p>${esc(s.tip)}${s.expectation ? ' ' + esc(s.expectation) : ''}</p></div>
       ${HL.media(s, 'station-photo')}
-      <p class="credit">${s.photo ? esc(s.photo.credit) : '示意图，实景照片待替换'}</p>
+      ${HL.photoCredit(s)}
       ${HL.storyBlock(s)}
       <div class="station-actions">
         <button class="btn ${visited ? 'is-on' : 'btn-primary'}" type="button" data-act="visit" data-id="${s.id}" aria-pressed="${visited}">${icon(visited ? 'check' : 'stamp')}${visited ? '已收下印章' : '到站打卡'}</button>

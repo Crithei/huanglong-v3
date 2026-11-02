@@ -36,7 +36,7 @@ python tools/check.py
 python tools/build-single.py
 ```
 
-生成的 `dist/huanglong.html` 内嵌了样式、脚本、数据和图片（约 0.9 MB），可以直接用微信或邮件发送。
+生成的 `dist/huanglong.html` 内嵌了样式、脚本、数据和全部图片（约 3.2 MB；不含水滴四章的三维场景和数字人云端问答，这两样在单文件版里分别显示二维示意和内置回答），可以直接用微信或邮件发送。
 
 只需要 Python 3.8 及以上，不需要 Node、npm 或任何第三方包。
 
@@ -114,7 +114,23 @@ python tools/check.py
 
 ## 素材授权
 
-- `assets/five-colored-pond.jpg`、`assets/welcome-ponds.jpg`：Kounosu，CC BY-SA 3.0，来自 Wikimedia Commons。使用时保留署名。
+景点实景照片均来自 Wikimedia Commons，协议为 CC BY 3.0 或 CC BY-SA 3.0，可以商用和修改，但**必须保留署名和协议**（页面上每张照片下方都有署名链接）。BY-SA 的照片若被裁剪、调色后另行发布，新作品也要用同样的协议。照片已缩到 960 像素宽以减小体积。黄龙洞暂无可确认地点、协议合适的照片，仍用示意图。
+
+| 景点 | 文件 | 作者 · 协议 | 原图 |
+| --- | --- | --- | --- |
+| 迎宾池 | `assets/welcome-ponds.jpg` | Kounosu · CC BY-SA 3.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Welcome-Ponds_Huanglong_Sichuan_China.jpg) |
+| 飞瀑流辉 | `assets/photos/flying-waterfall.jpg` | rheins · CC BY 3.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:%E9%A3%9E%E7%80%91%E6%B5%81%E8%BE%89_-_Marvellous_Flying_Waterfll_-_2011.10_-_panoramio.jpg) |
+| 莲台飞瀑 | `assets/photos/liantai-fall.jpg` | Leungcwd · CC BY-SA 3.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:%E9%BB%83%E9%BE%8D-%E8%93%AE%E5%8F%B0%E9%A3%9B%E7%80%91.JPG) |
+| 洗身洞观景台 | `assets/photos/wash-body-viewpoint.jpg` | Leungcwd · CC BY-SA 3.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:%E9%BB%83%E9%BE%8D-%E6%B4%97%E8%BA%AB%E6%B4%9E.JPG) |
+| 金沙铺地 | `assets/photos/jinsha-pudi.jpg` | Kounosu · CC BY-SA 3.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Golden-Sand-Field_Huanglong_Sichuan_China.jpg) |
+| 盆景池 | `assets/photos/bonsai-pond.jpg` | rheins · CC BY 3.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:%E7%9B%86%E6%99%AF%E6%B1%A0_-_Bonsai_Pond_-_2011.10_-_panoramio.jpg) |
+| 明镜倒映池 | `assets/photos/mirror-pond.jpg` | Leungcwd · CC BY-SA 3.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:%E9%BB%83%E9%BE%8D-%E6%98%8E%E9%8F%A1%E5%80%92%E6%98%A0%E6%B1%A0.JPG) |
+| 娑罗映彩池 | `assets/photos/suoluo-pond.jpg` | Leungcwd · CC BY-SA 3.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:%E9%BB%83%E9%BE%8D-%E5%A8%91%E8%98%BF%E6%98%A0%E5%BD%A9%E6%B1%A0.JPG) |
+| 争艳彩池 | `assets/photos/zhengyan-chi.jpg` | rheins · CC BY 3.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:%E4%BA%89%E8%89%B3%E6%B1%A0%E5%85%A8%E6%99%AF_-_Panorama_of_Beauty-Competing_Pond_-_2011.10_-_panoramio.jpg) |
+| 接仙桥 | `assets/photos/immortal-bridge.jpg` | rheins · CC BY 3.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:%E6%8E%A5%E4%BB%99%E6%A1%A5_-_Immortal_Guilding_Bridge_-_2011.10_-_panoramio.jpg) |
+| 黄龙中寺 | `assets/photos/huanglong-middle-temple.jpg` | Jmhullot · CC BY 3.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Huanglong_middle_temple.jpg) |
+| 黄龙古寺 | `assets/photos/huanglong-ancient-temple.jpg` | Jmhullot · CC BY 3.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Huanglong_ancient_temple.jpg) |
+| 五彩池 | `assets/five-colored-pond.jpg` | Kounosu · CC BY-SA 3.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Water-of-Five-colored-Pond_Huanglong_Sichuan_China.jpg) |
 - 设施数据：高德地图 Web Service v3/place/around，查询于 2026-09-18。
 - `assets/stamps/`、`assets/badges/`：印章、徽章与贴纸，来自 v1 `assets/passport/`（原创 SVG）。
 - `assets/guide/`：四位数字人头像，来自「黄龙数字人网页端交接包 20261102」。
