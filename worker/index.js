@@ -10,13 +10,15 @@
 /* 只接受从这些网站发起的地图请求，防止别人借我们的域名消耗 Key 的额度 */
 const ALLOWED_HOSTS = ['huanglong.nyxal.site', 'huanglong-v3.itsmephrynx.workers.dev'];
 
-/* 与官方 Nginx 示例一一对应：[路径前缀, 转发目标, Key 参数名, 是否保留前缀之后的路径] */
+/* 与官方 Nginx 示例对应：[路径前缀, 转发目标, Key 参数名, 是否保留前缀之后的路径]
+   官方示例里还有 /_TMapService/service → apis.map.qq.com/ws（WebService），这里故意不转发：
+   页面没用到服务类库，而来源检查挡不住伪造 Referer 的脚本，开着会让人借域名消耗额度。
+   以后要搜地点、查路线，另写带限流的服务端接口，不要把它加回来。 */
 const TMAP_ROUTES = [
   ['/_TMapService/checkKey', 'https://apikey.map.qq.com/mkey/index.php/mkey/check', 'key', false],
   ['/_TMapService/oversea', 'https://overseactrl.map.qq.com', 'apikey', true],
-  ['/_TMapService/service', 'https://apis.map.qq.com/ws', 'key', true],
-  ['/_TMapService', 'https://pr.map.qq.com/pingd?appid=jsapi_v3', 'key', false],
 ];
+const TMAP_PING = ['/_TMapService', 'https://pr.map.qq.com/pingd?appid=jsapi_v3', 'key', false];
 
 function fromOurSite(request) {
   const src = request.headers.get('Origin') || request.headers.get('Referer');
@@ -28,7 +30,9 @@ async function proxyTmap(request, env, url) {
   const key = String(env.TMAP_JS_KEY || '').trim();
   if (!key) return new Response('map key not configured', { status: 503 });
   if (!fromOurSite(request)) return new Response('forbidden', { status: 403 });
-  const route = TMAP_ROUTES.find(([prefix]) => url.pathname === prefix || url.pathname.startsWith(prefix + '/'));
+  /* 只认这几条确切路径；/_TMapService/service 等其他子路径一律 404，不会落到统计接口上 */
+  const route = url.pathname === TMAP_PING[0] ? TMAP_PING
+    : TMAP_ROUTES.find(([prefix]) => url.pathname === prefix || url.pathname.startsWith(prefix + '/'));
   if (!route) return new Response('not found', { status: 404 });
   const [prefix, target, keyName, keepPath] = route;
   const out = new URL(target + (keepPath ? url.pathname.slice(prefix.length) : ''));
