@@ -12,3 +12,6 @@ __pycache__/
 # 密钥、地图 Key 不要提交
 .env
 *.local.*
+
+# Cloudflare 本地缓存
+.wrangler/

@@ -1,0 +1,14 @@
+# 不上传到 Cloudflare 的文件：只公开网页运行需要的 index.html、src/、assets/
+.git
+.gitignore
+.editorconfig
+.assetsignore
+.wrangler
+wrangler.jsonc
+worker
+docs
+tools
+dist
+README.md
+src/config.local.js
+src/config.example.js

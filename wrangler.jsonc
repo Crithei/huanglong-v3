@@ -1,0 +1,15 @@
+// Cloudflare Workers 部署配置。部署：见 docs/开发指南.md「部署」。
+// 静态文件由 assets 直接提供；只有找不到对应文件的请求（目前只有 /src/config.local.js）才进 worker/index.js。
+{
+  "name": "huanglong-v3",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-07-01",
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS"
+  },
+  "routes": [
+    { "pattern": "huanglong.nyxal.site", "custom_domain": true }
+  ],
+  "workers_dev": true
+}

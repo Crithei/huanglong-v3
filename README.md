@@ -10,6 +10,8 @@
 - `python tools/check.py` 在提交前检查数据和代码引用；
 - `python tools/build-single.py` 打包成一个 HTML 文件，发给没有开发环境的人。
 
+**在线访问：** <https://huanglong.nyxal.site/>（手机打开效果最好）
+
 ## 快速开始
 
 **直接看效果：** 双击 `index.html`，用 Chrome 或 Edge 打开。电脑上会显示手机画幅，手机上全屏显示。
