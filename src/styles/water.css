@@ -135,12 +135,20 @@
 .pool-phases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 10px; }
 .pool-phases span { padding: 6px 0; text-align: center; border-radius: 999px; font-size: 12px; color: var(--ink-2); background: rgba(23, 51, 45, .05); }
 .pool-phases span.is-now { background: var(--ink); color: #fff; font-weight: 600; }
-.water-progress { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; margin: 14px 16px 0; font-size: 12px; color: var(--ink-2); }
-.water-feedback { margin: 10px 16px 0; padding: 10px 12px; min-height: 44px; border-left: 3px solid transparent; border-radius: 0 10px 10px 0; font-size: 13.5px; line-height: 1.65; transition: background .2s, border-color .2s; }
-.water-feedback[data-state="hint"] { background: #f3f1e2; border-color: #c9b77a; }
-.water-feedback[data-state="process"] { background: rgba(76, 195, 194, .12); border-color: var(--deep); }
-.water-feedback[data-state="complete"] { background: #f6efd9; border-color: var(--gold); color: #6e5320; }
-.water-feedback[data-state="locked"] { background: rgba(23, 51, 45, .05); border-color: var(--line); color: var(--ink-2); }
+/* 反馈卡：和本站攻略的章节提示条同一种样式——圆角卡、左侧圆形图标、正文加一行小字（进度 · 奖励） */
+.water-feedback { display: flex; align-items: flex-start; gap: 10px; margin: 16px 16px 0; padding: 12px; border-radius: 16px; background: rgba(23, 51, 45, .05); transition: background .2s; }
+.water-feedback .ico { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--surface); color: var(--ink-2); }
+.water-feedback .ico .i { width: 18px; height: 18px; }
+.water-feedback .t { flex: 1; min-width: 0; padding-top: 6px; }
+.water-feedback p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--ink); }
+.water-feedback .meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; margin-top: 6px; font-size: 12px; color: var(--ink-2); }
+.water-feedback[data-state="hint"] { background: rgba(201, 160, 75, .14); }
+.water-feedback[data-state="hint"] .ico { color: #8a6a26; }
+.water-feedback[data-state="process"] { background: rgba(76, 195, 194, .14); }
+.water-feedback[data-state="process"] .ico { color: var(--deep); }
+.water-feedback[data-state="complete"] { background: #f6efd9; }
+.water-feedback[data-state="complete"] .ico { background: var(--gold); color: #fff; }
+.water-feedback[data-state="locked"] p { color: var(--ink-2); }
 .water-action { display: flex; width: calc(100% - 32px); margin: 12px 16px 0; }
 .water-action[hidden] { display: none; }
 .water-science { margin: 14px 16px 0; }

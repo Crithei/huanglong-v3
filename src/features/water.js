@@ -102,8 +102,10 @@
         <div class="water-unlock" id="waterUnlock" hidden></div>
         <div class="water-story"><span class="water-stage-label" id="waterStageLabel"></span><h2 id="waterTitle"></h2><p id="waterStageCopy"></p></div>
         <fieldset class="water-game" id="waterGame"><legend>本章互动</legend></fieldset>
-        <div class="water-progress"><span id="waterProgress"></span><span id="waterReward"></span></div>
-        <p class="water-feedback" id="waterFeedback" role="status"></p>
+        <div class="water-feedback" id="waterFeedbackBox">
+          <span class="ico" id="waterFeedbackIco"></span>
+          <div class="t"><p id="waterFeedback" role="status"></p><span class="meta"><span id="waterProgress"></span><span id="waterReward"></span></span></div>
+        </div>
         <button class="btn btn-primary water-action" type="button" data-act="water-action" id="waterAction"></button>
         <button class="btn btn-ghost water-action" type="button" data-act="water-step" id="waterStep" hidden>查看下一状态</button>
         <p class="note water-science" id="waterScience"></p>
@@ -283,9 +285,12 @@
     const id = S.water.active, c = chapter(id), p = progress(id), open = isOpen(id), status = statusOf(id, p), fb = feedbackOf(id, p, open);
     $('#waterProgress').textContent = status;
     $('#waterReward').textContent = p.earnedAt ? `✓ ${c.reward}` : `完成后收下「${c.reward}」`;
-    const feedback = $('#waterFeedback');
+    const feedback = $('#waterFeedback'), box = $('#waterFeedbackBox');
     if (!feedback.dataset.hold) { feedback.textContent = fb.text; }
-    feedback.dataset.state = fb.state;
+    if (box.dataset.state !== fb.state) {
+      box.dataset.state = fb.state;
+      $('#waterFeedbackIco').innerHTML = icon({ locked: 'lock', hint: 'info', process: 'drop', complete: 'check' }[fb.state]);
+    }
     $('#waterStageCopy').textContent = stageCopy(id, p);
     const sf = $('#springFill');
     if (sf) {
