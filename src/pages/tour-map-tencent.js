@@ -1,7 +1,10 @@
 /* 游览页的腾讯地图（JavaScript API GL，命名空间 TMap）。
    由 tour-map.js 调用，对外是 HL.realMap = { status, reason, message, render(el), ping(loc), setMode(mode) }。
 
-   加载顺序：src/config.local.js（本机 Key，不进仓库）→ map.qq.com/api/gljs → 创建地图。
+   加载顺序：src/config.local.js → map.qq.com/api/gljs → 创建地图。config.local.js 二选一：
+     - 本机开发：HL.config.tmapKey 写 Key（文件不进仓库），JSAPI 直接带 Key 加载；
+     - 线上：由 worker/index.js 生成，只有 HL.config.tmapProxy（代理地址），JSAPI 不带 Key 加载，
+       需要 Key 的请求走腾讯官方的代理转发，Key 不进浏览器。
    任何一步失败都把 status 置为 'failed'，tour-map.js 会退回内置示意图。
 
    画在地图上的东西：
@@ -51,13 +54,17 @@
     rm.status = 'loading';
     await loadScript('src/config.local.js').catch(() => { /* 没有本机配置就是没有 Key */ });
     const key = String(HL.config.tmapKey || '').trim();
-    if (!key) return fail('nokey', '未配置地图 Key');
+    const proxy = String(HL.config.tmapProxy || '').trim();
+    if (!key && !proxy) return fail('nokey', '未配置地图 Key');
     if (!hasWebGL()) return fail('webgl', '浏览器不支持 WebGL');
+    /* 官方代理方案：必须在加载 JSAPI 之前声明，名字由腾讯规定 */
+    if (!key) window._TMapSecurityConfig = { serviceHost: proxy };
+    const keyArg = key ? `&key=${encodeURIComponent(key)}` : '';
     const ok = await new Promise(resolve => {
       const timer = setTimeout(() => resolve(false), LOAD_TIMEOUT);
-      /* JSAPI 用全局回调通知加载完成，这是本项目唯一的额外全局名 */
+      /* JSAPI 用全局回调通知加载完成（与 _TMapSecurityConfig 一样是腾讯要求的全局名） */
       window.__hlTmapReady = () => { clearTimeout(timer); resolve(true); };
-      loadScript(`https://map.qq.com/api/gljs?v=1.exp&key=${encodeURIComponent(key)}&callback=__hlTmapReady`)
+      loadScript(`https://map.qq.com/api/gljs?v=1.exp${keyArg}&callback=__hlTmapReady`)
         .catch(() => { clearTimeout(timer); resolve(false); });
     });
     if (!ok || !window.TMap) return fail('network', '地图加载失败');
