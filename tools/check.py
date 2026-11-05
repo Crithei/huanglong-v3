@@ -188,6 +188,19 @@ if guide is not None:
         if not (isinstance(pr.get("chips"), list) and pr["chips"]):
             err("%s：chips 至少要有一个常用问题" % where)
 
+# ---------- 数字人配图 data/photos.js ----------
+photos = load_data("photos")
+if photos is not None:
+    for k, ph in enumerate(photos):
+        where = "photos[%d] %s" % (k, ph.get("title", "?"))
+        if not ph.get("title") or not ph.get("keywords"):
+            err("%s：缺少 title 或 keywords" % where)
+        bs = ph.get("boards") or [ph.get("board")]
+        if not all(b in ("public", "karst", "orchid", "biodiv") for b in bs):
+            err("%s：board 应为 public / karst / orchid / biodiv" % where)
+        check_asset(ph.get("file", ""), where)
+        check_url(ph.get("source", ""), where)
+
 # ---------- 徽章 data/badges.js ----------
 badges = load_data("badges")
 if badges is not None and stations is not None:

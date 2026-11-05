@@ -144,6 +144,48 @@
       `<li><b>${esc(c.title || '')}</b> ${esc(String(c.body || '').replace(/\s+/g, '').slice(0, 48))}…</li>`).join('')}</ol></details>`;
   }
 
+  /* ---------- 回答配图（沿用交接包 matchPhotos 的规则，图库在 src/data/photos.js） ----------
+     只放强相关的图：问句点名了条目（完整名或别名），或回答正文写出了完整名称；只被泛称带过的不放。
+     v3 加了一条：问句里被更长的词完整盖住的短词不算点名（问「五彩池」时，里面的「彩池」不再拉出泛泛的彩池图）。
+     每个点名的对象只出一张，最多 4 张；同一对象的几张图轮换着出，同一会话尽量不重复。 */
+  const PHOTOS = D.photos || [], PHOTO_MAX = 4, shownPhotos = new Set();
+  function matchPhotos(board, q, answer) {
+    const pool = [];
+    PHOTOS.forEach((m, i) => { if ((m.boards || [m.board]).includes(board) && m.title) pool.push(i); });
+    const hits = [];   // 问句里命中的 [位置, 关键词, 图]
+    for (const i of pool) for (const k of PHOTOS[i].keywords || []) { const p = q.indexOf(k); if (p >= 0) hits.push([p, k, i]); }
+    const covered = ([p, k]) => hits.some(([p2, k2]) => k2.length > k.length && p2 <= p && p + k.length <= p2 + k2.length);
+    const scored = [], named = new Set();
+    for (const h of hits.filter(h => !covered(h)).sort((x, y) => x[0] - y[0] || y[1].length - x[1].length)) {
+      if (named.has(h[2])) continue;
+      named.add(h[2]); scored.push([1, h[0], h[2], h[1]]);
+    }
+    for (const i of pool) {
+      if (named.has(i) || hits.some(h => h[2] === i)) continue;
+      const ia = answer.indexOf(PHOTOS[i].title); if (ia >= 0) scored.push([2, ia, i, PHOTOS[i].title]);
+    }
+    scored.sort((x, y) => x[0] - y[0] || x[1] - y[1]);
+    const groups = new Map();   // 按点名的词分组：同一个词只出一张
+    for (const [, , i, key] of scored) { if (!groups.has(key)) groups.set(key, []); groups.get(key).push(i); }
+    return [...groups.values()].slice(0, PHOTO_MAX).map(list => {
+      const i = list.find(x => !shownPhotos.has(x)); const pick = i === undefined ? list[0] : i;
+      shownPhotos.add(pick); return pick;
+    });
+  }
+  const photoSrc = m => encodeURI(m.file);
+  const photosBlock = list => (list.length ? `<div class="g-photos">${list.map(i => { const m = PHOTOS[i];
+    return `<button type="button" class="g-photo" data-act="guide-photo" data-i="${i}" aria-label="看大图：${esc(m.title)}"><img src="${photoSrc(m)}" alt="" loading="lazy"><span>${esc(m.title)}</span></button>`; }).join('')}</div>` : '');
+
+  /* 点配图看大图，点任意处关闭 */
+  HL.act('guide-photo', el => {
+    const m = PHOTOS[Number(el.dataset.i)]; if (!m) return;
+    let box = document.getElementById('photo-view');
+    if (!box) { box = document.createElement('div'); box.id = 'photo-view'; box.className = 'photo-view'; document.body.appendChild(box); box.onclick = e => { if (!e.target.closest('a')) box.hidden = true; }; }
+    const url = HL.safeUrl(m.source);
+    box.innerHTML = `<img src="${photoSrc(m)}" alt="${esc(m.title)}"><b>${esc(m.title)}</b>${m.credit ? `<span>${esc(m.credit)}</span>` : ''}${url ? `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">图片来源页</a>` : ''}<small>点任意处关闭</small>`;
+    box.hidden = false;
+  });
+
   /* 回答里出现「请切换到【华屿】」之类时，给一个换角色的按钮 */
   function handoffActs(text) {
     const named = k => text.includes('【' + G.personas[k].name) || text.includes(G.personas[k].name + '】');
@@ -190,10 +232,10 @@
         if (r) { if (r.html) html += r.html; acts.push(...r.acts); }
       }
       acts.push(...handoffActs(text));
-      return { html: html + sourcesBlock(chunks), acts: acts.slice(0, 4), who: p.name };
+      return { html: html + photosBlock(matchPhotos(p.board, q, text.replace(CMD, ''))) + sourcesBlock(chunks), acts: acts.slice(0, 4), who: p.name };
     },
     takePlan() { const p = pendingPlan; pendingPlan = null; return p; },
-    reset() { history.length = 0; },
+    reset() { history.length = 0; shownPhotos.clear(); },
   };
 
   async function fallback(q, ctx, err) {

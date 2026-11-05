@@ -24,7 +24,10 @@ if check.returncode:
 
 # assets/ 下（含子文件夹：photos、stamps、badges、guide）的图片转成 data URI，替换所有文本里的 "assets/…"。
 assets = {}
+SKIP = os.path.join(ROOT, "assets", "guide", "photos")  # 数字人配图图库约 6 MB，只在云端回答里出现，单文件版用不到
 for dirpath, _, files in os.walk(os.path.join(ROOT, "assets")):
+    if dirpath.startswith(SKIP):
+        continue
     for fn in sorted(files):
         path = os.path.join(dirpath, fn)
         mime = mimetypes.guess_type(fn)[0]
