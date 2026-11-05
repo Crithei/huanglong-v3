@@ -1,5 +1,5 @@
 /* 数字人导游：云端问答配置与四位角色。内容来自「黄龙数字人网页端交接包 20261102」（index.html 的 CHARS 与 buildSystem），原文保留。
-   publishableKey 是云端的公开只读密钥（交接文档：可公开、可进仓库），不是写权限密钥；云端按来源域名校验，换域名要请应用所有者加白名单。
+   publishableKey 是云端的公开只读密钥（交接文档：可公开、可进仓库），不是写权限密钥；云端按来源域名校验：本机 localhost 直连 endpoint；线上域名不在白名单里，走 worker/index.js 的同源代理 /cloud。
    等号右边必须是合法 JSON，运行 python tools/check.py 校验。 */
 HL.data.guide = {
   "cloud": {

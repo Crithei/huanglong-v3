@@ -5,7 +5,8 @@
      2. 模型可以在回答末尾写一行 <<cmd {"name":…,"args":{…}}>>，这里按白名单校验后变成对话里的按钮，
         由游客点了才生效；改路线还要再确认、可撤销。打卡、清空记录等永远不开放给模型。
    云端不通，或知识库一条都没检索到时，退回内置规则回答（HL.guide.rules）。
-   配置与四位角色在 src/data/guide.js；SDK 在 vendor/workbuddy/，第一次提问时才加载。 */
+   配置与四位角色在 src/data/guide.js；SDK 在 vendor/workbuddy/，第一次提问时才加载。
+   线上由 worker 生成的 config.local.js 给出 HL.config.cloudProxy（同源代理 /cloud），有它就走代理，见 worker/index.js。 */
 (() => {
   'use strict';
   const { esc, S, idx, data: D } = HL;
@@ -27,7 +28,7 @@
         document.head.appendChild(s);
       }).then(() => {
         cloud = window.WorkBuddyCloud.createWorkBuddyCloud({
-          endpoint: G.cloud.endpoint, oauthRelayBaseUrl: G.cloud.oauthRelayBaseUrl, publishableKey: G.cloud.publishableKey,
+          endpoint: (HL.config && HL.config.cloudProxy) || G.cloud.endpoint, oauthRelayBaseUrl: G.cloud.oauthRelayBaseUrl, publishableKey: G.cloud.publishableKey,
         });
         return cloud;
       });
