@@ -56,7 +56,7 @@ async function proxyTmap(request, env, url) {
    平台正式放行后：把 src/data/guide.js 的 proxy 删掉，再删掉这一段。 */
 const CLOUD_UPSTREAM = 'https://huanglong-digital-human.app.workbuddy.host';
 const CLOUD_ALLOWED = [
-  /^\/\.cloud\/database\/rest\/v1\/rpc\/kb_search$/,
+  /^\/\.cloud\/database\/rest\/(?:v1\/)?rpc\/kb_search$/, // SDK 实际请求不带 v1，部署包文档里带
   /^\/\.cloud\/llm\/(?:[\w-]+\/)*chat\/completions$/,
 ];
 

@@ -22,11 +22,14 @@
   function loadSdk() {
     if (cloud) return Promise.resolve(cloud);
     if (!sdkLoading) {
-      sdkLoading = new Promise((resolve, reject) => {
+      const script = (src, must) => new Promise((resolve, reject) => {
         const s = document.createElement('script');
-        s.src = G.cloud.sdk; s.onload = resolve; s.onerror = () => reject(new Error('sdk'));
+        s.src = src; s.onload = resolve; s.onerror = () => (must ? reject(new Error(src)) : resolve());
         document.head.appendChild(s);
-      }).then(() => {
+      });
+      /* 代理地址写在 config.local.js 里；地图可能还没打开、没读过它，这里先读一次（读不到就直连） */
+      sdkLoading = (HL.config.cloudProxy ? Promise.resolve() : script('src/config.local.js', false))
+        .then(() => script(G.cloud.sdk, true)).then(() => {
         cloud = window.WorkBuddyCloud.createWorkBuddyCloud({
           endpoint: (HL.config && HL.config.cloudProxy) || G.cloud.endpoint, oauthRelayBaseUrl: G.cloud.oauthRelayBaseUrl, publishableKey: G.cloud.publishableKey,
         });
