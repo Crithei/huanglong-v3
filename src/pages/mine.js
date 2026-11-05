@@ -1,9 +1,9 @@
-/* 我的：进度环 → 本次路线 → 山水护照 → 徽章与贴纸（含一滴水入口） → 想去的景点 → 想要的文创 → 旅行记录。
+/* 我的：进度环 → 本次路线 → 山水护照 → 徽章与贴纸（含一滴水入口） → 黄龙生灵 → 想去的景点 → 想要的文创 → 旅行记录。
    除「旅行记录」来自 cards.js 的 mine，其余都由本机状态即时生成。 */
 (() => {
   'use strict';
   const { $, esc, icon, tidy, S, idx, data: D } = HL;
-  const ST = D.stations;
+  const ST = D.stations, SP = D.badges.species || [];
 
   function render() {
     const act = HL.active();
@@ -52,6 +52,16 @@
           sub: `${HL.waterDone()} / 4 章${S.water.badgeAt ? ' · 已收下「山水同行者」' : ' · 到关联景点打卡后解锁'}` }).replace('data-act="go-tour"', 'data-act="go-tour" data-panel="water"')}</ul>
       </section>
 
+      <section class="sec" aria-labelledby="h-species">
+        <div class="sec-h"><h2 id="h-species">黄龙生灵</h2><span class="aside">收下 ${S.species.length} / ${SP.length}</span></div>
+        <p class="sec-note">${esc(D.badges.speciesRule)}</p>
+        <div class="badges species">${SP.map(sp => {
+          const g = S.species.includes(sp.id);
+          return `<button class="badge${g ? ' is-got' : ''}" type="button" data-act="species" data-id="${sp.id}" aria-label="${esc(sp.name)}，${g ? '已收下' : '未收下'}">
+            <img src="${esc(sp.img)}" alt="" loading="lazy" decoding="async"><b>${esc(sp.name)}</b><span>${g ? '已收下' : esc(sp.group)}</span></button>`;
+        }).join('')}</div>
+      </section>
+
       <section class="sec" aria-labelledby="h-wish">
         <div class="sec-h"><h2 id="h-wish">想去的景点</h2></div>
         ${S.wish.length ? `<ul class="rows">${S.wish.map(id => idx.station[id]).map(s => HL.row({
@@ -98,6 +108,26 @@
         <p class="note">打卡是手动记录，不核验位置；徽章只作纪念，不能兑换实物。</p>`,
       foot: b.id === 'pool' ? `<div class="sheet-foot"><button class="btn btn-primary" type="button" data-act="lab-open">${icon('pool')}打开彩池实验室</button></div>` : '',
     });
+  });
+
+  /* 生灵徽章详情：按钮问生物多样性导游（qiyu），问完就收下（逻辑在 features/guide.js 的 collectSpecies） */
+  HL.act('species', el => {
+    const sp = SP.find(x => x.id === el.dataset.id);
+    if (!sp) return;
+    const g = S.species.includes(sp.id), who = D.guide && D.guide.personas.qiyu;
+    HL.openSheet({
+      title: sp.name,
+      body: `<div class="sheet-media square badge-media"><img src="${esc(sp.img)}" alt="${esc(sp.name)}徽章"${g ? '' : ' class="is-locked"'}></div>
+        <p class="lead">${g ? '已收下' : '还没收下：向数字人导游问问它'}</p>
+        <p class="latin"><i>${esc(sp.latin)}</i> · ${esc(sp.en)}</p>
+        ${g ? `<p>${esc(sp.description)}</p>` : ''}
+        <p class="note">徽章只作纪念，不能兑换实物。野外遇见野生动物请保持距离，不追赶、不投喂。</p>`,
+      foot: `<div class="sheet-foot"><button class="btn ${g ? 'btn-ghost' : 'btn-primary'}" type="button" data-act="species-ask" data-id="${sp.id}">${icon('chat')}${who ? `问问${esc(who.name)}` : '问问导游'}</button></div>`,
+    });
+  });
+  HL.act('species-ask', el => {
+    const sp = SP.find(x => x.id === el.dataset.id);
+    if (sp) HL.askGuide(`给我讲讲${sp.name}`, 'qiyu');
   });
 
   HL.pages.mine = { render };

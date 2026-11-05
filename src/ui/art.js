@@ -71,7 +71,10 @@
     : `<div class="${cls}" style="--c:${st.tint}" role="img" aria-label="${esc(st.name)}示意图">${sceneArt(st)}</div>`;
 
   /* 文创商品占位图。新增商品没有专门画法时用明信片样式。 */
+  /* 有款式图（variants）的商品直接用第一张图当封面（fit: contain 时完整显示不裁切），其余用下面的示意插画 */
   HL.productArt = id => {
+    const p = HL.idx.product[id];
+    if (p && p.variants && p.variants.length) return `<img class="product-img${p.fit === 'contain' ? ' is-contain' : ''}" src="${HL.esc(encodeURI(p.variants[0].img))}" alt="" loading="lazy" decoding="async">`;
     const v = 'viewBox="0 0 200 200" aria-hidden="true"';
     const rims = (x, y, w, colors) => colors.map((c, k) => {
       const yy = y + k * 26;

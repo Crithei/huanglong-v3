@@ -24,6 +24,7 @@ if check.returncode:
 
 # assets/ 下（含子文件夹：photos、stamps、badges、guide）的图片转成 data URI，替换所有文本里的 "assets/…"。
 assets = {}
+mimetypes.add_type("image/webp", ".webp")  # Windows 上的 Python 不一定认识 webp，不登记会被漏掉
 SKIP = os.path.join(ROOT, "assets", "guide", "photos")  # 数字人配图图库约 6 MB，只在云端回答里出现，单文件版用不到
 for dirpath, _, files in os.walk(os.path.join(ROOT, "assets")):
     if dirpath.startswith(SKIP):

@@ -1,4 +1,4 @@
-/* 内容卡片：首页快捷入口、游玩灵感、服务页三组入口、文创商品、我的页旅行记录。
+/* 内容卡片：首页快捷入口、游玩灵感、服务页三组入口、文创商品（variants 为款式图，第一张是封面）、我的页旅行记录。
    字段说明见 docs/开发指南.md 的「数据」一节。
    等号右边必须是合法 JSON（双引号、无尾逗号、不写注释），运行 python tools/check.py 校验。 */
 HL.data.cards = {
@@ -215,6 +215,259 @@ HL.data.cards = {
     }
   ],
   "products": [
+    {
+      "id": "shop-orchid-frame",
+      "kind": "product",
+      "title": "兰花镂空书签",
+      "subtitle": "金属框里留一枝黄龙兰花",
+      "body": "以黄龙的四种野生兰花为题，花和叶用珐琅填色，嵌在细长的金属框里，有金色和银色两种框。\n野生兰花请只看不采，把它们带回家的方式就是这样一枚书签。",
+      "go": "",
+      "cta": "",
+      "url": "",
+      "author": "",
+      "variants": [
+        {
+          "label": "盔花兰 · 金框",
+          "img": "assets/shop/orchid-galearis-frame.webp"
+        },
+        {
+          "label": "羊耳蒜 · 银框",
+          "img": "assets/shop/orchid-liparis-frame.webp"
+        },
+        {
+          "label": "舌喙兰 · 银框",
+          "img": "assets/shop/orchid-hemipilia-frame.webp"
+        },
+        {
+          "label": "舌喙兰 · 金框",
+          "img": "assets/shop/orchid-hemipilia-frame-gold.webp"
+        },
+        {
+          "label": "鸟巢兰 · 银框",
+          "img": "assets/shop/orchid-neottia-frame.webp"
+        },
+        {
+          "label": "鸟巢兰 · 金框",
+          "img": "assets/shop/orchid-neottia-frame-gold.webp"
+        }
+      ]
+    },
+    {
+      "id": "shop-orchid-tassel",
+      "kind": "product",
+      "title": "兰花流苏书签",
+      "subtitle": "花枝书签，链尾坠一朵小花",
+      "body": "同一套四种兰花，做成镂空花枝的书签，细链末端挂一朵单独的小花，夹在书页外也看得见。",
+      "go": "",
+      "cta": "",
+      "url": "",
+      "author": "",
+      "variants": [
+        {
+          "label": "盔花兰",
+          "img": "assets/shop/orchid-galearis-tassel.webp"
+        },
+        {
+          "label": "羊耳蒜",
+          "img": "assets/shop/orchid-liparis-tassel.webp"
+        },
+        {
+          "label": "舌喙兰",
+          "img": "assets/shop/orchid-hemipilia-tassel.webp"
+        },
+        {
+          "label": "鸟巢兰",
+          "img": "assets/shop/orchid-neottia-tassel.webp"
+        }
+      ]
+    },
+    {
+      "id": "shop-orchid-pin",
+      "kind": "product",
+      "title": "兰花珐琅徽章",
+      "subtitle": "椭圆花框徽章，配一枚花朵胸针",
+      "body": "椭圆金边花框里是整株兰花，另配一枚单朵花的小胸针，可以分开别。四种兰花各有一款底色。",
+      "go": "",
+      "cta": "",
+      "url": "",
+      "author": "",
+      "variants": [
+        {
+          "label": "盔花兰",
+          "img": "assets/shop/orchid-galearis-pin.webp"
+        },
+        {
+          "label": "羊耳蒜",
+          "img": "assets/shop/orchid-liparis-pin.webp"
+        },
+        {
+          "label": "舌喙兰",
+          "img": "assets/shop/orchid-hemipilia-pin.webp"
+        },
+        {
+          "label": "鸟巢兰",
+          "img": "assets/shop/orchid-neottia-pin.webp"
+        }
+      ]
+    },
+    {
+      "id": "shop-species-badges",
+      "kind": "product",
+      "title": "黄龙生灵徽章",
+      "subtitle": "十种珍稀动物，一套金章",
+      "body": "和「我的 · 黄龙生灵」是同一套图案：大熊猫、川金丝猴、绿尾虹雉等十种动物，六边形金章上写着学名和英文名。\n线上的徽章问导游就能收下，这里是可以带走的实物款。",
+      "go": "mine",
+      "cta": "",
+      "url": "",
+      "author": "",
+      "variants": [
+        {
+          "label": "大熊猫",
+          "img": "assets/species/giant-panda.webp"
+        },
+        {
+          "label": "小熊猫",
+          "img": "assets/species/red-panda.webp"
+        },
+        {
+          "label": "川金丝猴",
+          "img": "assets/species/golden-monkey.webp"
+        },
+        {
+          "label": "羚牛",
+          "img": "assets/species/takin.webp"
+        },
+        {
+          "label": "红腹锦鸡",
+          "img": "assets/species/golden-pheasant.webp"
+        },
+        {
+          "label": "绿尾虹雉",
+          "img": "assets/species/chinese-monal.webp"
+        },
+        {
+          "label": "蓝马鸡",
+          "img": "assets/species/blue-eared-pheasant.webp"
+        },
+        {
+          "label": "金雕",
+          "img": "assets/species/golden-eagle.webp"
+        },
+        {
+          "label": "黑头噪鸦",
+          "img": "assets/species/sichuan-jay.webp"
+        },
+        {
+          "label": "黑额山噪鹛",
+          "img": "assets/species/snowy-cheeked-laughingthrush.webp"
+        }
+      ],
+      "fit": "contain"
+    },
+    {
+      "id": "shop-sticker",
+      "kind": "product",
+      "title": "黄龙生灵贴纸",
+      "subtitle": "林间和高处，两张贴纸页",
+      "body": "把黄龙山里的动物画成圆滚滚的贴纸，分「林间」和「高处」两页，可以贴在手账、水杯和行李箱上。",
+      "go": "",
+      "cta": "",
+      "url": "",
+      "author": "",
+      "variants": [
+        {
+          "label": "林间",
+          "img": "assets/shop/sticker-forest.webp"
+        },
+        {
+          "label": "高处",
+          "img": "assets/shop/sticker-alpine.webp"
+        }
+      ]
+    },
+    {
+      "id": "shop-stamps",
+      "kind": "product",
+      "title": "生灵邮票贴",
+      "subtitle": "黄喉貂、豹猫、小熊猫、川金丝猴",
+      "body": "四枚齿孔边的邮票贴纸，画的是黄喉貂、豹猫、小熊猫和川金丝猴，适合贴在明信片和手账上。",
+      "go": "",
+      "cta": "",
+      "url": "",
+      "author": "",
+      "variants": [
+        {
+          "label": "四连张",
+          "img": "assets/shop/stamps-four.webp"
+        }
+      ]
+    },
+    {
+      "id": "shop-bird-postcards",
+      "kind": "product",
+      "title": "山林鸟类明信片",
+      "subtitle": "雪线上下的鸟",
+      "body": "以黄龙及周边山地的鸟为题的插画明信片：红腹锦鸡、绿尾虹雉、蓝马鸡、金雕、黑颈鹤，另有一张九种小鸟的习作。",
+      "go": "",
+      "cta": "",
+      "url": "",
+      "author": "",
+      "variants": [
+        {
+          "label": "红腹锦鸡",
+          "img": "assets/shop/ill-golden-pheasant.webp"
+        },
+        {
+          "label": "绿尾虹雉",
+          "img": "assets/shop/ill-chinese-monal.webp"
+        },
+        {
+          "label": "蓝马鸡",
+          "img": "assets/shop/ill-blue-eared-pheasant.webp"
+        },
+        {
+          "label": "蓝马鸡 · 特写",
+          "img": "assets/shop/ill-blue-eared-pheasant-close.webp"
+        },
+        {
+          "label": "金雕",
+          "img": "assets/shop/ill-golden-eagle.webp"
+        },
+        {
+          "label": "黑颈鹤",
+          "img": "assets/shop/ill-black-necked-crane.webp"
+        },
+        {
+          "label": "九种小鸟",
+          "img": "assets/shop/ill-nine-birds.webp"
+        }
+      ]
+    },
+    {
+      "id": "shop-takin-plush",
+      "kind": "product",
+      "title": "羚牛发声玩偶",
+      "subtitle": "约 20 厘米，捏一下会叫",
+      "body": "把高山上的羚牛做成一团毛茸茸的玩偶，高约 20 厘米，捏一下会出声。另有一款皱着眉、背着金色爆炸星的「生气版」。",
+      "go": "",
+      "cta": "",
+      "url": "",
+      "author": "",
+      "variants": [
+        {
+          "label": "仰头叫",
+          "img": "assets/shop/takin-plush.webp"
+        },
+        {
+          "label": "背面",
+          "img": "assets/shop/takin-plush-back.webp"
+        },
+        {
+          "label": "生气版",
+          "img": "assets/shop/takin-plush-angry.webp"
+        }
+      ]
+    },
     {
       "id": "shop-pool-magnet",
       "kind": "product",

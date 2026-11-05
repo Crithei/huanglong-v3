@@ -38,13 +38,29 @@
     });
   };
 
+  /* 商品款式图：大图 + 一排缩略图，点缩略图换大图 */
+  const variantsBlock = p => {
+    const v = p.variants;
+    return `<div class="sheet-media variant-main"><img id="variant-img" src="${esc(encodeURI(v[0].img))}" alt="${esc(p.title + ' · ' + v[0].label)}"></div>
+      ${v.length > 1 ? `<div class="variants" role="group" aria-label="款式">${v.map((x, i) =>
+        `<button type="button" data-act="product-variant" data-src="${esc(encodeURI(x.img))}" data-alt="${esc(p.title + ' · ' + x.label)}" aria-pressed="${i === 0}"><img src="${esc(encodeURI(x.img))}" alt="" loading="lazy"><span>${esc(x.label)}</span></button>`).join('')}</div>` : ''}
+      <p class="note">商品图为设计效果图，实物以上架时为准。</p>`;
+  };
+  HL.act('product-variant', el => {
+    const img = document.getElementById('variant-img');
+    if (!img) return;
+    img.src = el.dataset.src; img.alt = el.dataset.alt;
+    el.parentNode.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b === el)));
+  });
+
   HL.openProduct = id => {
     const p = idx.product[id], on = S.want.includes(id), url = HL.safeUrl(p.url);
     HL.openSheet({
       title: p.title,
-      body: `<div class="sheet-media square">${HL.productArt(id)}</div><p class="lead">${esc(p.subtitle)}</p>${paras(p.body)}`,
+      body: `${p.variants && p.variants.length ? variantsBlock(p) : `<div class="sheet-media square">${HL.productArt(id)}</div>`}<p class="lead">${esc(p.subtitle)}</p>${paras(p.body)}`,
       foot: `<div class="sheet-foot">${url
         ? `<a class="btn btn-ghost" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(p.cta || '查看商品')}</a>`
+        : p.go && GO[p.go] ? `<button class="btn btn-ghost" type="button" data-act="product-go" data-id="${id}">${icon(GO[p.go].icon)}${p.go === 'mine' ? '看我收下的生灵' : GO[p.go].label}</button>`
         : '<span class="hint">示意商品，购买入口待接入</span>'}
         <button class="btn ${on ? 'is-on' : 'btn-ghost'}" type="button" data-act="want" data-id="${id}" aria-pressed="${on}">${icon(on ? 'check' : 'heart')}${on ? '已在想要清单' : '想要'}</button></div>`,
     });
@@ -86,6 +102,7 @@
     HL.toast(on ? '已从想去的景点移除' : '已收进想去的景点');
   });
 
+  HL.act('product-go', el => { const p = idx.product[el.dataset.id]; HL.closeSheet(); GO[p.go].run(); });
   HL.act('want', el => {
     const id = el.dataset.id, on = S.want.includes(id);
     S.want = on ? S.want.filter(x => x !== id) : [...S.want, id];

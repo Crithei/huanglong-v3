@@ -160,6 +160,13 @@ if cards is not None:
         warn("服务页有 %d 张 featured 卡片，顶部醒目入口建议只放一张" % featured)
     for k, p in enumerate(cards.get("products", [])):
         check_card(p, "cards.products[%d] %s" % (k, p.get("id", "?")), need_icon=False)
+        for v in p.get("variants", []):
+            if not v.get("label") or not v.get("img"):
+                err("cards.products[%d] %s：variants 每项要有 label 和 img" % (k, p.get("id", "?")))
+            else:
+                check_asset(v["img"], "cards.products[%d] %s 款式「%s」" % (k, p.get("id", "?"), v["label"]))
+        if p.get("fit", "cover") not in ("cover", "contain"):
+            err("cards.products[%d] %s：fit 只能是 cover 或 contain" % (k, p.get("id", "?")))
     for k, c in enumerate(cards.get("mine", [])):
         check_card(c, "cards.mine[%d] %s" % (k, c.get("id", "?")))
 
@@ -216,6 +223,26 @@ if badges is not None and stations is not None:
         for i in b.get("poiIds", []):
             if i not in station_ids:
                 err("%s：poiIds 里没有景点「%s」" % (where, i))
+    # 生灵徽章：问导游时问题里出现 keywords 就收下，同一个关键词不能分给两个物种
+    seen_kw = {}
+    for s in badges.get("species", []):
+        where = "badges.species %s" % s.get("id", "?")
+        for f in ("id", "name", "latin", "en", "group", "img", "description"):
+            if not s.get(f):
+                err("%s：缺少 %s" % (where, f))
+        if s.get("id"):
+            claim(s["id"], where)
+        if s.get("img"):
+            check_asset(s["img"], where)
+        kws = s.get("keywords") or []
+        if s.get("name") not in kws:
+            err("%s：keywords 里要包含物种名「%s」" % (where, s.get("name")))
+        for kw in kws:
+            if kw in seen_kw:
+                err("%s：关键词「%s」已经给了 %s" % (where, kw, seen_kw[kw]))
+            seen_kw[kw] = s.get("id")
+    if badges.get("species") and not badges.get("speciesRule"):
+        err("badges：有 species 时要写 speciesRule（我的页显示的规则说明）")
 
 # ---------- 首页配置 ----------
 if meta is not None and stations is not None:

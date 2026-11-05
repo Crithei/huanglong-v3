@@ -40,6 +40,21 @@
     };
   }
 
+  /* 生灵徽章：问题里提到了哪些物种（规则见 data/badges.js 的 species）。
+     长关键词先匹配并抹掉，「小熊猫」里的「熊猫」就不会再算成大熊猫。 */
+  const SPECIES = (D.badges && D.badges.species) || [];
+  const SP_KEYS = SPECIES.flatMap(sp => sp.keywords.map(k => [k, sp])).sort((a, b) => b[0].length - a[0].length);
+  HL.speciesIn = text => {
+    let rest = String(text || '');
+    const hit = [];
+    SP_KEYS.forEach(([k, sp]) => {
+      if (!rest.includes(k)) return;
+      rest = rest.split(k).join(' ');
+      if (!hit.includes(sp)) hit.push(sp);
+    });
+    return SPECIES.filter(sp => hit.includes(sp));
+  };
+
   const rules = {
     reply(q, { station: s }) {
       if (/累|走不动|少走|时间不够|赶时间|减站/.test(q)) return adjustReply();
@@ -57,6 +72,10 @@
       if (/索道|下山|缆车|接驳/.test(q)) {
         const t = HL.nearest('transit', s);
         return { html: `<p>离这里最近的接驳点是「${esc(t.f.name)}」，直线${HL.fmtDist(t.d)}。索道运营时间以现场公告为准。</p>`, acts: [{ k: 'fac:' + t.f.id, label: '在地图上看', primary: true }] };
+      }
+      const sps = HL.speciesIn(q);
+      if (sps.length) {
+        return { html: sps.map(sp => `<p><b>${esc(sp.name)}</b>：${esc(sp.description)}</p>`).join('') + '<p>野生动物多在清晨和傍晚活动，栈道上偶遇的机会不大。遇见了请保持距离，不追赶、不投喂。</p>' };
       }
       if (/拍|照片|机位/.test(q)) return { html: `<p>${esc(s.name)}：${esc(s.photoTip)}</p>`, acts: [{ k: 'station', label: '打开本站攻略' }] };
       if (/看什么|这里|介绍|讲讲|是什么/.test(q)) {
@@ -96,8 +115,20 @@
     const wait = new Promise(r => setTimeout(r, 380));
     const onStream = html => { msg.html = html; renderChat(); };
     Promise.all([Promise.resolve().then(() => HL.guide.provider.reply(q, context(), onStream)), wait])
-      .then(([a]) => a, () => ({ html: '<p>暂时没能回答，请稍后再试。</p>' }))
-      .then(a => { Object.assign(msg, a, { pending: false }); busy = false; renderChat(); });
+      .then(([a]) => a, () => ({ html: '<p>暂时没能回答，请稍后再试。</p>', failed: true }))
+      .then(a => { Object.assign(msg, a, { pending: false }); busy = false; if (!a.failed) collectSpecies(q, msg); renderChat(); });
+  }
+
+  /* 问题里提到、还没收下的物种：记进 S.species，回答下方加一行提示，并弹出提示条 */
+  function collectSpecies(q, msg) {
+    const fresh = HL.speciesIn(q).filter(sp => !S.species.includes(sp.id));
+    if (!fresh.length) return;
+    S.species = [...S.species, ...fresh.map(sp => sp.id)];
+    HL.store.save();
+    if (HL.pages.mine) HL.pages.mine.render();
+    msg.html += `<div class="g-species">${fresh.map(sp =>
+      `<button type="button" data-act="species" data-id="${esc(sp.id)}"><img src="${esc(sp.img)}" alt=""><span>收下生灵徽章<b>${esc(sp.name)}</b></span></button>`).join('')}</div>`;
+    HL.toast(`收下生灵徽章「${fresh.map(sp => sp.name).join('」「')}」`);
   }
 
   function welcome() {

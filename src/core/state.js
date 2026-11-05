@@ -26,6 +26,7 @@
     visited: [],                    // 已打卡的站
     wish: [],                       // 想去的景点
     want: [],                       // 想要的文创
+    species: [],                    // 已收下的生灵徽章（问导游时提到该物种），见 data/badges.js 的 species
   });
 
   /* 水滴四章：交给 v1 的状态机校验（vendor/huanglong-water/follow-state.js）。
@@ -58,6 +59,8 @@
     const ids = (a, table) => (Array.isArray(a) ? a : []).filter(id => table[id]);
     v.off = ids(v.off, idx.station); v.visited = ids(v.visited, idx.station); v.wish = ids(v.wish, idx.station);
     v.want = ids(v.want, idx.product);
+    const sp = new Set(((HL.data.badges && HL.data.badges.species) || []).map(x => x.id));
+    v.species = [...new Set(Array.isArray(v.species) ? v.species : [])].filter(id => sp.has(id));
     if (!PAGES.includes(v.page)) v.page = 'home';
     if (!idx.station[v.current]) v.current = HL.data.stations[0].id;
     if (!PANELS.includes(v.panel)) v.panel = 'station';

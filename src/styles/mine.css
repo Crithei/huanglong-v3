@@ -37,3 +37,8 @@
 .badge.is-got b { color: var(--ink); }
 .badge-media { display: grid; place-items: center; background: #f6efd9; }
 .badge-media img { width: 70%; height: 70%; object-fit: contain; }
+
+/* 黄龙生灵：问导游解锁的物种徽章 */
+.sec-note { margin: -4px 0 10px; font-size: 12.5px; line-height: 1.5; color: var(--ink-2); }
+.badges.species .badge img { width: 64px; height: 72px; }
+.latin { font-size: 13px; color: var(--ink-2); }
