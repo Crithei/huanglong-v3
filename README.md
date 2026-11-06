@@ -134,8 +134,8 @@ python tools/check.py
 | 黄龙古寺 | `assets/photos/huanglong-ancient-temple.jpg` | Jmhullot · CC BY 3.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Huanglong_ancient_temple.jpg) |
 | 五彩池 | `assets/five-colored-pond.jpg` | Kounosu · CC BY-SA 3.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Water-of-Five-colored-Pond_Huanglong_Sichuan_China.jpg) |
 - 设施数据：高德地图 Web Service v3/place/around，查询于 2026-09-18。
-- `assets/stamps/`、`assets/badges/`：印章、徽章与贴纸，来自 v1 `assets/passport/`（原创 SVG）。
+- `assets/stamps/`、`assets/badges/`：印章、徽章与贴纸。六枚手绘章和主题徽章来自 v1 `assets/passport/`（原创 SVG）；另外 8 枚景点章由 `tools/make-stamps.py` 按同一套框生成。
 - `assets/guide/`：四位数字人头像，来自「黄龙数字人网页端交接包 20261102」。
 - `assets/guide/photos/`：数字人回答配图 45 张，同样来自交接包图库，索引在 `src/data/photos.js`，作者与协议写在每条的 `credit`、大图下方有显示。景区实景 18 张来自 Wikimedia Commons；生物多样性 7 张照片来自 iNaturalist（CC BY / CC0），另 20 张是项目自绘的图纸与物种设定图。兰花图库 150 张没有许可说明，暂未收入。单文件版不内嵌这些图。
 - `assets/species/`、`assets/shop/`：十枚生灵徽章，以及文创商店的兰花书签、兰花珐琅徽章、贴纸、邮票、鸟类明信片、羚牛玩偶效果图，来自项目组素材包「11-5」和「兰花文创」，已转成 webp 并压缩尺寸。
-- 其余插图（景点示意图、印章）由代码生成。
+- 其余插图（景点示意图）由代码生成。

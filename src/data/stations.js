@@ -174,7 +174,7 @@ HL.data.stations = [
     ],
     "checkedAt": "2026-11-02",
     "facts": [],
-    "stamp": null,
+    "stamp": "assets/stamps/liantai-fall.svg",
     "photo": {
       "src": "assets/photos/liantai-fall.jpg",
       "credit": "Leungcwd，CC BY-SA 3.0，Wikimedia Commons",
@@ -234,7 +234,7 @@ HL.data.stations = [
     ],
     "checkedAt": "2026-11-02",
     "facts": [],
-    "stamp": null,
+    "stamp": "assets/stamps/wash-body-viewpoint.svg",
     "photo": {
       "src": "assets/photos/wash-body-viewpoint.jpg",
       "credit": "Leungcwd，CC BY-SA 3.0，Wikimedia Commons",
@@ -435,7 +435,7 @@ HL.data.stations = [
         "3600 余平方米"
       ]
     ],
-    "stamp": null,
+    "stamp": "assets/stamps/mirror-pond.svg",
     "photo": {
       "src": "assets/photos/mirror-pond.jpg",
       "credit": "Leungcwd，CC BY-SA 3.0，Wikimedia Commons",
@@ -505,7 +505,7 @@ HL.data.stations = [
         "6840 平方米"
       ]
     ],
-    "stamp": null,
+    "stamp": "assets/stamps/suoluo-pond.svg",
     "photo": {
       "src": "assets/photos/suoluo-pond.jpg",
       "credit": "Leungcwd，CC BY-SA 3.0，Wikimedia Commons",
@@ -622,7 +622,7 @@ HL.data.stations = [
     ],
     "checkedAt": "2026-11-02",
     "facts": [],
-    "stamp": null,
+    "stamp": "assets/stamps/immortal-bridge.svg",
     "photo": {
       "src": "assets/photos/immortal-bridge.jpg",
       "credit": "rheins，CC BY 3.0，Wikimedia Commons",
@@ -685,7 +685,7 @@ HL.data.stations = [
         "约 500 平方米"
       ]
     ],
-    "stamp": null,
+    "stamp": "assets/stamps/huanglong-middle-temple.svg",
     "photo": {
       "src": "assets/photos/huanglong-middle-temple.jpg",
       "credit": "Jmhullot，CC BY 3.0，Wikimedia Commons",
@@ -752,7 +752,7 @@ HL.data.stations = [
         "676 米"
       ]
     ],
-    "stamp": null,
+    "stamp": "assets/stamps/huanglong-ancient-temple.svg",
     "photo": {
       "src": "assets/photos/huanglong-ancient-temple.jpg",
       "credit": "Jmhullot，CC BY 3.0，Wikimedia Commons",
@@ -817,7 +817,7 @@ HL.data.stations = [
         "高 30 米 · 长 50 米"
       ]
     ],
-    "stamp": null,
+    "stamp": "assets/stamps/huanglong-cave.svg",
     "photo": null
   },
   {
