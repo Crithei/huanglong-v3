@@ -17,11 +17,18 @@ HL.data.meta = {
   "finale": "five-color-pond",
   "finaleAltitude": "约 3576 米",
   "featured": [
-    "five-color-pond",
     "welcome-pond",
-    "zhengyan-chi",
-    "jinsha-pudi",
     "flying-waterfall",
-    "huanglong-middle-temple"
+    "liantai-fall",
+    "wash-body-viewpoint",
+    "jinsha-pudi",
+    "bonsai-pond",
+    "mirror-pond",
+    "suoluo-pond",
+    "zhengyan-chi",
+    "immortal-bridge",
+    "huanglong-middle-temple",
+    "huanglong-ancient-temple",
+    "five-color-pond"
   ]
 };

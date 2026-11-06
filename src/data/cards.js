@@ -456,50 +456,6 @@ HL.data.cards = {
           "img": "assets/shop/takin-plush-angry.webp"
         }
       ]
-    },
-    {
-      "id": "shop-pool-magnet",
-      "kind": "product",
-      "title": "彩池层叠冰箱贴",
-      "subtitle": "把一池碧色带回家",
-      "body": "以彩池池沿的层次与水色为灵感，展示层叠造型的纪念磁贴。",
-      "go": "",
-      "cta": "",
-      "url": "",
-      "author": ""
-    },
-    {
-      "id": "shop-field-notebook",
-      "kind": "product",
-      "title": "山水观察手账",
-      "subtitle": "记录旅途里的自然细节",
-      "body": "以黄龙山水与沿途观察为主题的随身手账，预留印章、照片与观察笔记的位置。",
-      "go": "",
-      "cta": "",
-      "url": "",
-      "author": ""
-    },
-    {
-      "id": "shop-water-bookmark",
-      "kind": "product",
-      "title": "一滴水书签",
-      "subtitle": "让水的旅程停在书页间",
-      "body": "以水滴和水路为主题的书签，将钙华形成的故事藏进日常阅读。",
-      "go": "",
-      "cta": "",
-      "url": "",
-      "author": ""
-    },
-    {
-      "id": "shop-mountain-postcard",
-      "kind": "product",
-      "title": "黄龙风景明信片",
-      "subtitle": "寄出山林与彩池的颜色",
-      "body": "以山林、瀑布与彩池为主题的风景明信片组，留下一句话与一次旅行的记忆。",
-      "go": "",
-      "cta": "",
-      "url": "",
-      "author": ""
     }
   ],
   "mine": [

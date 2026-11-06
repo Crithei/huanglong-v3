@@ -82,7 +82,7 @@ docs/
 | 给科普视频、小游戏、数字人作品接上网址 | `src/data/cards.js` 对应卡片的 `url`（完整 http/https 地址），`author` 写作者 |
 | 新增一个服务入口 | 在 `cards.js` 的对应组 `items` 里复制一张卡片，改 `id` 和内容 |
 | 换首页精选景观 | `src/data/meta.js` → `featured` |
-| 新增文创商品 | `cards.js` → `products`；有效果图就填 `variants`，没有再在 `src/ui/art.js` 的 `productArt` 里加一种占位图 |
+| 新增文创商品 | `cards.js` → `products`；填 `variants` 放效果图；没有效果图时显示 `src/ui/art.js` 里 `productArt` 的通用示意图 |
 | 改某一页的版式 | `src/pages/<页面>.js` 与 `src/styles/<页面>.css` |
 | 改数字人的人设、欢迎语、常用问题 | `src/data/guide.js`；问答流程在 `src/features/guide-cloud.js`，见开发指南「数字人导游」 |
 | 本机显示腾讯地图 | 复制 `src/config.example.js` 为 `src/config.local.js` 并填 Key（不进仓库），见开发指南「地图」 |
@@ -138,4 +138,4 @@ python tools/check.py
 - `assets/guide/`：四位数字人头像，来自「黄龙数字人网页端交接包 20261102」。
 - `assets/guide/photos/`：数字人回答配图 45 张，同样来自交接包图库，索引在 `src/data/photos.js`，作者与协议写在每条的 `credit`、大图下方有显示。景区实景 18 张来自 Wikimedia Commons；生物多样性 7 张照片来自 iNaturalist（CC BY / CC0），另 20 张是项目自绘的图纸与物种设定图。兰花图库 150 张没有许可说明，暂未收入。单文件版不内嵌这些图。
 - `assets/species/`、`assets/shop/`：十枚生灵徽章，以及文创商店的兰花书签、兰花珐琅徽章、贴纸、邮票、鸟类明信片、羚牛玩偶效果图，来自项目组素材包「11-5」和「兰花文创」，已转成 webp 并压缩尺寸。
-- 其余插图（景点示意图、四件示意文创、印章）由代码生成。
+- 其余插图（景点示意图、印章）由代码生成。

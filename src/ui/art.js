@@ -71,25 +71,12 @@
     : `<div class="${cls}" style="--c:${st.tint}" role="img" aria-label="${esc(st.name)}示意图">${sceneArt(st)}</div>`;
 
   /* 文创商品占位图。新增商品没有专门画法时用明信片样式。 */
-  /* 有款式图（variants）的商品直接用第一张图当封面（fit: contain 时完整显示不裁切），其余用下面的示意插画 */
+  /* 有款式图（variants）的商品直接用第一张图当封面（fit: contain 时完整显示不裁切），没有效果图的商品先用下面这张通用示意图 */
   HL.productArt = id => {
     const p = HL.idx.product[id];
     if (p && p.variants && p.variants.length) return `<img class="product-img${p.fit === 'contain' ? ' is-contain' : ''}" src="${HL.esc(encodeURI(p.variants[0].img))}" alt="" loading="lazy" decoding="async">`;
     const v = 'viewBox="0 0 200 200" aria-hidden="true"';
-    const rims = (x, y, w, colors) => colors.map((c, k) => {
-      const yy = y + k * 26;
-      return `<path d="M${x} ${yy + 6} q${w / 4} -10 ${w / 2} 0 t${w / 2} 0 V${yy + 34} H${x} Z" fill="${c}"/><path d="M${x} ${yy + 6} q${w / 4} -10 ${w / 2} 0 t${w / 2} 0" stroke="#f4ecd4" stroke-width="3" fill="none"/>`;
-    }).join('');
-    switch (id) {
-      case 'shop-pool-magnet':
-        return `<svg ${v}><rect width="200" height="200" fill="#e4eee8"/><rect x="44" y="48" width="112" height="112" rx="24" fill="#12666d" transform="translate(4 6)" opacity=".18"/><clipPath id="pm"><rect x="44" y="44" width="112" height="112" rx="24"/></clipPath><g clip-path="url(#pm)"><rect x="44" y="44" width="112" height="112" fill="#2a5444"/>${rims(44, 62, 112, ['#9ee1d8', '#64c8ce', '#3aa7ad', '#12666d'])}</g></svg>`;
-      case 'shop-field-notebook':
-        return `<svg ${v}><rect width="200" height="200" fill="#f1ead6"/><rect x="56" y="30" width="96" height="140" rx="8" fill="#17332d" transform="translate(4 5)" opacity=".2"/><rect x="56" y="30" width="96" height="140" rx="8" fill="#1d4a42"/><path d="M68 30v140" stroke="#0f2621" stroke-width="2"/><path d="M138 30v140" stroke="#c9a04b" stroke-width="5"/><circle cx="102" cy="96" r="22" fill="none" stroke="#c9a04b" stroke-width="3"/><path d="M88 92q7-5 14 0t14 0M88 101q7-5 14 0t14 0" stroke="#c9a04b" stroke-width="2.4" fill="none"/></svg>`;
-      case 'shop-water-bookmark':
-        return `<svg ${v}><rect width="200" height="200" fill="#e7efe9"/><path d="M100 8v20" stroke="#c9a04b" stroke-width="2"/><circle cx="100" cy="10" r="4" fill="#c9a04b"/><rect x="78" y="28" width="44" height="160" rx="8" fill="#4cc3c2"/><path d="M100 48s11 12 11 20a11 11 0 0 1-22 0c0-8 11-20 11-20z" fill="#fafcfa"/><path d="M78 118q11-7 22 0t22 0M78 136q11-7 22 0t22 0M78 154q11-7 22 0t22 0" stroke="#f4ecd4" stroke-width="3" fill="none"/></svg>`;
-      default:
-        return `<svg ${v}><rect width="200" height="200" fill="#e9efe6"/><g transform="rotate(-6 100 100)"><rect x="28" y="52" width="144" height="100" rx="4" fill="#17332d" opacity=".15" transform="translate(4 5)"/><rect x="28" y="52" width="144" height="100" rx="4" fill="#fafcfa"/><clipPath id="pc"><rect x="36" y="60" width="88" height="84" rx="2"/></clipPath><g clip-path="url(#pc)"><rect x="36" y="60" width="88" height="84" fill="#dfe9e2"/><path d="M36 112l22-30 14 16 16-24 36 38v32H36z" fill="#2a5444"/><path d="M36 124q22-8 44 0t44 0V144H36z" fill="#64c8ce"/><path d="M36 124q22-8 44 0t44 0" stroke="#f4ecd4" stroke-width="2.5" fill="none"/></g><rect x="138" y="62" width="24" height="28" fill="none" stroke="#c9a04b" stroke-width="2" stroke-dasharray="3 2"/><path d="M134 112h28M134 124h28M134 136h20" stroke="#c4cfc9" stroke-width="2"/></g></svg>`;
-    }
+    return `<svg ${v}><rect width="200" height="200" fill="#e9efe6"/><g transform="rotate(-6 100 100)"><rect x="28" y="52" width="144" height="100" rx="4" fill="#17332d" opacity=".15" transform="translate(4 5)"/><rect x="28" y="52" width="144" height="100" rx="4" fill="#fafcfa"/><clipPath id="pc"><rect x="36" y="60" width="88" height="84" rx="2"/></clipPath><g clip-path="url(#pc)"><rect x="36" y="60" width="88" height="84" fill="#dfe9e2"/><path d="M36 112l22-30 14 16 16-24 36 38v32H36z" fill="#2a5444"/><path d="M36 124q22-8 44 0t44 0V144H36z" fill="#64c8ce"/><path d="M36 124q22-8 44 0t44 0" stroke="#f4ecd4" stroke-width="2.5" fill="none"/></g><rect x="138" y="62" width="24" height="28" fill="none" stroke="#c9a04b" stroke-width="2" stroke-dasharray="3 2"/><path d="M134 112h28M134 124h28M134 136h20" stroke="#c4cfc9" stroke-width="2"/></g></svg>`;
   };
 
   HL.dropArt = () => `<svg class="art" viewBox="0 0 92 112" aria-hidden="true"><path d="M46 6s34 36 34 62a34 34 0 0 1-68 0C12 42 46 6 46 6z" fill="#12666d"/><clipPath id="dc"><path d="M46 6s34 36 34 62a34 34 0 0 1-68 0C12 42 46 6 46 6z"/></clipPath><g clip-path="url(#dc)"><path d="M0 62q23-10 46 0t46 0V112H0z" fill="#4cc3c2"/><path d="M0 78q23-10 46 0t46 0V112H0z" fill="#9ee1d8"/><path d="M0 94q23-10 46 0t46 0V112H0z" fill="#f4ecd4"/><path d="M0 62q23-10 46 0t46 0M0 78q23-10 46 0t46 0" stroke="#f4ecd4" stroke-width="2.5" fill="none"/></g></svg>`;

@@ -64,7 +64,7 @@
 
 
       <section class="sec" aria-labelledby="h-shop">
-        <div class="sec-h"><h2 id="h-shop">文创商店</h2><span class="aside">商品图为示意</span></div>
+        <div class="sec-h"><h2 id="h-shop">文创商店</h2><span class="aside">设计效果图</span></div>
         <div class="shop">
           ${D.cards.products.map(p => `
             <button class="product" type="button" data-act="product" data-id="${p.id}">
