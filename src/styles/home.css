@@ -1,4 +1,4 @@
-/* 首页：主视觉、快捷入口、沿途色带、边走边玩、精选景观、文创商店 */
+/* 首页：主视觉、快捷入口、精选景观、停留示意（沿途色带）、随行互动、文创商店 */
 .hero { position: relative; height: 72vh; min-height: 470px; max-height: 640px; color: #fff; overflow: hidden; }
 .hero > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 38% 60%; }
 .hero::after {
@@ -85,15 +85,25 @@
 .variants button[aria-pressed="true"] { color: var(--ink); font-weight: 600; }
 .variants button[aria-pressed="true"] img { box-shadow: 0 0 0 2px var(--gold); }
 
-/* 边走边玩：首页上两个互动的入口，带进度 */
-.play-grid { display: grid; gap: 10px; }
-.play-card { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: center; width: 100%; padding: 14px 16px 14px 12px; border-radius: 18px; text-align: left; background: var(--ink); color: #fff; }
+/* 随行互动：首页上两个互动的入口，并排两张小卡：上面是真实模型的截图（一滴水第四章完成态、实验室池群），下面一行标题 */
+.play-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.play-card { display: block; width: 100%; min-width: 0; padding: 0; border-radius: 18px; overflow: hidden; text-align: left; background: var(--ink); color: #fff; }
 .play-card.lab { background: #12666d; }
-.play-card svg.art { width: 64px; height: 78px; }
-.play-card b { display: block; font: 600 17px/1.35 var(--serif); }
-.play-card .t > span { display: block; margin-top: 3px; font-size: 13px; line-height: 1.5; color: rgba(255, 255, 255, .78); }
-.play-card .bar { display: block; height: 4px; margin-top: 10px; border-radius: 2px; background: rgba(255, 255, 255, .18); overflow: hidden; }
-.play-card .bar::after { content: ""; display: block; height: 100%; width: calc(var(--p) * 100%); min-width: 4px; background: var(--pool); border-radius: 2px; }
-.play-card em { display: block; margin-top: 6px; font-style: normal; font-size: 12.5px; font-weight: 600; color: var(--pool); }
-.play-card.lab em, .play-card.lab .bar::after { color: #f4ecd4; }
-.play-card.lab .bar::after { background: #f4ecd4; }
+.play-card .shot { position: relative; display: block; aspect-ratio: 1; overflow: hidden; } /* 方形画幅，和裁好的模型图比例接近 */
+.play-card .shot img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.shot-water { background: radial-gradient(ellipse at 50% 62%, #f2f6ea 0%, #d7e7dc 55%, #bcd6c9 100%); }
+.play-card .shot-water img { object-fit: contain; padding: 4px 4px 12px; } /* 图已裁到模型本体（去掉了右侧投影），居中完整显示 */
+.shot-lab img { object-position: 50% 35%; }
+/* 图和标题之间一道池沿一样的浅色弧线 */
+.play-card .shot::after { content: ""; position: absolute; left: -4%; right: -4%; bottom: -10px; height: 20px; border-radius: 50%; box-shadow: 0 -3px 0 #f4ecd4; }
+.play-card .shot-water::after { background: var(--ink); }
+.play-card .shot-lab::after { background: #12666d; }
+.play-card .t { display: block; padding: 6px 12px 11px; }
+.play-card b { display: block; font: 600 15.5px/1.35 var(--serif); white-space: nowrap; }
+/* 待机：模型轻轻浮动，池群画面缓慢推近 */
+@media (prefers-reduced-motion: no-preference) {
+  .shot-water img { animation: shot-float 6s ease-in-out infinite; }
+  .shot-lab img { animation: shot-drift 14s ease-in-out infinite alternate; }
+}
+@keyframes shot-float { 50% { transform: translateY(-4px); } }
+@keyframes shot-drift { from { transform: scale(1); } to { transform: scale(1.08) translate(-2%, -2%); } }

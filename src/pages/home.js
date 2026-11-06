@@ -1,4 +1,4 @@
-/* 首页：主视觉 → 快捷入口 → 边走边玩（一滴水、彩池实验室） → 沿途色带 → 精选景观 → 文创商店。
+/* 首页：主视觉 → 快捷入口 → 精选景观 → 停留示意（沿途色带） → 随行互动（一滴水、彩池实验室） → 文创商店。
    文案和精选景点都在 src/data/（meta.js、cards.js），这里只管排版。 */
 (() => {
   'use strict';
@@ -28,28 +28,6 @@
         ${D.cards.quick.map(q => `<button type="button" data-act="tab" data-page="${q.go}">${icon(q.icon)}<b>${esc(q.title)}</b><span>${esc(q.subtitle)}</span></button>`).join('')}
       </nav>
 
-      <section class="sec" aria-labelledby="h-play">
-        <div class="sec-h"><h2 id="h-play">边走边玩</h2><span class="aside">两个科普互动</span></div>
-        <div class="play-grid">
-          <button class="play-card" type="button" data-act="tab" data-page="play">
-            ${HL.dropArt()}
-            <div class="t"><b>一滴水的旅程</b><span>四章小游戏：水流、溶解、出露、沉积，跟着一滴水看彩池怎样长出来</span>
-              <i class="bar" style="--p:${HL.waterDone() / 4}"></i><em>${HL.waterDone()} / 4 章 · ${esc(HL.waterNext())}</em></div>
-          </button>
-          <button class="play-card lab" type="button" data-act="lab-open">
-            ${HL.poolArt()}
-            <div class="t"><b>彩池实验室</b><span>改来水和沉积条件，看四片池子蓄水、溢流、池沿抬高</span>
-              <i class="bar" style="--p:${S.lab.found.length / 3}"></i><em>${esc(HL.labProgress())}</em></div>
-          </button>
-        </div>
-      </section>
-
-      <section class="sec" aria-labelledby="h-strata">
-        <div class="sec-h"><h2 id="h-strata">一条沟，${ST.length} 处停留</h2><span class="aside">色块宽度是建议停留时间</span></div>
-        <div class="strata">${HL.strata(true)}</div>
-        <div class="strata-ends"><span><b>${esc(first.name)}</b> ${esc(first.area)}</span><span>${esc(last.name)} <b>${esc(M.finaleAltitude)}</b></span></div>
-      </section>
-
       <section class="sec" aria-labelledby="h-spots">
         <div class="sec-h"><h2 id="h-spots">精选景观</h2><button class="link-btn" type="button" data-act="go-tour" data-panel="route">全部 ${ST.length} 处</button></div>
         <div class="scroller">
@@ -62,6 +40,25 @@
         </div>
       </section>
 
+      <section class="sec" aria-labelledby="h-strata">
+        <div class="sec-h"><h2 id="h-strata">停留示意</h2><span class="aside">${ST.length} 处 · 色块越宽，建议停留越久</span></div>
+        <div class="strata">${HL.strata(true)}</div>
+        <div class="strata-ends"><span><b>${esc(first.name)}</b> ${esc(first.area)}</span><span>${esc(last.name)} <b>${esc(M.finaleAltitude)}</b></span></div>
+      </section>
+
+      <section class="sec" aria-labelledby="h-play">
+        <div class="sec-h"><h2 id="h-play">随行互动</h2><span class="aside">两个科普互动</span></div>
+        <div class="play-grid">
+          <button class="play-card" type="button" data-act="tab" data-page="play">
+            <span class="shot shot-water"><img src="assets/play/water-final.webp" alt="一滴水第四章「长成彩池」完成后的三维模型" loading="lazy" decoding="async"></span>
+            <div class="t"><b>一滴水的旅程</b></div>
+          </button>
+          <button class="play-card lab" type="button" data-act="lab-open">
+            <span class="shot shot-lab"><img src="assets/play/lab-pools.webp" alt="彩池实验室里相连的池群" loading="lazy" decoding="async"></span>
+            <div class="t"><b>彩池实验室</b></div>
+          </button>
+        </div>
+      </section>
 
       <section class="sec" aria-labelledby="h-shop">
         <div class="sec-h"><h2 id="h-shop">文创商店</h2><span class="aside">设计效果图</span></div>

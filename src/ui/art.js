@@ -79,14 +79,8 @@
     return `<svg ${v}><rect width="200" height="200" fill="#e9efe6"/><g transform="rotate(-6 100 100)"><rect x="28" y="52" width="144" height="100" rx="4" fill="#17332d" opacity=".15" transform="translate(4 5)"/><rect x="28" y="52" width="144" height="100" rx="4" fill="#fafcfa"/><clipPath id="pc"><rect x="36" y="60" width="88" height="84" rx="2"/></clipPath><g clip-path="url(#pc)"><rect x="36" y="60" width="88" height="84" fill="#dfe9e2"/><path d="M36 112l22-30 14 16 16-24 36 38v32H36z" fill="#2a5444"/><path d="M36 124q22-8 44 0t44 0V144H36z" fill="#64c8ce"/><path d="M36 124q22-8 44 0t44 0" stroke="#f4ecd4" stroke-width="2.5" fill="none"/></g><rect x="138" y="62" width="24" height="28" fill="none" stroke="#c9a04b" stroke-width="2" stroke-dasharray="3 2"/><path d="M134 112h28M134 124h28M134 136h20" stroke="#c4cfc9" stroke-width="2"/></g></svg>`;
   };
 
-  HL.dropArt = () => `<svg class="art" viewBox="0 0 92 112" aria-hidden="true"><path d="M46 6s34 36 34 62a34 34 0 0 1-68 0C12 42 46 6 46 6z" fill="#12666d"/><clipPath id="dc"><path d="M46 6s34 36 34 62a34 34 0 0 1-68 0C12 42 46 6 46 6z"/></clipPath><g clip-path="url(#dc)"><path d="M0 62q23-10 46 0t46 0V112H0z" fill="#4cc3c2"/><path d="M0 78q23-10 46 0t46 0V112H0z" fill="#9ee1d8"/><path d="M0 94q23-10 46 0t46 0V112H0z" fill="#f4ecd4"/><path d="M0 62q23-10 46 0t46 0M0 78q23-10 46 0t46 0" stroke="#f4ecd4" stroke-width="2.5" fill="none"/></g></svg>`;
 
   /* 印章：有 v1 手绘章（stations.js 的 stamp）就用图，未收下时由样式变灰；其余用代码画的圆章 */
-  /* 首页「彩池实验室」卡片上的池群：四层池沿 */
-  HL.poolArt = () => `<svg class="art" viewBox="0 0 92 112" aria-hidden="true">${['#9ee1d8', '#64c8ce', '#3aa7ad', '#12666d'].map((c, k) => {
-    const y = 18 + k * 22;
-    return `<path d="M8 ${y + 8} q19 -12 38 0 t38 0 V${y + 34} H8 Z" fill="${c}"/><path d="M8 ${y + 8} q19 -12 38 0 t38 0" stroke="#f4ecd4" stroke-width="3" fill="none"/>`;
-  }).join('')}</svg>`;
   HL.stampArt = (st, got) => st.stamp
     ? `<img class="stamp-art${got ? '' : ' is-locked'}" src="${HL.esc(st.stamp)}" alt="" loading="lazy" decoding="async">`
     : got

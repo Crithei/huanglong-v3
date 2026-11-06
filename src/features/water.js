@@ -33,7 +33,7 @@
 
   HL.chaptersFor = stationId => E.CHAPTERS.filter(c => c.poiIds.includes(stationId));
   HL.waterDone = () => E.CHAPTERS.filter(c => progress(c.id).earnedAt).length;
-  /* 首页「边走边玩」上的下一步提示 */
+  /* 下一步提示（数字人和别处可用） */
   HL.waterNext = () => {
     const c = E.CHAPTERS.find(x => !progress(x.id).earnedAt);
     if (!c) return '四章集齐，收下「山水同行者」';
