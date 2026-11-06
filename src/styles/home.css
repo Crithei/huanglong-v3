@@ -107,3 +107,10 @@
 }
 @keyframes shot-float { 50% { transform: translateY(-4px); } }
 @keyframes shot-drift { from { transform: scale(1); } to { transform: scale(1.08) translate(-2%, -2%); } }
+
+/* 滑动视差（ui/parallax.js）：栏目标题、色带、互动卡片进入视野时从下方浮上来 */
+@media (prefers-reduced-motion: no-preference) {
+  #p-home .rise { opacity: 0; translate: 0 22px; transition: opacity .6s ease, translate .7s cubic-bezier(.2, .7, .2, 1); }
+  #p-home .rise.is-in { opacity: 1; translate: 0 0; }
+  #p-home .hero > img, #p-home .hero-title, #p-home .hero-body { will-change: translate; }
+}

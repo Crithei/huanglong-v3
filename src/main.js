@@ -20,4 +20,5 @@
 
   HL.renderAll();
   HL.setPage(HL.S.page);
+  HL.parallax.init(); // 首页滑动视差，见 ui/parallax.js
 })();

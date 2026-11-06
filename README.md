@@ -54,7 +54,7 @@ src/
     facilities.js     51 个沿途设施（高德 POI，GCJ-02 坐标）
     cards.js          内容卡片：快捷入口、服务三组、文创商品、旅行记录
   core/               基础：命名空间与工具、数据索引、本机状态、页面切换
-  ui/                 跨页面组件：插图、列表行、色带、弹层、提示
+  ui/                 跨页面组件：插图、列表行、色带、弹层、提示、首页滑动视差
   features/           功能：详情弹层（含作品链接）、数字人导游
   pages/              四个页面，各管各的渲染和动作
     home.js  tour-map.js  tour-map-tencent.js  tour.js  play.js  services.js
