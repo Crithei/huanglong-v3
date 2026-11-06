@@ -110,18 +110,17 @@
   const H = () => (win() && win().HL && win().HL.S ? win().HL : null);
   const $in = s => win().document.querySelector(s);
 
-  /* 左侧界面状态：哪一页、哪个面板、有没有打开弹层 / 章节页 / 实验室 */
+  /* 左侧界面状态：哪一页、哪个面板、有没有打开弹层；一滴水和实验室内嵌在互动页，按「是否在屏幕中间」判断 */
   function appState() {
     const h = H(); if (!h) return null;
     const open = id => { const el = $in(id); return !!el && !el.hidden; };
     const sheet = open('#layer') ? ($in('.sheet.guide') ? 'guide' : 'detail') : null;
-    return { page: h.S.page, panel: h.S.panel, sheet, water: open('#water-view'), lab: open('#lab-view') };
+    const onScreen = id => { const el = $in(id); if (!el || h.S.page !== 'play') return false; const r = el.getBoundingClientRect(), vh = win().innerHeight; return r.top < vh * .6 && r.bottom > vh * .3; };
+    return { page: h.S.page, panel: h.S.panel, sheet, water: onScreen('#water-view'), lab: onScreen('#lab-view'), collect: onScreen('#play-collect') };
   }
   function closeOverlays(h) {
     h.closeSheet();
-    const w = $in('#water-view'), l = $in('#lab-view');
-    if (w && !w.hidden) $in('[data-act="water-close"]').click();
-    if (l && !l.hidden) $in('[data-act="lab-close"]').click();
+    if (h.labPause) h.labPause();
   }
   const plain = st => !st.sheet && !st.water && !st.lab;
   const scrollTo = (sel, offset = 0) => setTimeout(() => { const el = $in(sel); if (!el) return; el.scrollIntoView({ block: 'start' }); const box = el.closest('.page, #panel-body, .water-body'); if (box) box.scrollTop -= offset; }, 250);
@@ -158,7 +157,7 @@
         ['看点清单', '告诉你在哪里看、看什么，不错过每一站的精华'],
         ['关键数字', '海拔、彩池数量一眼可见，五彩池海拔 3576 米、有 693 个彩池'],
         ['背后的故事', '传说、成因和小知识收在折叠区，想深入了解再点开'],
-        ['想去就收藏', '点红心加入「想去的景点」，在「我的」里随时找回'],
+        ['想去就收藏', '点红心加入「想去的景点」，在「服务 · 我的记录」里随时找回'],
       ],
       tries: [['看黄龙古寺', h => h.openStation('huanglong-ancient-temple')], ['看争艳彩池', h => h.openStation('zhengyan-chi')]],
       apply: h => { closeOverlays(h); h.setPage('home'); h.openStation('five-color-pond'); },
@@ -218,10 +217,10 @@
         ['边走边解锁', '到了特定景点，对应的游戏章节才会打开，越往上走解锁越多'],
         ['点错能撤回', '再点一次就取消，不影响别的记录'],
       ],
-      tries: [['在飞瀑流辉打卡', h => h.actions.visit({ dataset: { id: 'flying-waterfall' } })], ['看解锁了哪些章节', h => h.goTour('water')]],
+      tries: [['在飞瀑流辉打卡', h => h.actions.visit({ dataset: { id: 'flying-waterfall' } })], ['看解锁了哪些章节', h => { closeOverlays(h); h.openWater(); }]],
       notes: ['点完打卡留意底部提示：会显示解锁了哪一章，可以直接「去看看」。'],
       apply: h => { closeOverlays(h); h.goTour('station'); h.selectStation('flying-waterfall'); },
-      match: st => plain(st) && st.page === 'tour' && (st.panel === 'station' || st.panel === 'water') },
+      match: st => plain(st) && st.page === 'tour' && st.panel === 'station' },
 
     { nav: '一滴水', kicker: '互动小游戏 · 一滴水', title: '跟着一滴水，走完四个小游戏',
       lead: '一滴雪山融水从山上流下，经过「水流、溶解、出露、沉积」四章，最后变成彩池边的一层钙华。每章一个小游戏，玩完就懂黄龙的彩池从哪来。',
@@ -248,16 +247,16 @@
       apply: h => { closeOverlays(h); h.openLab(); },
       match: st => st.lab },
 
-    { nav: '印章与徽章', kicker: '我的 · 山水护照', title: '把这趟旅程收进护照',
+    { nav: '印章与徽章', kicker: '互动 · 山水护照', title: '把这趟旅程收进护照',
       lead: '打过卡的景点会在护照上盖下手绘印章，集齐一定数量就能点亮主题徽章。',
       points: [
         ['六枚手绘印章', '迎宾池、飞瀑流辉、金沙铺地、盆景池、争艳彩池、五彩池'],
         ['三枚主题徽章', '山水初见、山水同行、细节发现者，记录你走了多远、看得多细'],
-        ['收藏与回顾', '想去的景点、喜欢的文创都在这里，回家后也能翻看'],
+        ['黄龙生灵', '到站显出动物剪影，在现场找到观察线索就点亮一枚生灵徽章'],
       ],
-      tries: [['看护照与徽章', h => { closeOverlays(h); h.setPage('mine'); scrollTo('#h-stamps', 10); }]],
-      apply: h => { closeOverlays(h); h.setPage('mine'); },
-      match: st => plain(st) && st.page === 'mine' },
+      tries: [['看护照与徽章', h => { closeOverlays(h); h.setPage('play'); scrollTo('#h-stamps', 10); }]],
+      apply: h => { closeOverlays(h); h.setPage('play'); scrollTo('#h-stamps', 10); },
+      match: st => plain(st) && st.page === 'play' && st.collect },
 
     { nav: '贴心服务', kicker: '服务', title: '高原上的贴心服务',
       lead: '黄龙海拔超过 3000 米，服务页把游客最需要的帮助放在最前面。',

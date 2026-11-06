@@ -42,7 +42,7 @@
 
   /* ---------- 页面命令：白名单 ---------- */
   const FAC = { toilet: '厕所', supply: '补给', medical: '医疗点', transit: '索道接驳', visitor: '游客中心' };
-  const PANELS = { station: '本站攻略', fac: '沿途设施', route: '我的路线', water: '一滴水' };
+  const PANELS = { station: '本站攻略', fac: '沿途设施', route: '我的路线', water: '互动页（一滴水和彩池实验室）' }; // water 由 HL.goTour 转到底栏「互动」页
   const CHAPTERS = window.HuanglongJournal ? HuanglongJournal.CHAPTERS : [];
   const pick = (v, list) => list.some(o => o[0] === v) ? v : undefined;
 
@@ -94,7 +94,7 @@
       'findFacility(type) 在地图上定位离游客最近的设施。type：toilet 厕所 / supply 补给 / medical 医疗点 / transit 索道接驳 / visitor 游客中心',
       `planRoute(hours, pace, mode, cable) 按条件重排路线（哪些站细看、哪些路过）。hours：${HL.PLAN.hours.map(o => o[0]).join(' / ')}；pace：轻松 / 平衡 / 深度；mode：观光核心 / 科普研学 / 摄影 / 低负担；cable：true / false。只填游客提到的条件。游客说累、走不动、时间不够时用它。`,
       `openWater(chapter) 打开「一滴水」互动小游戏，用动画演示水的旅程：flow=水流（径流、下渗）、dissolution=溶解（CO₂ 溶解石灰岩）、emergence=出露（地下水、泉水出露）、deposition=沉积（钙华池沿生长、彩池形成）。游客想看演示、动画、互动，或讲到这些过程时，推荐对应的一章。`,
-      'openPanel(panel) 打开游览页面板：station 本站攻略 / fac 沿途设施 / route 我的路线 / water 一滴水',
+      'openPanel(panel) 打开游览页面板：station 本站攻略 / fac 沿途设施 / route 我的路线 / water 互动页（一滴水四章和彩池实验室）',
       'openLab(preset) 打开彩池演化实验室：四池相连的池群，可改来水、溶解钙、CO₂ 逸散、光照，看蓄水、溢流、池沿沉积怎样连续变化。preset 可选：steady 补给充足 / low 来水减少 / grow 增强沉积条件 / shade 柔光观察（可省略）。游客想动手试试水量、沉积、水色的关系时推荐。',
     ].join('\n');
   }

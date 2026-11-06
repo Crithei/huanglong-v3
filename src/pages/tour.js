@@ -1,12 +1,12 @@
-/* 游览页下半部分：「本站攻略 / 沿途设施 / 我的路线 / 一滴水」四个面板，以及跳转到游览页的公共入口。
-   「一滴水」面板和章节页在 features/water.js。
+/* 游览页下半部分：「本站攻略 / 沿途设施 / 我的路线」三个面板，以及跳转到游览页的公共入口。
+   一滴水和彩池实验室在底栏「互动」页（pages/play.js），这里只在本站攻略里给提示条。
    地图在 tour-map.js。面板切换时地图跟着切换显示景点或设施。 */
 (() => {
   'use strict';
   const { $, esc, icon, S, idx, data: D } = HL;
   const ST = D.stations, FAC = D.facilities;
 
-  const PANELS = [['station', '本站攻略'], ['fac', '沿途设施'], ['route', '我的路线'], ['water', '一滴水']];
+  const PANELS = [['station', '本站攻略'], ['fac', '沿途设施'], ['route', '我的路线']];
 
   function renderPanelTabs() {
     $('#panel-tabs').innerHTML = `<div class="seg" role="tablist" aria-label="游览内容">${PANELS.map(([k, t]) =>
@@ -32,6 +32,7 @@
       </div>
       ${HL.factChips(s)}
       ${HL.waterHint(s)}
+      ${HL.labHint(s)}
       ${off ? `<div class="empty" style="margin-top:14px">按你的路线，这一站只路过看一眼。<br><button class="btn btn-ghost" type="button" data-act="toggle-stop" data-id="${s.id}">改成停下细看</button></div>` : ''}
       <div class="guide-block"><h3>看什么</h3><p>${esc(s.viewing)}</p></div>
       ${s.highlights.length ? `<ul class="highlights">${s.highlights.map(h => `<li>${esc(h)}</li>`).join('')}</ul>` : ''}
@@ -41,6 +42,7 @@
       ${HL.media(s, 'station-photo')}
       ${HL.photoCredit(s)}
       ${HL.storyBlock(s)}
+      ${HL.speciesBlock(s)}
       <div class="station-actions">
         <button class="btn ${visited ? 'is-on' : 'btn-primary'}" type="button" data-act="visit" data-id="${s.id}" aria-pressed="${visited}">${icon(visited ? 'check' : 'stamp')}${visited ? '已收下印章' : '到站打卡'}</button>
         <button class="icon-btn" type="button" data-act="wish" data-id="${s.id}" aria-pressed="${wished}" aria-label="收藏到想去的景点">${icon('heart')}</button>
@@ -112,7 +114,7 @@
       <p class="note">停留时间来自${esc(D.meta.source.pois)}，只作安排参考。</p>`;
   }
 
-  const PANEL_RENDER = { station: stationPanel, fac: facPanel, route: routePanel, water: () => HL.waterPanel() };
+  const PANEL_RENDER = { station: stationPanel, fac: facPanel, route: routePanel };
 
   /* 地图需要容器尺寸，所以只在游览页可见时绘制。 */
   function render() {
@@ -125,6 +127,7 @@
 
   /* ---------- 供其他页面调用的入口 ---------- */
   HL.goTour = panel => {
+    if (panel === 'water') { HL.closeSheet(); HL.setPage('play'); return; } // 一滴水和实验室搬到了底栏「互动」页
     S.panel = panel || 'station';
     if (S.panel !== 'fac') S.facFocus = null;
     HL.store.save(); HL.setPage('tour');
@@ -186,11 +189,19 @@
   HL.act('visit', el => {
     const id = el.dataset.id, before = HL.store.snapshot(), had = S.visited.includes(id);
     S.visited = had ? S.visited.filter(x => x !== id) : [...S.visited, id];
+    if (had) HL.pruneSeen();
     HL.store.save(); HL.renderAll();
     const fresh = had ? [] : HL.newChapters(before.visited);
     if (had) HL.toast(`已撤回「${idx.station[id].name}」的印章`, { label: '撤销', fn: () => HL.store.restore(before) });
     else if (fresh.length) HL.toast(`收下印章，解锁一滴水「${fresh[0].label}」`, { label: '去看看', fn: () => HL.openWater(fresh[0].id) });
-    else HL.toast(`收下「${idx.station[id].name}」印章`, { label: '去护照', fn: () => HL.setPage('mine') });
+    else if (HL.isLabStation(id) && !S.lab.stickerAt && !before.visited.some(HL.isLabStation)) {
+      HL.toast('收下印章，可以在彩池实验室收集「池群观察者」贴纸了', { label: '去实验室', fn: () => HL.openLab() });
+    }
+    else if (HL.speciesAt(id).some(sp => !S.seen.includes(sp.id))) {
+      const sp = HL.speciesAt(id).filter(x => !S.seen.includes(x.id));
+      HL.toast(`收下印章，这一段有生灵线索：${sp.map(x => x.clue.label).join('、')}`, { label: '去找找', fn: () => { const b = document.getElementById('species-block'); if (b) b.scrollIntoView({ behavior: 'smooth', block: 'center' }); } });
+    }
+    else HL.toast(`收下「${idx.station[id].name}」印章`, { label: '去护照', fn: () => HL.setPage('play') });
   });
 
   /* 面板分段：左右方向键切换。 */

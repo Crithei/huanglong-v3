@@ -12,7 +12,7 @@
     station: Object.fromEntries(ST.map(s => [s.id, s])),
     facility: Object.fromEntries(FAC.map(f => [f.id, f])),
     product: Object.fromEntries(C.products.map(p => [p.id, p])),
-    card: Object.fromEntries([...C.quick, C.inspire, ...C.services.flatMap(g => g.items), ...C.mine].map(c => [c.id, c])),
+    card: Object.fromEntries([...C.quick, ...C.services.flatMap(g => g.items), ...C.mine].map(c => [c.id, c])),
   };
 
   HL.FAC_TYPES = [['all', '全部'], ['toilet', '厕所'], ['supply', '补给'], ['medical', '医疗'], ['transit', '索道接驳'], ['visitor', '游客中心']];

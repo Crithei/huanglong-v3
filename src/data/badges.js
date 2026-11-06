@@ -1,4 +1,4 @@
-/* 徽章与贴纸：主题徽章（按六枚主章计数）、实验贴纸与生灵徽章（问导游解锁）。规则和文字沿用 v1 data/passport.js，图在 assets/badges/，生灵徽章图在 assets/species/。
+/* 徽章与贴纸：主题徽章（按六枚主章计数）、实验贴纸与生灵徽章（到站显出剪影，找到现场线索点亮）。规则和文字沿用 v1 data/passport.js，图在 assets/badges/，生灵徽章图在 assets/species/。
    等号右边必须是合法 JSON，运行 python tools/check.py 校验。 */
 HL.data.badges = {
   "source": "v1 data/passport.js 的 themes 与 pool 实验，图来自 v1 assets/passport/（原创 SVG）；生灵徽章图来自项目组 11-5 素材包",
@@ -83,7 +83,14 @@ HL.data.badges = {
         "滚滚"
       ],
       "img": "assets/species/giant-panda.webp",
-      "description": "国家一级重点保护野生动物。黄龙所在的岷山是大熊猫的重要栖息地，它们住在竹林茂密的山林里，一天大半时间都在吃竹子。"
+      "description": "国家一级重点保护野生动物。黄龙所在的岷山是大熊猫的重要栖息地，它们住在竹林茂密的山林里，一天大半时间都在吃竹子。",
+      "stations": [
+        "suoluo-pond"
+      ],
+      "clue": {
+        "label": "竹丛和杜鹃林",
+        "hint": "娑萝就是杜鹃。找一找杜鹃林下的竹丛，岷山的大熊猫就生活在这样竹子茂密的山林里。"
+      }
     },
     {
       "id": "red-panda",
@@ -95,7 +102,14 @@ HL.data.badges = {
         "小熊猫"
       ],
       "img": "assets/species/red-panda.webp",
-      "description": "国家二级重点保护野生动物。红棕色的毛和一条带环纹的大尾巴，爱在树上休息，也吃竹叶。名字里有熊猫，和大熊猫并不是近亲。"
+      "description": "国家二级重点保护野生动物。红棕色的毛和一条带环纹的大尾巴，爱在树上休息，也吃竹叶。名字里有熊猫，和大熊猫并不是近亲。",
+      "stations": [
+        "bonsai-pond"
+      ],
+      "clue": {
+        "label": "林下的箭竹",
+        "hint": "找一找林下成丛的细竹子。竹叶是小熊猫的主要食物。"
+      }
     },
     {
       "id": "golden-monkey",
@@ -108,7 +122,14 @@ HL.data.badges = {
         "金丝猴"
       ],
       "img": "assets/species/golden-monkey.webp",
-      "description": "国家一级重点保护野生动物，中国特有。蓝色的脸、金色的长毛，成群生活在高山森林里，冬天也不下到太低的地方。"
+      "description": "国家一级重点保护野生动物，中国特有。蓝色的脸、金色的长毛，成群生活在高山森林里，冬天也不下到太低的地方。",
+      "stations": [
+        "liantai-fall"
+      ],
+      "clue": {
+        "label": "树上的松萝",
+        "hint": "抬头找树枝上垂下来的灰绿色丝状植物，那是松萝，川金丝猴冬天常吃它。"
+      }
     },
     {
       "id": "takin",
@@ -121,7 +142,14 @@ HL.data.badges = {
         "扭角羚"
       ],
       "img": "assets/species/takin.webp",
-      "description": "国家一级重点保护野生动物。体形壮实，角向后扭转，常结群在高山林地和草甸间季节性迁移。"
+      "description": "国家一级重点保护野生动物。体形壮实，角向后扭转，常结群在高山林地和草甸间季节性迁移。",
+      "stations": [
+        "zhengyan-chi"
+      ],
+      "clue": {
+        "label": "远处的林线",
+        "hint": "望向远处山坡，找树林到草坡的那条分界线。羚牛会随季节在林地和草甸之间上下迁移。"
+      }
     },
     {
       "id": "golden-pheasant",
@@ -135,7 +163,14 @@ HL.data.badges = {
         "金鸡"
       ],
       "img": "assets/species/golden-pheasant.webp",
-      "description": "国家二级重点保护野生动物，中国特有。雄鸟金冠红腹、尾羽很长，常在林下灌丛里活动，比起飞更爱走。"
+      "description": "国家二级重点保护野生动物，中国特有。雄鸟金冠红腹、尾羽很长，常在林下灌丛里活动，比起飞更爱走。",
+      "stations": [
+        "welcome-pond"
+      ],
+      "clue": {
+        "label": "林下灌丛",
+        "hint": "在栈道边找一片低矮的灌丛。红腹锦鸡比起飞更爱走，常在这样的灌丛底下觅食。"
+      }
     },
     {
       "id": "chinese-monal",
@@ -148,7 +183,14 @@ HL.data.badges = {
         "虹雉"
       ],
       "img": "assets/species/chinese-monal.webp",
-      "description": "国家一级重点保护野生动物，中国特有。雄鸟羽色带金属光泽，生活在林线以上的高山草甸和灌丛，是高海拔的代表鸟类。"
+      "description": "国家一级重点保护野生动物，中国特有。雄鸟羽色带金属光泽，生活在林线以上的高山草甸和灌丛，是高海拔的代表鸟类。",
+      "stations": [
+        "five-color-pond"
+      ],
+      "clue": {
+        "label": "雪山下的草甸",
+        "hint": "远望雪宝顶方向，找林线以上的高山草甸和灌丛，那是绿尾虹雉生活的地方。"
+      }
     },
     {
       "id": "blue-eared-pheasant",
@@ -161,7 +203,14 @@ HL.data.badges = {
         "马鸡"
       ],
       "img": "assets/species/blue-eared-pheasant.webp",
-      "description": "国家二级重点保护野生动物，中国特有。全身蓝灰，脸部红色，耳后有一对白色羽簇，常成群在针叶林和灌丛间觅食。"
+      "description": "国家二级重点保护野生动物，中国特有。全身蓝灰，脸部红色，耳后有一对白色羽簇，常成群在针叶林和灌丛间觅食。",
+      "stations": [
+        "jinsha-pudi"
+      ],
+      "clue": {
+        "label": "针叶林边缘",
+        "hint": "看看钙华滩两侧，针叶林和开阔地交界的地方。蓝马鸡常成群在林缘觅食。"
+      }
     },
     {
       "id": "golden-eagle",
@@ -173,7 +222,14 @@ HL.data.badges = {
         "金雕"
       ],
       "img": "assets/species/golden-eagle.webp",
-      "description": "国家一级重点保护野生动物。大型猛禽，翼展可超过两米，常在高山开阔地带的上空盘旋。"
+      "description": "国家一级重点保护野生动物。大型猛禽，翼展可超过两米，常在高山开阔地带的上空盘旋。",
+      "stations": [
+        "five-color-pond"
+      ],
+      "clue": {
+        "label": "抬头看天空",
+        "hint": "到了沟里最高处，抬头看看开阔的天空。金雕常借上升气流在高山上空盘旋。"
+      }
     },
     {
       "id": "sichuan-jay",
@@ -186,7 +242,15 @@ HL.data.badges = {
         "噪鸦"
       ],
       "img": "assets/species/sichuan-jay.webp",
-      "description": "国家一级重点保护野生动物，中国特有。羽色灰暗、不太起眼，只生活在青藏高原东缘的亚高山针叶林里，分布范围很窄。"
+      "description": "国家一级重点保护野生动物，中国特有。羽色灰暗、不太起眼，只生活在青藏高原东缘的亚高山针叶林里，分布范围很窄。",
+      "stations": [
+        "huanglong-middle-temple",
+        "huanglong-ancient-temple"
+      ],
+      "clue": {
+        "label": "成片的冷杉林",
+        "hint": "看看寺庙周围高大、塔形的冷杉。黑头噪鸦只生活在这种亚高山针叶林里。"
+      }
     },
     {
       "id": "snowy-cheeked-laughingthrush",
@@ -199,8 +263,15 @@ HL.data.badges = {
         "山噪鹛"
       ],
       "img": "assets/species/snowy-cheeked-laughingthrush.webp",
-      "description": "国家一级重点保护野生动物，中国特有。脸颊有白斑，只分布在甘肃南部和四川北部的山地林下，数量稀少。"
+      "description": "国家一级重点保护野生动物，中国特有。脸颊有白斑，只分布在甘肃南部和四川北部的山地林下，数量稀少。",
+      "stations": [
+        "flying-waterfall"
+      ],
+      "clue": {
+        "label": "林下的鸟叫",
+        "hint": "在瀑布声小一点的地方停下来，听一会儿林子里的鸟叫。噪鹛常成小群在林下活动，叫声比身影好找。"
+      }
     }
   ],
-  "speciesRule": "向任意一位数字人导游提问，问题里提到某个物种，就收下这枚生灵徽章。"
+  "speciesRule": "到对应的站打卡，徽章会显出剪影；在那一站找到观察线索，就能点亮它。想多了解，可以问问数字人导游。"
 };

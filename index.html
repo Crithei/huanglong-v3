@@ -74,8 +74,8 @@
           <div class="panel-body" id="panel-body" role="tabpanel"></div>
         </div>
       </section>
+      <section class="page page-play" id="p-play" aria-label="互动" hidden></section>
       <section class="page page-services" id="p-services" aria-label="服务" hidden></section>
-      <section class="page page-mine" id="p-mine" aria-label="我的" hidden></section>
     </main>
 
     <button class="fab" type="button" data-act="guide" aria-label="问问数字人导游">
@@ -87,14 +87,9 @@
     <nav class="tabbar" aria-label="主导航">
       <button type="button" data-act="tab" data-page="home" aria-current="page"><span class="pip"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg></span>首页</button>
       <button type="button" data-act="tab" data-page="tour"><span class="pip"><svg class="i" aria-hidden="true"><use href="#i-tour"/></svg></span>游览</button>
+      <button type="button" data-act="tab" data-page="play"><span class="pip"><svg class="i" aria-hidden="true"><use href="#i-pool"/></svg></span>互动</button>
       <button type="button" data-act="tab" data-page="services"><span class="pip"><svg class="i" aria-hidden="true"><use href="#i-service"/></svg></span>服务</button>
-      <button type="button" data-act="tab" data-page="mine"><span class="pip"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg></span>我的</button>
     </nav>
-
-    <!-- 一滴水章节页：盖住游览页和底部导航，内容由 src/features/water.js 生成 -->
-    <section class="water-view" id="water-view" hidden></section>
-    <!-- 彩池实验室：同样盖住整页，内容由 src/features/lab.js 生成 -->
-    <section class="water-view lab-view" id="lab-view" hidden></section>
 
     <div class="layer" id="layer" hidden></div>
   </div>
@@ -123,14 +118,15 @@
 <script src="src/features/details.js"></script>
 <script src="src/features/guide.js"></script>
 <script src="src/features/guide-cloud.js"></script>
+<script src="src/features/species.js"></script>
 <script src="src/features/water.js"></script>
 <script src="src/features/lab.js"></script>
 <script src="src/pages/home.js"></script>
 <script src="src/pages/tour-map.js"></script>
 <script src="src/pages/tour-map-tencent.js"></script>
 <script src="src/pages/tour.js"></script>
+<script src="src/pages/play.js"></script>
 <script src="src/pages/services.js"></script>
-<script src="src/pages/mine.js"></script>
 <script src="src/main.js"></script>
 </body>
 </html>

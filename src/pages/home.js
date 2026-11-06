@@ -1,8 +1,8 @@
-/* 首页：主视觉 → 快捷入口 → 沿途色带 → 精选景观 → 游玩灵感 → 文创商店。
+/* 首页：主视觉 → 快捷入口 → 边走边玩（一滴水、彩池实验室） → 沿途色带 → 精选景观 → 文创商店。
    文案和精选景点都在 src/data/（meta.js、cards.js），这里只管排版。 */
 (() => {
   'use strict';
-  const { $, esc, icon, idx, data: D } = HL;
+  const { $, esc, icon, idx, S, data: D } = HL;
   const ST = D.stations, M = D.meta;
 
   function render() {
@@ -28,6 +28,22 @@
         ${D.cards.quick.map(q => `<button type="button" data-act="tab" data-page="${q.go}">${icon(q.icon)}<b>${esc(q.title)}</b><span>${esc(q.subtitle)}</span></button>`).join('')}
       </nav>
 
+      <section class="sec" aria-labelledby="h-play">
+        <div class="sec-h"><h2 id="h-play">边走边玩</h2><span class="aside">两个科普互动</span></div>
+        <div class="play-grid">
+          <button class="play-card" type="button" data-act="tab" data-page="play">
+            ${HL.dropArt()}
+            <div class="t"><b>一滴水的旅程</b><span>四章小游戏：水流、溶解、出露、沉积，跟着一滴水看彩池怎样长出来</span>
+              <i class="bar" style="--p:${HL.waterDone() / 4}"></i><em>${HL.waterDone()} / 4 章 · ${esc(HL.waterNext())}</em></div>
+          </button>
+          <button class="play-card lab" type="button" data-act="lab-open">
+            ${HL.poolArt()}
+            <div class="t"><b>彩池实验室</b><span>改来水和沉积条件，看四片池子蓄水、溢流、池沿抬高</span>
+              <i class="bar" style="--p:${S.lab.found.length / 3}"></i><em>${esc(HL.labProgress())}</em></div>
+          </button>
+        </div>
+      </section>
+
       <section class="sec" aria-labelledby="h-strata">
         <div class="sec-h"><h2 id="h-strata">一条沟，${ST.length} 处停留</h2><span class="aside">色块宽度是建议停留时间</span></div>
         <div class="strata">${HL.strata(true)}</div>
@@ -46,13 +62,6 @@
         </div>
       </section>
 
-      <section class="sec" aria-labelledby="h-inspire">
-        <h2 class="sr" id="h-inspire">游玩灵感</h2>
-        <button class="inspire" type="button" data-act="card-go" data-id="${esc(D.cards.inspire.id)}">
-          <div><b>${esc(D.cards.inspire.title)}</b><span>${esc(D.cards.inspire.subtitle)}</span><em>${esc(D.cards.inspire.cta)}</em></div>
-          ${HL.dropArt()}
-        </button>
-      </section>
 
       <section class="sec" aria-labelledby="h-shop">
         <div class="sec-h"><h2 id="h-shop">文创商店</h2><span class="aside">商品图为示意</span></div>

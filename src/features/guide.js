@@ -40,8 +40,8 @@
     };
   }
 
-  /* 生灵徽章：问题里提到了哪些物种（规则见 data/badges.js 的 species）。
-     长关键词先匹配并抹掉，「小熊猫」里的「熊猫」就不会再算成大熊猫。 */
+  /* 问题里提到了哪些生灵徽章物种（data/badges.js 的 species），云端不通时内置回答用它介绍物种。
+     导游只负责「了解更多」，不点亮徽章。长关键词先匹配并抹掉，「小熊猫」里的「熊猫」就不会再算成大熊猫。 */
   const SPECIES = (D.badges && D.badges.species) || [];
   const SP_KEYS = SPECIES.flatMap(sp => sp.keywords.map(k => [k, sp])).sort((a, b) => b[0].length - a[0].length);
   HL.speciesIn = text => {
@@ -115,20 +115,8 @@
     const wait = new Promise(r => setTimeout(r, 380));
     const onStream = html => { msg.html = html; renderChat(); };
     Promise.all([Promise.resolve().then(() => HL.guide.provider.reply(q, context(), onStream)), wait])
-      .then(([a]) => a, () => ({ html: '<p>暂时没能回答，请稍后再试。</p>', failed: true }))
-      .then(a => { Object.assign(msg, a, { pending: false }); busy = false; if (!a.failed) collectSpecies(q, msg); renderChat(); });
-  }
-
-  /* 问题里提到、还没收下的物种：记进 S.species，回答下方加一行提示，并弹出提示条 */
-  function collectSpecies(q, msg) {
-    const fresh = HL.speciesIn(q).filter(sp => !S.species.includes(sp.id));
-    if (!fresh.length) return;
-    S.species = [...S.species, ...fresh.map(sp => sp.id)];
-    HL.store.save();
-    if (HL.pages.mine) HL.pages.mine.render();
-    msg.html += `<div class="g-species">${fresh.map(sp =>
-      `<button type="button" data-act="species" data-id="${esc(sp.id)}"><img src="${esc(sp.img)}" alt=""><span>收下生灵徽章<b>${esc(sp.name)}</b></span></button>`).join('')}</div>`;
-    HL.toast(`收下生灵徽章「${fresh.map(sp => sp.name).join('」「')}」`);
+      .then(([a]) => a, () => ({ html: '<p>暂时没能回答，请稍后再试。</p>' }))
+      .then(a => { Object.assign(msg, a, { pending: false }); busy = false; renderChat(); });
   }
 
   function welcome() {

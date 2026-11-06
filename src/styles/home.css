@@ -1,4 +1,4 @@
-/* 首页：主视觉、快捷入口、沿途色带、精选景观、游玩灵感、文创商店 */
+/* 首页：主视觉、快捷入口、沿途色带、边走边玩、精选景观、文创商店 */
 .hero { position: relative; height: 72vh; min-height: 470px; max-height: 640px; color: #fff; overflow: hidden; }
 .hero > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 38% 60%; }
 .hero::after {
@@ -56,15 +56,6 @@
 .spot span { display: block; font-size: 13.5px; color: var(--ink-2); }
 .spot .tag { position: absolute; left: 10px; top: 10px; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; background: rgba(250, 252, 250, .88); color: var(--ink); }
 
-.inspire {
-  display: grid; grid-template-columns: 1fr 92px; gap: 14px; align-items: center;
-  width: 100%; padding: 18px; border-radius: 20px; text-align: left;
-  background: var(--ink); color: #fff;
-}
-.inspire b { font: 600 18px/1.4 var(--serif); display: block; }
-.inspire span { display: block; margin-top: 4px; font-size: 13.5px; color: rgba(255, 255, 255, .78); }
-.inspire em { display: inline-block; margin-top: 12px; font-style: normal; font-size: 13.5px; font-weight: 600; color: var(--pool); }
-.inspire svg.art { width: 92px; height: 112px; }
 
 .shop { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 12px; }
 .product { text-align: left; }
@@ -93,3 +84,16 @@
 .variants img { width: 64px; height: 64px; border-radius: 10px; object-fit: cover; background: #f4efe6; box-shadow: inset 0 0 0 1px var(--line); }
 .variants button[aria-pressed="true"] { color: var(--ink); font-weight: 600; }
 .variants button[aria-pressed="true"] img { box-shadow: 0 0 0 2px var(--gold); }
+
+/* 边走边玩：首页上两个互动的入口，带进度 */
+.play-grid { display: grid; gap: 10px; }
+.play-card { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: center; width: 100%; padding: 14px 16px 14px 12px; border-radius: 18px; text-align: left; background: var(--ink); color: #fff; }
+.play-card.lab { background: #12666d; }
+.play-card svg.art { width: 64px; height: 78px; }
+.play-card b { display: block; font: 600 17px/1.35 var(--serif); }
+.play-card .t > span { display: block; margin-top: 3px; font-size: 13px; line-height: 1.5; color: rgba(255, 255, 255, .78); }
+.play-card .bar { display: block; height: 4px; margin-top: 10px; border-radius: 2px; background: rgba(255, 255, 255, .18); overflow: hidden; }
+.play-card .bar::after { content: ""; display: block; height: 100%; width: calc(var(--p) * 100%); min-width: 4px; background: var(--pool); border-radius: 2px; }
+.play-card em { display: block; margin-top: 6px; font-style: normal; font-size: 12.5px; font-weight: 600; color: var(--pool); }
+.play-card.lab em, .play-card.lab .bar::after { color: #f4ecd4; }
+.play-card.lab .bar::after { background: #f4ecd4; }

@@ -1,6 +1,6 @@
 # 黄龙景区综合服务系统 · 第三版前端骨架
 
-手机竖屏优先的景区服务网页原型，最终面向微信小程序。底部四页固定为 **首页 / 游览 / 服务 / 我的**。
+手机竖屏优先的景区服务网页原型，最终面向微信小程序。底部四页为 **首页 / 游览 / 互动 / 服务**：互动页放一滴水四章、彩池实验室和印章、徽章、生灵收集；服务页放服务入口，底部是「我的记录」（路线进度、想去、想要、旅行记录）。
 
 这一版沿用第二版设计稿（`huanglong-v2-design`）的视觉，主要整理代码结构，方便多人分工继续开发：
 
@@ -52,12 +52,12 @@ src/
     meta.js           首页主视觉、精选景观、终点、数据来源
     stations.js       14 处景点，数组顺序就是游线顺序
     facilities.js     51 个沿途设施（高德 POI，GCJ-02 坐标）
-    cards.js          内容卡片：快捷入口、游玩灵感、服务三组、文创商品、旅行记录
+    cards.js          内容卡片：快捷入口、服务三组、文创商品、旅行记录
   core/               基础：命名空间与工具、数据索引、本机状态、页面切换
   ui/                 跨页面组件：插图、列表行、色带、弹层、提示
   features/           功能：详情弹层（含作品链接）、数字人导游
   pages/              四个页面，各管各的渲染和动作
-    home.js  tour-map.js  tour-map-tencent.js  tour.js  services.js  mine.js
+    home.js  tour-map.js  tour-map-tencent.js  tour.js  play.js  services.js
   config.example.js   本机配置模板（地图 Key）；复制为 config.local.js 后填写，后者不进仓库
 vendor/
   huanglong-water/    从 v1 原样搬来的水滴四章状态机与三维场景（不要直接改，见其中 README）

@@ -95,6 +95,11 @@
   HL.dropArt = () => `<svg class="art" viewBox="0 0 92 112" aria-hidden="true"><path d="M46 6s34 36 34 62a34 34 0 0 1-68 0C12 42 46 6 46 6z" fill="#12666d"/><clipPath id="dc"><path d="M46 6s34 36 34 62a34 34 0 0 1-68 0C12 42 46 6 46 6z"/></clipPath><g clip-path="url(#dc)"><path d="M0 62q23-10 46 0t46 0V112H0z" fill="#4cc3c2"/><path d="M0 78q23-10 46 0t46 0V112H0z" fill="#9ee1d8"/><path d="M0 94q23-10 46 0t46 0V112H0z" fill="#f4ecd4"/><path d="M0 62q23-10 46 0t46 0M0 78q23-10 46 0t46 0" stroke="#f4ecd4" stroke-width="2.5" fill="none"/></g></svg>`;
 
   /* 印章：有 v1 手绘章（stations.js 的 stamp）就用图，未收下时由样式变灰；其余用代码画的圆章 */
+  /* 首页「彩池实验室」卡片上的池群：四层池沿 */
+  HL.poolArt = () => `<svg class="art" viewBox="0 0 92 112" aria-hidden="true">${['#9ee1d8', '#64c8ce', '#3aa7ad', '#12666d'].map((c, k) => {
+    const y = 18 + k * 22;
+    return `<path d="M8 ${y + 8} q19 -12 38 0 t38 0 V${y + 34} H8 Z" fill="${c}"/><path d="M8 ${y + 8} q19 -12 38 0 t38 0" stroke="#f4ecd4" stroke-width="3" fill="none"/>`;
+  }).join('')}</svg>`;
   HL.stampArt = (st, got) => st.stamp
     ? `<img class="stamp-art${got ? '' : ' is-locked'}" src="${HL.esc(st.stamp)}" alt="" loading="lazy" decoding="async">`
     : got

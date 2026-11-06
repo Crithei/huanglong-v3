@@ -34,7 +34,7 @@ def load_data(name):
 
 
 # 卡片 go 字段可用的内部去向，与 src/features/details.js 的 GO 保持一致。
-GO = {"", "home", "tour", "services", "mine", "facilities", "medical", "guide", "water", "lab"}
+GO = {"", "home", "tour", "play", "services", "records", "facilities", "medical", "guide", "water", "lab"}
 FAC_TYPES = {"toilet", "supply", "medical", "transit", "visitor"}
 CARD_FIELDS = ["id", "kind", "title", "subtitle", "body", "go", "cta", "url", "author"]
 
@@ -145,10 +145,8 @@ def check_card(c, where, need_icon=True):
 if cards is not None:
     for k, c in enumerate(cards.get("quick", [])):
         check_card(c, "cards.quick[%d]" % k)
-        if c.get("go") not in ("home", "tour", "services", "mine"):
+        if c.get("go") not in ("home", "tour", "play", "services"):
             err("cards.quick[%d]：快捷入口的 go 只能是四个页面之一" % k)
-    if "inspire" in cards:
-        check_card(cards["inspire"], "cards.inspire", need_icon=False)
     featured = 0
     for g, group in enumerate(cards.get("services", [])):
         if not group.get("title"):
@@ -223,7 +221,7 @@ if badges is not None and stations is not None:
         for i in b.get("poiIds", []):
             if i not in station_ids:
                 err("%s：poiIds 里没有景点「%s」" % (where, i))
-    # 生灵徽章：问导游时问题里出现 keywords 就收下，同一个关键词不能分给两个物种
+    # 生灵徽章：stations 里任一站打卡后显出剪影，找到 clue 点亮；keywords 给导游的内置回答识别物种，同一个关键词不能分给两个物种
     seen_kw = {}
     for s in badges.get("species", []):
         where = "badges.species %s" % s.get("id", "?")
@@ -234,6 +232,14 @@ if badges is not None and stations is not None:
             claim(s["id"], where)
         if s.get("img"):
             check_asset(s["img"], where)
+        if not s.get("stations"):
+            err("%s：缺少 stations（在哪一站点亮）" % where)
+        for i in s.get("stations", []):
+            if i not in station_ids:
+                err("%s：stations 里没有景点「%s」" % (where, i))
+        clue = s.get("clue") or {}
+        if not clue.get("label") or not clue.get("hint"):
+            err("%s：clue 要有 label 和 hint" % where)
         kws = s.get("keywords") or []
         if s.get("name") not in kws:
             err("%s：keywords 里要包含物种名「%s」" % (where, s.get("name")))
@@ -242,7 +248,7 @@ if badges is not None and stations is not None:
                 err("%s：关键词「%s」已经给了 %s" % (where, kw, seen_kw[kw]))
             seen_kw[kw] = s.get("id")
     if badges.get("species") and not badges.get("speciesRule"):
-        err("badges：有 species 时要写 speciesRule（我的页显示的规则说明）")
+        err("badges：有 species 时要写 speciesRule（互动页显示的规则说明）")
 
 # ---------- 首页配置 ----------
 if meta is not None and stations is not None:

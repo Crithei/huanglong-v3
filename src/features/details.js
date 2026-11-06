@@ -9,7 +9,8 @@
     home: { label: '回到首页', icon: 'home', run: () => HL.setPage('home') },
     tour: { label: '进入游览', icon: 'map', run: () => HL.goTour('station') },
     services: { label: '查看服务', icon: 'grid', run: () => HL.setPage('services') },
-    mine: { label: '打开我的', icon: 'user', run: () => HL.setPage('mine') },
+    play: { label: '去互动页', icon: 'drop', run: () => HL.setPage('play') },
+    records: { label: '看我的记录', icon: 'user', run: () => { HL.setPage('services'); const r = document.getElementById('records'); if (r) r.scrollIntoView({ block: 'start' }); } },
     facilities: { label: '在游览页查看', icon: 'map', run: () => HL.goTour('fac') },
     medical: { label: '查看最近的医疗点', icon: 'cross', run: () => HL.focusFacility(HL.nearest('medical', idx.station[S.current]).f.id) },
     guide: { label: '问问导游', icon: 'guide', run: () => HL.openGuide() },
@@ -60,7 +61,7 @@
       body: `${p.variants && p.variants.length ? variantsBlock(p) : `<div class="sheet-media square">${HL.productArt(id)}</div>`}<p class="lead">${esc(p.subtitle)}</p>${paras(p.body)}`,
       foot: `<div class="sheet-foot">${url
         ? `<a class="btn btn-ghost" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(p.cta || '查看商品')}</a>`
-        : p.go && GO[p.go] ? `<button class="btn btn-ghost" type="button" data-act="product-go" data-id="${id}">${icon(GO[p.go].icon)}${p.go === 'mine' ? '看我收下的生灵' : GO[p.go].label}</button>`
+        : p.go && GO[p.go] ? `<button class="btn btn-ghost" type="button" data-act="product-go" data-id="${id}">${icon(GO[p.go].icon)}${p.go === 'play' ? '看我点亮的生灵' : GO[p.go].label}</button>`
         : '<span class="hint">示意商品，购买入口待接入</span>'}
         <button class="btn ${on ? 'is-on' : 'btn-ghost'}" type="button" data-act="want" data-id="${id}" aria-pressed="${on}">${icon(on ? 'check' : 'heart')}${on ? '已在想要清单' : '想要'}</button></div>`,
     });
@@ -106,7 +107,7 @@
   HL.act('want', el => {
     const id = el.dataset.id, on = S.want.includes(id);
     S.want = on ? S.want.filter(x => x !== id) : [...S.want, id];
-    HL.store.save(); HL.pages.mine.render(); HL.openProduct(id);
+    HL.store.save(); HL.pages.services.render(); // 想要清单在服务页「我的记录」里 HL.openProduct(id);
     HL.toast(on ? '已从想要清单移除' : '已加入想要清单');
   });
 })();

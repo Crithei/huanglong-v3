@@ -7,8 +7,8 @@
 
   /* 地址带 ?demo 时（汇报页 present/ 里嵌入的就是这种）用单独的演示存档，不碰游客自己的进度 */
   const KEY = new URLSearchParams(location.search).has('demo') ? 'huanglong.v3.demo' : 'huanglong.v3.1';
-  const PAGES = ['home', 'tour', 'services', 'mine'];
-  const PANELS = ['station', 'fac', 'route', 'water'];
+  const PAGES = ['home', 'tour', 'play', 'services']; // 底栏四页：首页 / 游览 / 互动 / 服务
+  const PANELS = ['station', 'fac', 'route'];
   const MAP_MODES = ['vector', 'satellite', 'schematic'];
 
   const defaults = () => ({
@@ -26,7 +26,7 @@
     visited: [],                    // 已打卡的站
     wish: [],                       // 想去的景点
     want: [],                       // 想要的文创
-    species: [],                    // 已收下的生灵徽章（问导游时提到该物种），见 data/badges.js 的 species
+    seen: [],                       // 已点亮的生灵徽章（到站后找到观察线索），见 data/badges.js 的 species
   });
 
   /* 水滴四章：交给 v1 的状态机校验（vendor/huanglong-water/follow-state.js）。
@@ -59,8 +59,11 @@
     const ids = (a, table) => (Array.isArray(a) ? a : []).filter(id => table[id]);
     v.off = ids(v.off, idx.station); v.visited = ids(v.visited, idx.station); v.wish = ids(v.wish, idx.station);
     v.want = ids(v.want, idx.product);
-    const sp = new Set(((HL.data.badges && HL.data.badges.species) || []).map(x => x.id));
-    v.species = [...new Set(Array.isArray(v.species) ? v.species : [])].filter(id => sp.has(id));
+    /* 生灵徽章要先到对应站打卡；撤回打卡后，那一站的线索也一起作废 */
+    const sp = Object.fromEntries(((HL.data.badges && HL.data.badges.species) || []).map(x => [x.id, x]));
+    v.seen = [...new Set(Array.isArray(v.seen) ? v.seen : [])].filter(id => sp[id] && sp[id].stations.some(s => v.visited.includes(s)));
+    delete v.species; // 旧版「问导游解锁」的记录，规则已改，不再沿用
+    if (v.page === 'mine') v.page = 'play'; // 旧版的「我的」页已拆成互动和服务
     if (!PAGES.includes(v.page)) v.page = 'home';
     if (!idx.station[v.current]) v.current = HL.data.stations[0].id;
     if (!PANELS.includes(v.panel)) v.panel = 'station';
