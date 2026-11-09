@@ -205,48 +205,11 @@ HL.data.cards = {
   ],
   "products": [
     {
-      "id": "shop-orchid-frame",
+      "id": "shop-orchid-badge",
       "kind": "product",
-      "title": "兰花镂空书签",
-      "subtitle": "金属框里留一枝黄龙兰花",
-      "body": "以黄龙的四种野生兰花为题，花和叶用珐琅填色，嵌在细长的金属框里，有金色和银色两种框。\n野生兰花请只看不采，把它们带回家的方式就是这样一枚书签。",
-      "go": "",
-      "cta": "",
-      "url": "",
-      "author": "",
-      "variants": [
-        {
-          "label": "盔花兰 · 金框",
-          "img": "assets/shop/orchid-galearis-frame.webp"
-        },
-        {
-          "label": "羊耳蒜 · 银框",
-          "img": "assets/shop/orchid-liparis-frame.webp"
-        },
-        {
-          "label": "舌喙兰 · 银框",
-          "img": "assets/shop/orchid-hemipilia-frame.webp"
-        },
-        {
-          "label": "舌喙兰 · 金框",
-          "img": "assets/shop/orchid-hemipilia-frame-gold.webp"
-        },
-        {
-          "label": "鸟巢兰 · 银框",
-          "img": "assets/shop/orchid-neottia-frame.webp"
-        },
-        {
-          "label": "鸟巢兰 · 金框",
-          "img": "assets/shop/orchid-neottia-frame-gold.webp"
-        }
-      ]
-    },
-    {
-      "id": "shop-orchid-tassel",
-      "kind": "product",
-      "title": "兰花流苏书签",
-      "subtitle": "花枝书签，链尾坠一朵小花",
-      "body": "同一套四种兰花，做成镂空花枝的书签，细链末端挂一朵单独的小花，夹在书页外也看得见。",
+      "title": "兰花珐琅徽章",
+      "subtitle": "椭圆金边花框，四种黄龙兰花",
+      "body": "以黄龙的四种野生兰花为题：盔花兰、羊耳蒜、舌喙兰、鸟巢兰。椭圆金边花框里是整株兰花，底部飘带上刻着学名，每种一款底色。\n野生兰花请只看不采，把它们带回家的方式就是这样一枚徽章。",
       "go": "",
       "cta": "",
       "url": "",
@@ -254,28 +217,28 @@ HL.data.cards = {
       "variants": [
         {
           "label": "盔花兰",
-          "img": "assets/shop/orchid-galearis-tassel.webp"
+          "img": "assets/shop/orchid-galearis-badge.webp"
         },
         {
           "label": "羊耳蒜",
-          "img": "assets/shop/orchid-liparis-tassel.webp"
+          "img": "assets/shop/orchid-liparis-badge.webp"
         },
         {
           "label": "舌喙兰",
-          "img": "assets/shop/orchid-hemipilia-tassel.webp"
+          "img": "assets/shop/orchid-hemipilia-badge.webp"
         },
         {
           "label": "鸟巢兰",
-          "img": "assets/shop/orchid-neottia-tassel.webp"
+          "img": "assets/shop/orchid-neottia-badge.webp"
         }
       ]
     },
     {
       "id": "shop-orchid-pin",
       "kind": "product",
-      "title": "兰花珐琅徽章",
-      "subtitle": "椭圆花框徽章，配一枚花朵胸针",
-      "body": "椭圆金边花框里是整株兰花，另配一枚单朵花的小胸针，可以分开别。四种兰花各有一款底色。",
+      "title": "兰花胸针",
+      "subtitle": "一朵花的形状，别在衣襟上",
+      "body": "把四种兰花各取一朵，按花的轮廓做成金边珐琅胸针，花瓣上的斑点和渐变都留着。",
       "go": "",
       "cta": "",
       "url": "",
@@ -296,6 +259,51 @@ HL.data.cards = {
         {
           "label": "鸟巢兰",
           "img": "assets/shop/orchid-neottia-pin.webp"
+        }
+      ]
+    },
+    {
+      "id": "shop-orchid-bookmark",
+      "kind": "product",
+      "title": "兰花流苏书签",
+      "subtitle": "正面珐琅上色，背面金色镂空",
+      "body": "镂空花枝书签，正面是上了珐琅色的兰花，背面是整片金色镂空，刻着兰花的中文名。细链末端坠一朵小花，夹在书页外也看得见。",
+      "go": "",
+      "cta": "",
+      "url": "",
+      "author": "",
+      "variants": [
+        {
+          "label": "盔花兰 · 正面",
+          "img": "assets/shop/orchid-galearis-bookmark.webp"
+        },
+        {
+          "label": "盔花兰 · 背面",
+          "img": "assets/shop/orchid-galearis-bookmark-back.webp"
+        },
+        {
+          "label": "羊耳蒜 · 正面",
+          "img": "assets/shop/orchid-liparis-bookmark.webp"
+        },
+        {
+          "label": "羊耳蒜 · 背面",
+          "img": "assets/shop/orchid-liparis-bookmark-back.webp"
+        },
+        {
+          "label": "舌喙兰 · 正面",
+          "img": "assets/shop/orchid-hemipilia-bookmark.webp"
+        },
+        {
+          "label": "舌喙兰 · 背面",
+          "img": "assets/shop/orchid-hemipilia-bookmark-back.webp"
+        },
+        {
+          "label": "鸟巢兰 · 正面",
+          "img": "assets/shop/orchid-neottia-bookmark.webp"
+        },
+        {
+          "label": "鸟巢兰 · 背面",
+          "img": "assets/shop/orchid-neottia-bookmark-back.webp"
         }
       ]
     },
