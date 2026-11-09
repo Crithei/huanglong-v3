@@ -27,6 +27,7 @@
     wish: [],                       // 想去的景点
     want: [],                       // 想要的文创
     seen: [],                       // 已点亮的生灵徽章（到站后找到观察线索），见 data/badges.js 的 species
+    sound: null,                    // 听见黄龙：声音驿站收集、认声纹、安静挑战、记录、手册翻到第几页，见 features/sound.js（由 sanitize 补全）
   });
 
   /* 水滴四章：交给 v1 的状态机校验（vendor/huanglong-water/follow-state.js）。
@@ -79,6 +80,19 @@
     v.water = sanitizeWater(v.water, v.visited);
     if (!(HL.data.guide && HL.data.guide.personas[v.persona])) v.persona = 'huaxi';
     v.lab = sanitizeLab(v.lab);
+    /* 听见黄龙：只保留 data/birds.js 里有的驿站 */
+    const so = v.sound && typeof v.sound === 'object' ? v.sound : {};
+    const stops = new Set(((HL.data.birds && HL.data.birds.stops) || []).map(s => s.id));
+    const keep = (o, ok) => Object.fromEntries(Object.entries(o && typeof o === 'object' ? o : {}).filter(([k, x]) => stops.has(k) && ok(x)));
+    const got = keep(so.got, x => typeof x === 'string');
+    v.sound = {
+      got,
+      quiz: keep(so.quiz, x => x === true && true),
+      quiet: keep(so.quiet, x => typeof x === 'string'),
+      note: keep(so.note, x => typeof x === 'string' && x.length <= 60),
+      page: Number.isInteger(so.page) && so.page >= 0 ? so.page : 0,
+    };
+    ['quiz', 'quiet', 'note'].forEach(k => { for (const id of Object.keys(v.sound[k])) if (!got[id]) delete v.sound[k][id]; }); // 没收集的站不能有后面几枚章
     return v;
   }
 

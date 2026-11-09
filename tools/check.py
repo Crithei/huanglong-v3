@@ -250,6 +250,41 @@ if badges is not None and stations is not None:
     if badges.get("species") and not badges.get("speciesRule"):
         err("badges：有 species 时要写 speciesRule（互动页显示的规则说明）")
 
+# ---------- 听见黄龙 data/birds.js ----------
+birds = load_data("birds")
+if birds is not None:
+    if not birds.get("credit"):
+        err("birds：缺少 credit（研究团队署名）")
+    if not isinstance(birds.get("quietSeconds"), int) or not 5 <= birds["quietSeconds"] <= 120:
+        err("birds：quietSeconds 要是 5–120 的整数")
+    nos = set()
+    for s in birds.get("stops", []):
+        where = "birds.stops %s" % s.get("id", "?")
+        for f in ("id", "no", "place", "bird", "latin", "en", "size", "look", "voice", "sono", "habit", "habitat", "tip"):
+            if not s.get(f):
+                err("%s：缺少 %s" % (where, f))
+        if s.get("id"):
+            claim(s["id"], where)
+        if s.get("no") in nos:
+            err("%s：编号 %s 重复" % (where, s.get("no")))
+        nos.add(s.get("no"))
+        if len(s.get("keys") or []) < 1:
+            err("%s：keys 至少一个" % where)
+        if len(s.get("colors") or []) < 2:
+            err("%s：colors 至少两个" % where)
+        for k, n in enumerate(s.get("notes") or []):
+            if n.get("shape") not in ("sweep", "arc", "trill"):
+                err("%s notes[%d]：shape 只能是 sweep / arc / trill" % (where, k))
+            if not (0 <= n.get("t", -1) and n.get("t", 0) + n.get("d", 0) <= 3):
+                err("%s notes[%d]：要落在 0–3 秒内" % (where, k))
+            for f in ("f0", "f1"):
+                if not 0 <= n.get(f, -1) <= 10:
+                    err("%s notes[%d]：%s 要在 0–10 千赫" % (where, k, f))
+        if not s.get("notes"):
+            err("%s：缺少 notes（声纹示意）" % where)
+    if len(birds.get("stops", [])) < 3:
+        err("birds：至少要有 3 个驿站，否则看声纹认鸟凑不齐三个选项")
+
 # ---------- 首页配置 ----------
 if meta is not None and stations is not None:
     for i in meta.get("featured", []):
