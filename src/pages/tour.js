@@ -33,6 +33,7 @@
       ${HL.factChips(s)}
       ${HL.waterHint(s)}
       ${HL.labHint(s)}
+      ${HL.soundHint(s)}
       ${off ? `<div class="empty" style="margin-top:14px">按你的路线，这一站只路过看一眼。<br><button class="btn btn-ghost" type="button" data-act="toggle-stop" data-id="${s.id}">改成停下细看</button></div>` : ''}
       <div class="guide-block"><h3>看什么</h3><p>${esc(s.viewing)}</p></div>
       ${s.highlights.length ? `<ul class="highlights">${s.highlights.map(h => `<li>${esc(h)}</li>`).join('')}</ul>` : ''}

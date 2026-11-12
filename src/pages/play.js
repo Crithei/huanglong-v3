@@ -23,9 +23,13 @@
 
       <section class="sec play-sec" aria-labelledby="h-sound">
         <div class="sec-h"><h2 id="h-sound">听见黄龙</h2><span class="aside" id="play-sound-count"></span></div>
+        <div class="hb-switch" role="tablist" aria-label="选一本手册">
+          <button type="button" role="tab" data-act="sound-which" data-v="guide"><b>栈道手册</b><small>认识声纹栈道和五种鸟</small></button>
+          <button type="button" role="tab" data-act="sound-which" data-v="collect"><b>声景手册</b><small>沿途录下水、风、鸟和安静</small></button>
+        </div>
         <div id="sound-book"></div>
         <div class="sound-scan" id="sound-scan"></div>
-        <p class="sound-credit">${HL.esc(HL.data.birds.credit)}</p>
+        <p class="sound-credit" id="sound-credit"></p>
       </section>
 
       <div id="play-collect"></div>`;
@@ -38,8 +42,6 @@
     $('#play-water-count').textContent = `${HL.waterDone()} / 4 章`;
     $('#play-lab-count').textContent = S.lab.stickerAt ? '已收下贴纸' : `发现 ${S.lab.found.length} / 3`;
     HL.waterRefresh(); HL.labRefresh(); HL.soundRender();
-    $('#sound-scan').innerHTML = `<b>${icon('pin')}原型：模拟在驿站碰一碰</b><p>实地会在栈道上的声音驿站贴 NFC 或二维码（位置待定），手机碰一下或扫一下就打开这一站。</p>
-      <div class="chips">${HL.data.birds.stops.map(s => `<button class="chip${S.sound.got[s.id] ? ' is-got' : ''}" type="button" data-act="sound-scan" data-id="${s.id}">No.${s.no} ${S.sound.got[s.id] ? esc(s.bird) : '驿站'}</button>`).join('')}</div>`;
     $('#play-collect').innerHTML = `
       <section class="sec" aria-labelledby="h-stamps">
         <div class="sec-h"><h2 id="h-stamps">山水护照</h2><span class="aside">收下 ${S.visited.length} / ${ST.length} 枚</span></div>

@@ -90,7 +90,19 @@
       quiz: keep(so.quiz, x => x === true && true),
       quiet: keep(so.quiet, x => typeof x === 'string'),
       note: keep(so.note, x => typeof x === 'string' && x.length <= 60),
+      nodes: Object.fromEntries(((HL.data.birds && HL.data.birds.nodes) || []).filter(n => so.nodes && so.nodes[n.id] === true).map(n => [n.id, true])), // 到过的栈道节点
       page: Number.isInteger(so.page) && so.page >= 0 ? so.page : 0,
+      page2: Number.isInteger(so.page2) && so.page2 >= 0 ? so.page2 : 0, // 声景手册翻到第几页
+      book: so.book === 'collect' ? 'collect' : 'guide',                   // 互动页显示哪一本
+      /* 声景手册：每个采集点一张标本（时间、类别、手机猜的类别、声纹小图）；录音本身在 IndexedDB */
+      bank: (() => {
+        const sd = HL.data.sounds || { targets: [], kinds: [] }, ks = new Set(sd.kinds.map(k => k.id)), out = {};
+        for (const t of sd.targets) {
+          const b = so.bank && so.bank[t.id];
+          if (b && typeof b.at === 'string' && ks.has(b.kind) && typeof b.img === 'string' && /^data:image\/(webp|jpeg|png);base64,/.test(b.img) && b.img.length < 80000) out[t.id] = { at: b.at, kind: b.kind, guess: ks.has(b.guess) ? b.guess : b.kind, img: b.img };
+        }
+        return out;
+      })(),
     };
     ['quiz', 'quiet', 'note'].forEach(k => { for (const id of Object.keys(v.sound[k])) if (!got[id]) delete v.sound[k][id]; }); // 没收集的站不能有后面几枚章
     return v;

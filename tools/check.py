@@ -257,21 +257,58 @@ if birds is not None:
         err("birds：缺少 credit（研究团队署名）")
     if not isinstance(birds.get("quietSeconds"), int) or not 5 <= birds["quietSeconds"] <= 120:
         err("birds：quietSeconds 要是 5–120 的整数")
+    trail = birds.get("trail") or {}
+    for f in ("name", "motto", "where", "from", "to", "facts", "altitude"):
+        if not trail.get(f):
+            err("birds.trail：缺少 %s" % f)
+    for f in ("from", "to"):
+        if stations is not None and trail.get(f) and trail[f] not in station_ids:
+            err("birds.trail.%s：没有景点「%s」" % (f, trail[f]))
+    for n in birds.get("nodes", []):
+        where = "birds.nodes %s" % n.get("id", "?")
+        for f in ("id", "name", "img", "line", "detail"):
+            if not n.get(f):
+                err("%s：缺少 %s" % (where, f))
+        if n.get("img"):
+            check_asset(n["img"], where)
+    sci = birds.get("science") or {}
+    for f in ("what", "factors", "stable", "uses", "callSong", "monitor", "day", "months", "space"):
+        if not sci.get(f):
+            err("birds.science：缺少 %s" % f)
+    for h in (sci.get("day") or {}).get("rich", {}):
+        if not h.isdigit() or not 0 <= int(h) <= 23:
+            err("birds.science.day.rich：钟点「%s」不对" % h)
+    for sc in birds.get("scenes", []):
+        if not sc.get("id") or not sc.get("name") or not sc.get("text") or not sc.get("voice"):
+            err("birds.scenes %s：缺少 id / name / text / voice" % sc.get("id", "?"))
+        if any(not 1 <= m <= 12 for m in sc.get("months", [])) or any(not 0 <= h <= 23 for h in sc.get("hours", [])):
+            err("birds.scenes %s：months 要在 1–12，hours 要在 0–23" % sc.get("id", "?"))
+    for pr in birds.get("press", []):
+        if len(pr) != 4:
+            err("birds.press：每条要有 媒体、标题、日期、网址")
+        else:
+            check_url(pr[3], "birds.press %s" % pr[0])
     nos = set()
     for s in birds.get("stops", []):
         where = "birds.stops %s" % s.get("id", "?")
-        for f in ("id", "no", "place", "bird", "latin", "en", "size", "look", "voice", "sono", "habit", "habitat", "tip"):
+        for f in ("id", "no", "place", "bird", "pinyin", "latin", "en", "family", "look", "voice", "sono", "habit", "habitat", "tip"):
             if not s.get(f):
                 err("%s：缺少 %s" % (where, f))
+        for f in ("weight", "length"):
+            if len(s.get(f) or []) != 2:
+                err("%s：%s 要写 [雄, 雌] 两项" % (where, f))
+        if s.get("alt") is not None and not (len(s["alt"]) == 2 and 0 <= s["alt"][0] < s["alt"][1] <= 5000):
+            err("%s：alt 要是 [低, 高]，在 0–5000 米之间；没有就写 null" % where)
         if s.get("id"):
             claim(s["id"], where)
+            check_asset("assets/sound/bird-%s.webp" % s["id"], where)
         if s.get("no") in nos:
             err("%s：编号 %s 重复" % (where, s.get("no")))
         nos.add(s.get("no"))
         if len(s.get("keys") or []) < 1:
             err("%s：keys 至少一个" % where)
-        if len(s.get("colors") or []) < 2:
-            err("%s：colors 至少两个" % where)
+        if len(s.get("colors") or []) < 3:
+            err("%s：colors 至少三个（第三个用作鸟页的底色纸）" % where)
         for k, n in enumerate(s.get("notes") or []):
             if n.get("shape") not in ("sweep", "arc", "trill"):
                 err("%s notes[%d]：shape 只能是 sweep / arc / trill" % (where, k))
@@ -284,6 +321,33 @@ if birds is not None:
             err("%s：缺少 notes（声纹示意）" % where)
     if len(birds.get("stops", [])) < 3:
         err("birds：至少要有 3 个驿站，否则看声纹认鸟凑不齐三个选项")
+    for f in ("cover", "poly-pair", "poly-nest", "poly-feed"):
+        check_asset("assets/sound/%s.webp" % f, "听见黄龙手册")
+
+# ---------- 声景手册 data/sounds.js ----------
+sounds = load_data("sounds")
+if sounds is not None:
+    if not isinstance(sounds.get("recordSeconds"), int) or not 3 <= sounds["recordSeconds"] <= 30:
+        err("sounds：recordSeconds 要是 3–30 的整数")
+    kinds = {k.get("id") for k in sounds.get("kinds", [])}
+    for k in sounds.get("kinds", []):
+        for f in ("id", "name", "label", "color", "hint"):
+            if not k.get(f):
+                err("sounds.kinds %s：缺少 %s" % (k.get("id", "?"), f))
+    for need in ("water", "wind", "bird", "quiet", "voice"):
+        if need not in kinds:
+            err("sounds.kinds：缺少 %s（粗略判断会用到）" % need)
+    for s in sounds.get("targets", []):
+        where = "sounds.targets %s" % s.get("id", "?")
+        for f in ("id", "kind", "station", "title", "listen", "tip"):
+            if not s.get(f):
+                err("%s：缺少 %s" % (where, f))
+        if s.get("id"):
+            claim(s["id"], where)
+        if s.get("kind") not in kinds or s.get("kind") == "voice":
+            err("%s：kind 要是 water / wind / bird / quiet" % where)
+        if stations is not None and s.get("station") not in station_ids:
+            err("%s：没有景点「%s」" % (where, s.get("station")))
 
 # ---------- 首页配置 ----------
 if meta is not None and stations is not None:
