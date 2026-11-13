@@ -68,7 +68,7 @@
           const st = HL.speciesState(sp), where = sp.stations.map(id => idx.station[id].name).join('或');
           const sub = st === 'got' ? '已点亮' : st === 'near' ? `找线索：${sp.clue.label}` : `到${where}打卡`;
           return `<button class="badge is-${st}${st === 'got' ? ' is-got' : ''}" type="button" data-act="species" data-id="${sp.id}" aria-label="${esc(sp.name)}，${esc(sub)}">
-            <img src="${esc(sp.img)}" alt="" loading="lazy" decoding="async"><b>${esc(sp.name)}</b><span>${esc(sub)}</span></button>`;
+            ${HL.badge3d.mini(sp.img, st, HL.speciesMetal(sp))}<b>${esc(sp.name)}</b><span>${esc(sub)}</span></button>`;
         }).join('')}</div>
       </section>
       <p class="note" style="margin:16px 20px 0">打卡和线索都是手动记录，不核验位置；徽章只作纪念，不能兑换实物。</p>`;

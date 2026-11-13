@@ -1,0 +1,92 @@
+/* 生灵徽章金属检视器（逻辑见 features/badge3d.js）。
+   --src 是徽章图，同时用作各层的蒙版；--gx/--gy 是高光位置，--side 越接近 1 越侧着。 */
+.bv { position: relative; display: grid; justify-items: center; padding: 22px 0 6px; margin: 0 -20px; overflow: hidden;
+  background: radial-gradient(120% 80% at 50% 38%, #fbf6ea 0%, #f1e8d2 55%, #e6dbc1 100%); }
+.bv-stage { width: min(68vw, 270px); aspect-ratio: 422 / 480; perspective: 900px; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
+.bv.is-drag .bv-stage { cursor: grabbing; }
+.bv-obj { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; will-change: transform; }
+.bv-obj > * { position: absolute; inset: 0; }
+
+/* 同形状蒙版 */
+.bv-edge, .bv-plate, .bv-sheen {
+  -webkit-mask: var(--src) center / contain no-repeat; mask: var(--src) center / contain no-repeat; }
+/* 描边蒙版：只有金色凸线和外框（tools/metal-mask.py 从徽章图里挑出来的） */
+.bv-gild, .bv-glint, .bv-holo, .bv-mini::after {
+  -webkit-mask: var(--metal) center / contain no-repeat; mask: var(--metal) center / contain no-repeat; }
+
+/* 侧边：沿轮廓走的金属色，深浅交替像车削出来的边 */
+.bv-edge { background: linear-gradient(115deg, #6d4a1a 0%, #d9b064 22%, #8d6427 40%, #f2d58f 58%, #9a6e2c 76%, #5e3f15 100%); }
+
+.bv-face { backface-visibility: hidden; -webkit-backface-visibility: hidden; isolation: isolate; }
+.bv-front { transform: translateZ(9.01px); }
+.bv-front > i { position: absolute; inset: 0; }
+.bv-back { transform: rotateY(180deg) translateZ(9.01px); }
+.bv-front img { width: 100%; height: 100%; object-fit: contain; display: block; pointer-events: none;
+  filter: drop-shadow(0 0 .5px rgba(90, 60, 20, .6)); }
+
+/* 正面：一条随角度滑动的白色高光 + 一层很淡的镭射彩 */
+.bv-sheen { pointer-events: none; mix-blend-mode: soft-light; opacity: .55;
+  background: linear-gradient(110deg, transparent 0 34%, rgba(255, 255, 255, .85) 46%, rgba(255, 250, 230, .35) 52%, transparent 64% 100%) var(--gx, 50%) var(--gy, 50%) / 260% 260% no-repeat; }
+.bv-holo { pointer-events: none; mix-blend-mode: color-dodge; opacity: .14;
+  background: linear-gradient(125deg, #ff7aa8, #ffd36b, #7cf0c4, #74b8ff, #c79bff, #ff7aa8) var(--gx, 50%) 50% / 300% 100%; }
+
+/* 描边反光：一层偏暖的金属渐变让线条更亮，一道窄的高光沿角度扫过，像抛光的金线在反光 */
+.bv-gild { pointer-events: none; mix-blend-mode: overlay; opacity: .75;
+  background: linear-gradient(160deg, #fff3c4 0%, #d8a640 35%, #fff0b8 55%, #9c6a1e 80%, #f6dc94 100%) 50% var(--gy, 50%) / 100% 200%; }
+.bv-glint { pointer-events: none; mix-blend-mode: color-dodge;
+  background: linear-gradient(112deg, transparent 0 40%, rgba(255, 236, 180, .55) 46%, #fff 50%, rgba(255, 236, 180, .55) 54%, transparent 60% 100%) var(--gx, 50%) var(--gy, 50%) / 300% 300% no-repeat; }
+.bv.is-near .bv-gild { opacity: .55; } .bv.is-near .bv-glint { opacity: .7; }
+.bv.is-locked .bv-gild { display: none; } .bv.is-locked .bv-glint { opacity: .6; }
+
+/* 背面：拉丝金板，刻字凹进去 */
+.bv-plate { background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, .07) 0 1px, rgba(0, 0, 0, .05) 1px 2px),
+    radial-gradient(90% 70% at 50% 40%, #f5dfa4 0%, #e3c27a 45%, #c9a35a 80%, #b38d48 100%); }
+.bv-back .bv-sheen { mix-blend-mode: soft-light; opacity: 1; }
+.bv-text { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 34% 18% 16%; text-align: center;
+  color: rgba(112, 76, 22, .82); text-shadow: 0 1px 0 rgba(255, 244, 210, .7), 0 -1px 0 rgba(90, 58, 12, .3); }
+.bv-text small { font-size: 10px; letter-spacing: .2em; }
+.bv-text b { font: 700 26px/1.2 var(--serif); letter-spacing: .12em; }
+.bv-text i { font: italic 11px/1.3 var(--serif); }
+.bv-text em { font-style: normal; font-size: 11.5px; letter-spacing: .06em; }
+.bv-text .bv-no { margin-top: 6px; font-family: ui-monospace, Menlo, monospace; letter-spacing: .12em; }
+.bv-rule { width: 46%; height: 1px; margin: 6px 0 4px; background: rgba(112, 76, 22, .5); box-shadow: 0 1px 0 rgba(255, 244, 210, .7); }
+.bv-clutch { position: absolute; top: 12%; width: 13%; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, #fff4cf 0 12%, #e2c17a 30%, #a47a35 70%, #7a5620 100%);
+  box-shadow: 0 2px 3px rgba(70, 45, 10, .45), inset 0 -2px 3px rgba(80, 50, 10, .4); }
+.bv-clutch.l { left: 28%; } .bv-clutch.r { right: 28%; }
+.bv-clutch i { position: absolute; inset: 34%; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #fff 0 15%, #c9a35a 60%, #6d4a1a); }
+.bv-back .bv-plate, .bv-back .bv-sheen, .bv-back .bv-text { position: absolute; inset: 0; }
+
+/* 地面的影子：侧过去时变窄 */
+.bv-shadow { width: 58%; height: 14px; margin-top: 10px; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(80, 55, 20, .32), transparent);
+  transform: scaleX(calc(1 - var(--side, 0) * .55)); }
+.bv-tip { margin: 8px 0 0; font-size: 12px; color: var(--ink-2); letter-spacing: .06em; }
+
+/* 未点亮：到站后是暗色金属剪影，没到站更淡 */
+.bv.is-near .bv-front img { filter: grayscale(1) brightness(.32) contrast(1.4); }
+.bv.is-near .bv-edge { filter: grayscale(.9) brightness(.7); }
+.bv.is-near .bv-plate { filter: grayscale(.9) brightness(.75); }
+.bv.is-near .bv-holo, .bv.is-locked .bv-holo { display: none; }
+/* 没到站：浅色锡坯。不能给 .bv-obj 设 opacity，半透明会把 3D 层压平，侧边厚度就没了 */
+.bv.is-locked .bv-front img { filter: grayscale(1) contrast(.5) brightness(1.32); }
+.bv.is-locked .bv-plate, .bv.is-locked .bv-edge { filter: grayscale(1) brightness(1.18); }
+
+/* 邮戳：已点亮的日期 */
+.bv-stamp { position: absolute; top: 10px; right: 12px; width: 108px; transform: rotate(-12deg); color: rgba(120, 112, 100, .62); pointer-events: none; }
+.bv-stamp svg { display: block; width: 100%; height: auto; }
+
+/* 互动页格子里的小徽章：已点亮的每隔几秒扫过一道光 */
+.bv-mini { position: relative; display: block; width: 64px; height: 72px; filter: drop-shadow(0 3px 3px rgba(80, 55, 20, .28)); }
+.badges.species .bv-mini img { width: 100%; height: 100%; object-fit: contain; }
+.bv-mini::after { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  background: linear-gradient(110deg, transparent 38%, #fff6d6 50%, transparent 62%) 120% 0 / 300% 100% no-repeat; mix-blend-mode: color-dodge; }
+.bv-mini.is-got::after { opacity: 1; animation: bv-sweep 5s ease-in-out infinite; }
+.badge:nth-child(3n+2) .bv-mini::after { animation-delay: 1.6s; }
+.badge:nth-child(3n) .bv-mini::after { animation-delay: 3.2s; }
+@keyframes bv-sweep { 0%, 62% { background-position: 120% 0; } 100% { background-position: -20% 0; } }
+.badges.species .badge.is-got { background: linear-gradient(160deg, #fbf3dc, #efe1b8); }
+.badges.species .badge.is-got:active .bv-mini { transform: perspective(300px) rotateY(-14deg) scale(1.04); transition: transform .15s; }
+
+@media (prefers-reduced-motion: reduce) { .bv-mini.is-got::after { animation: none; opacity: 0; } }

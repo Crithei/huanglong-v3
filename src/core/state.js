@@ -27,6 +27,7 @@
     wish: [],                       // 想去的景点
     want: [],                       // 想要的文创
     seen: [],                       // 已点亮的生灵徽章（到站后找到观察线索），见 data/badges.js 的 species
+    seenAt: {},                     // 生灵徽章点亮的时间（ISO 字符串），徽章背面和邮戳用
     sound: null,                    // 听见黄龙：声音驿站收集、认声纹、安静挑战、记录、手册翻到第几页，见 features/sound.js（由 sanitize 补全）
   });
 
@@ -63,6 +64,8 @@
     /* 生灵徽章要先到对应站打卡；撤回打卡后，那一站的线索也一起作废 */
     const sp = Object.fromEntries(((HL.data.badges && HL.data.badges.species) || []).map(x => [x.id, x]));
     v.seen = [...new Set(Array.isArray(v.seen) ? v.seen : [])].filter(id => sp[id] && sp[id].stations.some(s => v.visited.includes(s)));
+    const at = v.seenAt && typeof v.seenAt === 'object' ? v.seenAt : {};
+    v.seenAt = Object.fromEntries(v.seen.filter(id => typeof at[id] === 'string' && !isNaN(Date.parse(at[id]))).map(id => [id, at[id]]));
     delete v.species; // 旧版「问导游解锁」的记录，规则已改，不再沿用
     if (v.page === 'mine') v.page = 'play'; // 旧版的「我的」页已拆成互动和服务
     if (!PAGES.includes(v.page)) v.page = 'home';

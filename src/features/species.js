@@ -9,10 +9,13 @@
 
   /* locked 还没到站 / near 已到站、待找线索 / got 已点亮 */
   HL.speciesState = sp => S.seen.includes(sp.id) ? 'got' : sp.stations.some(id => S.visited.includes(id)) ? 'near' : 'locked';
+  /* 金属描边蒙版和徽章图同名，放在 assets/species/metal/（tools/metal-mask.py 生成） */
+  HL.speciesMetal = sp => sp.img.replace('assets/species/', 'assets/species/metal/');
   HL.speciesAt = stationId => SP.filter(sp => sp.stations.includes(stationId));
 
   /* 撤回打卡时，靠这一站点亮的徽章一起收回（另一站也打过卡的不收回） */
-  HL.pruneSeen = () => { S.seen = S.seen.filter(id => { const sp = byId(id); return sp && sp.stations.some(s => S.visited.includes(s)); }); };
+  HL.pruneSeen = () => { S.seen = S.seen.filter(id => { const sp = byId(id); return sp && sp.stations.some(s => S.visited.includes(s)); });
+    Object.keys(S.seenAt).forEach(id => { if (!S.seen.includes(id)) delete S.seenAt[id]; }); };
 
   /* 站点面板里的「这一段的生灵」 */
   HL.speciesBlock = s => {
@@ -36,6 +39,7 @@
     if (!sp || !sp.stations.some(id => S.visited.includes(id))) return;
     const before = HL.store.snapshot(), had = S.seen.includes(sp.id);
     S.seen = had ? S.seen.filter(x => x !== sp.id) : [...S.seen, sp.id];
+    if (had) delete S.seenAt[sp.id]; else S.seenAt[sp.id] = new Date().toISOString();
     HL.store.save(); HL.renderAll();
     if (el.closest('#layer')) HL.actions.species({ dataset: { id: sp.id } }); // 在徽章详情里点的，刷新详情
     HL.toast(had ? `已取消点亮「${sp.name}」` : `点亮生灵徽章「${sp.name}」`,
@@ -50,9 +54,11 @@
     const where = sp.stations.map(id => idx.station[id].name).join('或');
     const lead = st === 'got' ? '已点亮' : st === 'near' ? `已到站，还差一条线索：${sp.clue.label}` : `到${where}打卡后显出剪影`;
     const main = st === 'near' && sp.stations.find(id => S.visited.includes(id));
+    const at = st === 'got' && S.seenAt[sp.id] ? new Date(S.seenAt[sp.id]) : null;
     HL.openSheet({
       title: sp.name,
-      body: `<div class="sheet-media square badge-media"><img src="${esc(sp.img)}" alt="${esc(sp.name)}徽章" class="sp-${st}"></div>
+      body: `${HL.badge3d.html({ src: sp.img, metal: HL.speciesMetal(sp), state: st, name: sp.name, latin: sp.latin, en: sp.en, place: where,
+          date: at ? fmt(at, '.') : '', no: SP.indexOf(sp) + 1, total: SP.length, stamp: at ? stamp(at) : '' })}
         <p class="lead">${esc(lead)}</p>
         <p class="latin"><i>${esc(sp.latin)}</i> · ${esc(sp.en)}</p>
         ${st === 'locked' ? '' : `<p>${esc(sp.description)}</p>`}
@@ -63,7 +69,17 @@
         ${main ? `<button class="btn btn-primary" type="button" data-act="species-seen" data-id="${sp.id}">${icon('leaf')}找到了</button>`
           : `<button class="btn ${st === 'got' ? 'btn-ghost' : 'btn-primary'}" type="button" data-act="species-go" data-id="${sp.id}">${icon('map')}去${esc(idx.station[sp.stations[0]].name)}</button>`}</div>`,
     });
+    HL.badge3d.mount(document.querySelector('#layer .bv')); // 启动金属检视器
   });
+
+  const fmt = (d, sep) => [d.getFullYear(), d.getMonth() + 1, d.getDate()].map(n => String(n).padStart(2, '0')).join(sep);
+  /* 邮戳：圆章 + 右侧波浪线，写点亮的日期 */
+  const stamp = d => `<div class="bv-stamp" aria-label="${fmt(d, '年').replace(/年(\d+)$/, '月$1日')}点亮"><svg viewBox="0 0 120 84" fill="none" stroke="currentColor">
+      <circle cx="42" cy="42" r="36" stroke-width="3"/><circle cx="42" cy="42" r="29" stroke-width="1.2"/>
+      ${[30, 38, 46, 54].map(y => `<path d="M78 ${y} q7 -6 14 0 t14 0 t14 0" stroke-width="2"/>`).join('')}
+      <text x="42" y="30" text-anchor="middle" font-size="10" fill="currentColor" stroke="none" letter-spacing="1">已点亮</text>
+      <text x="42" y="51" text-anchor="middle" font-size="19" font-weight="700" fill="currentColor" stroke="none">${d.getMonth() + 1}·${d.getDate()}</text>
+      <text x="42" y="64" text-anchor="middle" font-size="10" font-weight="700" fill="currentColor" stroke="none">${d.getFullYear()}</text></svg></div>`;
 
   HL.act('species-go', el => { const sp = byId(el.dataset.id); if (sp) { HL.closeSheet(); HL.selectStation(sp.stations[0]); } });
   HL.act('species-ask', el => { const sp = byId(el.dataset.id); if (sp) HL.askGuide(`给我讲讲${sp.name}`, 'qiyu'); });
