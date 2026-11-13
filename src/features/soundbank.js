@@ -25,6 +25,22 @@
   const place = t => t.place || idx.station[t.station].name;
   const done = () => TG.filter(t => S.sound.bank[t.id]).length;
 
+  /* 声纹圆盘（features/sounddisc.js）：按类别换风格，按「采集点 + 录音时间」定种子 */
+  const shortDate = iso => { const d = new Date(iso); return `${d.getMonth() + 1}.${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; };
+  const discOpts = (t, k, at) => ({ kind: k, seed: t.id + at, glyph: kind(k).name, text: `${place(t)} · ${shortDate(at)} · ${kind(k).label}` });
+  const disc = (t, b, alt = '') => b.spec
+    ? `<img class="bk-disc" data-disc="${t.id}" src="${HL.soundDisc.url(b.spec, discOpts(t, b.kind, b.at))}" alt="${esc(alt)}" draggable="false">`
+    : `<img class="bk-disc is-legacy" data-disc="${t.id}" src="${b.img}" alt="${esc(alt)}" draggable="false">`;
+  /* 旧版存的是矩形声纹图：读像素换成频谱数据，存回去，再画成圆盘 */
+  let migrating = false;
+  async function migrate() {
+    const old = TG.filter(t => S.sound.bank[t.id] && !S.sound.bank[t.id].spec && S.sound.bank[t.id].img);
+    if (!old.length || migrating) return;
+    migrating = true;
+    for (const t of old) { const spec = await HL.soundDisc.fromImage(S.sound.bank[t.id].img); if (spec) { S.sound.bank[t.id].spec = spec; delete S.sound.bank[t.id].img; } }
+    migrating = false; save(); HL.bankRender();
+  }
+
   /* ---------- 录音存储：IndexedDB，只在本机 ---------- */
   const DBN = 'huanglong-sound', ST = 'clips';
   function idb(mode, fn) {
@@ -49,7 +65,7 @@
 
   function slot(t) {
     const b = S.sound.bank[t.id], k = kind(t.kind);
-    const got = b ? `<div class="bk-spec" style="--k:${kind(b.kind).color}">${tape()}<img src="${b.img}" alt="${esc(t.title)}的声纹标本" draggable="false">
+    const got = b ? `<div class="bk-spec" style="--k:${kind(b.kind).color}">${tape()}${disc(t, b, `${t.title}的声纹标本`)}
         <div class="bk-spec-meta">${strip(kind(b.kind).label, 'bk-kind')}<small>${esc(fmtDate(b.at))}</small>
           <button type="button" data-act="bank-play" data-id="${t.id}" aria-label="播放${esc(t.title)}">${icon('play')}</button></div></div>`
       : `<button class="bk-empty" type="button" data-act="bank-rec" data-id="${t.id}" style="--k:${k.color}">${icon('audio')}到这里录 ${SEC} 秒</button>`;
@@ -121,9 +137,9 @@
     const got = TG.filter(t => S.sound.bank[t.id]);
     add('wall', 'bk-wall', `${run('标本墙')}
       <h4>我的声音标本</h4>
-      ${got.length ? `<div class="bk-grid">${got.map((t, i) => { const b = S.sound.bank[t.id]; return `<button type="button" data-act="bank-play" data-id="${t.id}" style="--r:${[-3, 2, -1.5, 2.5, -2, 1.5][i % 6]}deg;--k:${kind(b.kind).color}">${tape()}<img src="${b.img}" alt="" draggable="false"><b>${esc(t.title)}</b><small>${esc(kind(b.kind).label)}</small></button>`; }).join('')}</div>`
+      ${got.length ? `<div class="bk-grid">${got.map((t, i) => { const b = S.sound.bank[t.id]; return `<button type="button" data-act="bank-play" data-id="${t.id}" style="--r:${[-3, 2, -1.5, 2.5, -2, 1.5][i % 6]}deg;--k:${kind(b.kind).color}">${disc(t, b)}<b>${esc(t.title)}</b><small>${esc(kind(b.kind).label)}</small></button>`; }).join('')}</div>`
         : '<p class="bk-none">还没有标本。翻到「水」「风」「鸟」「静」，找一个地方录第一段。</p>'}
-      <p class="hb-foot">点一张标本，回放那一段声音</p>`);
+      <p class="hb-foot">点一张唱片，回放那一段声音</p>`);
 
     const all = n === TG.length;
     add('wall', `hb-end${all ? ' is-done' : ''}`, `${run('小结')}
@@ -144,6 +160,7 @@
     const host = $('#sound-book');
     if (!host) return;
     book.render(host);
+    migrate();
     const cnt = $('#play-sound-count');
     if (cnt) cnt.textContent = `已采集 ${done()} / ${TG.length} 段`;
     const scan = $('#sound-scan');
@@ -155,13 +172,15 @@
 
   /* ---------- 回放 ---------- */
   let player = null;
+  /* 播放时对应的圆盘像唱片一样转 */
+  const spin = id => document.querySelectorAll('.bk-disc').forEach(d => d.classList.toggle('is-spin', d.dataset.disc === id));
   HL.act('bank-play', async el => {
-    if (player) { player.pause(); URL.revokeObjectURL(player.src); const same = player.dataset.id === el.dataset.id; player = null; if (same) return; }
+    if (player) { player.pause(); URL.revokeObjectURL(player.src); const same = player.dataset.id === el.dataset.id; player = null; spin(null); if (same) return; }
     const blob = await clipGet(el.dataset.id);
-    if (!blob) { HL.toast('这段录音不在这台手机上了，只剩声纹图'); return; }
+    if (!blob) { HL.toast('这段录音不在这台手机上了，只剩声纹'); return; }
     player = new Audio(URL.createObjectURL(blob)); player.dataset.id = el.dataset.id;
-    player.onended = () => { URL.revokeObjectURL(player.src); player = null; };
-    player.play().catch(() => HL.toast('播放失败'));
+    player.onended = () => { URL.revokeObjectURL(player.src); player = null; spin(null); };
+    player.play().then(() => spin(el.dataset.id)).catch(() => HL.toast('播放失败'));
   });
 
   /* ---------- 粗略判断 ---------- */
@@ -193,6 +212,7 @@
   HL.openBankRec = id => {
     const t = byId(id), k = kind(t.kind), b = S.sound.bank[id];
     stopRec();
+    const at0 = b ? b.at : new Date().toISOString();
     HL.openSheet({
       title: '采集声音', cls: 'sound-sheet bank-sheet',
       body: `
@@ -200,15 +220,17 @@
         <p class="br-listen">${esc(t.listen)}</p>
         <p class="sd-tip">${icon('info')}${esc(t.tip)}</p>
         <div class="br-rec">
-          <div class="br-view"><canvas id="brCanvas" width="720" height="200" aria-label="正在录的声音的声纹"></canvas><i class="br-head" id="brHead"></i>
-            <div class="br-idle" id="brIdle">${b ? '已经采过一段。再录会替换旧的标本。' : `按下按钮，安静地录 ${SEC} 秒`}</div>
-            <span class="sd-axis-hi">高音</span><span class="sd-axis-lo">低音</span></div>
+          <div class="br-view"><canvas id="brCanvas" width="360" height="360" aria-label="正在录的声音的声纹圆盘"></canvas><i class="br-head" id="brHead"></i></div>
+          <div class="br-idle" id="brIdle">${b ? '已经采过一段，再录会替换旧的标本。' : `按下按钮，安静地录 ${SEC} 秒，指针转一圈就录完了。`}<br><small>圆心是低音，外圈是高音</small></div>
           <button class="br-btn" type="button" data-act="bank-start" data-id="${id}" id="brBtn" aria-label="开始录音"><i></i><span id="brBtnText">录 ${SEC} 秒</span></button>
           <p class="sd-result" id="brMsg" role="status"></p>
         </div>
         <div class="br-out" id="brOut" hidden></div>
-        <p class="note">录音和声纹只存在这台手机上，不上传。分类是按频谱特征粗略判断的，可以改。</p>`,
+        <p class="note">录音和声纹只存在这台手机上，不上传。分类是按频谱特征粗略判断的，可以改；换了类别，圆盘的样式也跟着换。</p>`,
     });
+    const cv = $('#brCanvas');
+    if (b && b.spec) HL.soundDisc.draw(cv, b.spec, discOpts(t, b.kind, b.at));
+    else HL.soundDisc.live(cv, discOpts(t, t.kind, at0));
   };
 
   async function startRec(id) {
@@ -226,11 +248,11 @@
       const type = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/aac'].find(m => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m));
       try { mr = new MediaRecorder(stream, type ? { mimeType: type } : undefined); mr.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); }; mr.start(); } catch (e) { mr = null; }
     }
-    const cv = $('#brCanvas'), g = cv.getContext('2d');
-    g.fillStyle = '#0f2a2b'; g.fillRect(0, 0, cv.width, cv.height);
-    rec = { id, stream, ctx, an, mr, chunks, raf: 0, t0: performance.now(), x: 0, freq: new Float32Array(an.frequencyBinCount), wave: new Float32Array(an.fftSize),
+    const tg = byId(id), at = new Date().toISOString(), disc0 = HL.soundDisc.live($('#brCanvas'), discOpts(tg, tg.kind, at));
+    $('#brHead').style.setProperty('--a0', disc0.a0 + 'rad');
+    rec = { id, at, disc: disc0, frames: [], cur: 0, acc: new Array(HL.soundDisc.F).fill(0), stream, ctx, an, mr, chunks, raf: 0, t0: performance.now(), freq: new Float32Array(an.frequencyBinCount), wave: new Float32Array(an.fftSize),
       st: { level: [], flat: [], low: [], hiTone: [], loTone: [], cent: [], hiE: [], hiFrac: [] } };
-    $('#brIdle').hidden = true; $('#brOut').hidden = true;
+    $('#brIdle').hidden = true; $('#brOut').hidden = true; $('#brHead').classList.add('is-on');
     const btn = $('#brBtn'); btn.classList.add('is-rec'); btn.dataset.act = 'bank-cancel'; btn.setAttribute('aria-label', '停止录音');
     msg.textContent = '在录了。别说话，听。';
     tick();
@@ -239,19 +261,19 @@
   function tick() {
     const r = rec, cv = $('#brCanvas');
     if (!r || !cv) { stopRec(); return; }
-    const g = cv.getContext('2d'), W = cv.width, H = cv.height, el = (performance.now() - r.t0) / 1000;
+    const el = (performance.now() - r.t0) / 1000;
     r.an.getFloatFrequencyData(r.freq); r.an.getFloatTimeDomainData(r.wave);
     const sr = r.ctx.sampleRate, bw = sr / r.an.fftSize, bin = hz => Math.min(r.freq.length - 1, Math.round(hz / bw));
     const db = i => Math.max(-120, isFinite(r.freq[i]) ? r.freq[i] : -120);
-    /* 这一帧的声纹：从左往右画，0–10 千赫自下而上 */
-    const x = Math.min(W, el / SEC * W), top = bin(10000);
-    for (let yy = 0; yy < H; yy += 2) {
-      const v = Math.max(0, Math.min(1, (db(Math.floor((1 - yy / H) * top)) + 100) / 70));
-      g.fillStyle = `rgba(${Math.round(60 + 190 * v)},${Math.round(200 * v + 30)},${Math.round(180 - 60 * v)},${Math.min(1, .1 + v * 1.2)})`;
-      g.fillRect(r.x, yy, Math.max(1.5, x - r.x + .5), 2);
+    /* 这一帧的声纹：按对数频段取最大值，攒够一个时间片就画到圆盘上，指针跟着转 */
+    const DS = HL.soundDisc, idxT = Math.min(DS.T - 1, Math.floor(el / SEC * DS.T));
+    for (let f = 0; f < DS.F; f++) {
+      const i0 = bin(DS.edge(f)), i1 = Math.max(i0, bin(DS.edge(f + 1)) - 1);
+      let m = -120; for (let i = i0; i <= i1; i++) m = Math.max(m, db(i));
+      r.acc[f] = Math.max(r.acc[f], Math.max(0, Math.min(1, (m + 100) / 70)));
     }
-    r.x = x;
-    $('#brHead').style.left = (x / W * 100) + '%';
+    if (r.cur < idxT) flush(r, idxT);
+    $('#brHead').style.setProperty('--p', Math.min(1, el / SEC));
     /* 特征 */
     let sum = 0; for (const v of r.wave) sum += v * v;
     const lv = 20 * Math.log10(Math.sqrt(sum / r.wave.length) + 1e-9);
@@ -268,6 +290,13 @@
     r.raf = requestAnimationFrame(tick);
   }
 
+  /* 把攒好的时间片收进数据并画出来；手机卡顿一次跨过好几片时，这几片都用同一组数值 */
+  function flush(r, to = r.cur + 1) {
+    const b = r.acc.slice();
+    while (r.cur < to) { r.frames[r.cur] = b; r.disc.push(r.cur, b); r.cur++; }
+    r.acc.fill(0);
+  }
+
   function release() {
     if (!rec) return;
     cancelAnimationFrame(rec.raf);
@@ -280,22 +309,22 @@
     const r = rec;
     cancelAnimationFrame(r.raf);
     const result = HL.bankClassify(r.st);
-    /* 声纹图缩成一张小 webp，存进进度里 */
-    const big = $('#brCanvas'), sm = document.createElement('canvas'); sm.width = 360; sm.height = 100;
-    sm.getContext('2d').drawImage(big, 0, 0, sm.width, sm.height);
-    let img = sm.toDataURL('image/webp', .7); if (!img.startsWith('data:image/webp')) img = sm.toDataURL('image/jpeg', .7);
-    const done = blob => { release(); rec = null; showResult(r.id, img, blob, result); };
+    /* 频谱数据编成字符串存进进度里，圆盘随时按类别重画 */
+    if (r.cur < HL.soundDisc.T) flush(r, HL.soundDisc.T);
+    const spec = HL.soundDisc.encode(r.frames);
+    const done = blob => { release(); rec = null; showResult(r.id, spec, r.at, blob, result); };
     if (r.mr && r.mr.state !== 'inactive') { r.mr.onstop = () => done(r.chunks.length ? new Blob(r.chunks, { type: r.mr.mimeType || 'audio/webm' }) : null); r.mr.stop(); }
     else done(null);
   }
 
   let pending = null;
-  function showResult(id, img, blob, res) {
-    pending = { id, img, blob, kind: res.guess, guess: res.guess };
+  function showResult(id, spec, at, blob, res) {
+    pending = { id, spec, at, blob, kind: res.guess, guess: res.guess };
+    const cv = $('#brCanvas'); if (cv) HL.soundDisc.draw(cv, spec, discOpts(byId(id), res.guess, at));
     const t = byId(id), btn = $('#brBtn');
     if (!btn) return;
     btn.classList.remove('is-rec'); btn.dataset.act = 'bank-start'; btn.setAttribute('aria-label', '重新录音'); $('#brBtnText').textContent = '重录';
-    $('#brHead').style.left = '100%';
+    $('#brHead').classList.remove('is-on');
     $('#brMsg').textContent = '';
     const g = kind(res.guess), match = res.guess === t.kind;
     const out = $('#brOut'); out.hidden = false;
@@ -312,11 +341,12 @@
     stopRec();
     const btn = $('#brBtn'); if (!btn) return;
     btn.classList.remove('is-rec'); btn.dataset.act = 'bank-start'; $('#brBtnText').textContent = `录 ${SEC} 秒`;
-    $('#brMsg').textContent = '已停止，没有保存。';
+    $('#brMsg').textContent = '已停止，没有保存。'; $('#brHead').classList.remove('is-on');
   });
   HL.act('bank-kind', el => {
     if (!pending) return;
     pending.kind = el.dataset.k;
+    const cv = $('#brCanvas'); if (cv) HL.soundDisc.draw(cv, pending.spec, discOpts(byId(pending.id), pending.kind, pending.at));
     el.parentNode.querySelectorAll('button').forEach(b => b.setAttribute('aria-checked', String(b === el)));
   });
   HL.act('bank-preview', () => {
@@ -326,7 +356,7 @@
   HL.act('bank-save', async () => {
     if (!pending) return;
     const p = pending; pending = null;
-    S.sound.bank[p.id] = { at: new Date().toISOString(), kind: p.kind, guess: p.guess, img: p.img };
+    S.sound.bank[p.id] = { at: p.at, kind: p.kind, guess: p.guess, spec: p.spec };
     save();
     if (p.blob) await clipPut(p.id, p.blob);
     HL.closeSheet();

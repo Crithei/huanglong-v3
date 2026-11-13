@@ -97,12 +97,16 @@
       page: Number.isInteger(so.page) && so.page >= 0 ? so.page : 0,
       page2: Number.isInteger(so.page2) && so.page2 >= 0 ? so.page2 : 0, // 声景手册翻到第几页
       book: so.book === 'collect' ? 'collect' : 'guide',                   // 互动页显示哪一本
-      /* 声景手册：每个采集点一张标本（时间、类别、手机猜的类别、声纹小图）；录音本身在 IndexedDB */
+      /* 声景手册：每个采集点一张标本（时间、类别、手机猜的类别、频谱数据 spec）；录音本身在 IndexedDB。
+         旧版存的是矩形声纹小图 img，读进来后由 soundbank.js 换算成 spec */
       bank: (() => {
         const sd = HL.data.sounds || { targets: [], kinds: [] }, ks = new Set(sd.kinds.map(k => k.id)), out = {};
         for (const t of sd.targets) {
           const b = so.bank && so.bank[t.id];
-          if (b && typeof b.at === 'string' && ks.has(b.kind) && typeof b.img === 'string' && /^data:image\/(webp|jpeg|png);base64,/.test(b.img) && b.img.length < 80000) out[t.id] = { at: b.at, kind: b.kind, guess: ks.has(b.guess) ? b.guess : b.kind, img: b.img };
+          if (!b || typeof b.at !== 'string' || isNaN(Date.parse(b.at)) || !ks.has(b.kind)) continue;
+          const spec = typeof b.spec === 'string' && /^[0-9a-z]+$/.test(b.spec) && b.spec.length === 72 * 32 ? b.spec : null;
+          const img = typeof b.img === 'string' && /^data:image\/(webp|jpeg|png);base64,/.test(b.img) && b.img.length < 80000 ? b.img : null;
+          if (spec || img) out[t.id] = Object.assign({ at: b.at, kind: b.kind, guess: ks.has(b.guess) ? b.guess : b.kind }, spec ? { spec } : { img });
         }
         return out;
       })(),

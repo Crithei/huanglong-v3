@@ -378,22 +378,30 @@
 .bk-listen { margin: 5px 0 6px; font-size: 11px; line-height: 1.5; color: #5a4e36; }
 .bk-empty { width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 0; font-size: 12px; font-weight: 600; color: var(--k); border: 1.5px dashed var(--k); background: rgba(255, 253, 246, .6); }
 .bk-empty .i { width: 15px; height: 15px; }
-/* 声音标本：一条贴上去的声纹 */
-.bk-spec { position: relative; padding: 4px 4px 3px; background: #fffdf6; box-shadow: 0 2px 5px rgba(50, 35, 10, .25); transform: rotate(-.8deg); }
-.bk-spec .pc-tape { width: 36px; height: 12px; top: -6px; }
-.bk-spec img { display: block; width: 100%; height: 44px; object-fit: cover; }
-.bk-spec-meta { display: flex; align-items: center; gap: 6px; margin-top: 3px; }
-.bk-spec-meta small { flex: 1; font-size: 10px; color: #8a7a58; }
+/* 声音标本：一张声纹圆盘（features/sounddisc.js 画的），用胶带贴在纸片上，旁边是类别和时间 */
+.bk-spec { position: relative; display: flex; align-items: center; gap: 10px; padding: 5px 8px 5px 5px; background: #fffdf6; box-shadow: 0 2px 5px rgba(50, 35, 10, .25); transform: rotate(-.8deg); }
+.bk-spec .pc-tape { width: 36px; height: 12px; top: -6px; left: 14px; z-index: 1; }
+.bk-spec .bk-disc { flex: none; width: 78px; height: 78px; }
+.bk-spec-meta { flex: 1; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
+.bk-spec-meta .bk-kind { order: 0; }
+.bk-spec-meta small { flex-basis: 100%; order: 1; }
+.bk-spec-meta button { order: 2; }
+.bk-spec-meta small { font-size: 10px; color: #8a7a58; }
 .bk-spec-meta button { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: #2a2418; color: #fff; }
 .bk-spec-meta button .i { width: 13px; height: 13px; }
 .pc-strip.bk-kind { padding: 1px 8px 2px; font-size: 10.5px; color: #fff; background: var(--k, #2e6e66); }
 .bk-solo { margin-top: 10px; }
-.bk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 8px; margin-top: 6px; }
-.bk-grid button { position: relative; padding: 4px 4px 5px; text-align: left; background: #fffdf6; box-shadow: 0 2px 5px rgba(50, 35, 10, .25); transform: rotate(var(--r)); border-bottom: 3px solid var(--k); }
-.bk-grid .pc-tape { width: 30px; height: 11px; top: -5px; }
-.bk-grid img { display: block; width: 100%; height: 34px; object-fit: cover; }
-.bk-grid b { display: block; margin-top: 3px; font: 600 11.5px var(--serif); color: #2a2418; }
-.bk-grid small { font-size: 9.5px; color: #8a7a58; }
+.bk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px 8px; margin-top: 8px; }
+.bk-grid button { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; transform: rotate(var(--r)); }
+.bk-grid .bk-disc { width: 100%; aspect-ratio: 1; height: auto; }
+.bk-grid b { display: block; margin-top: 4px; font: 600 11px/1.3 var(--serif); color: #2a2418; }
+.bk-grid small { font-size: 9.5px; color: var(--k); font-weight: 600; }
+/* 圆盘本身：唱片的投影，播放时转起来 */
+.bk-disc { display: block; border-radius: 50%; box-shadow: 0 2px 6px rgba(30, 20, 5, .35), 0 0 0 1px rgba(0, 0, 0, .25); background: #10161a; }
+.bk-disc.is-legacy { object-fit: cover; }
+.bk-disc.is-spin { animation: bk-spin 3.2s linear infinite; }
+@keyframes bk-spin { to { transform: rotate(1turn); } }
+@media (prefers-reduced-motion: reduce) { .bk-disc.is-spin { animation-duration: 12s; } }
 .bk-none { margin-top: 20px; font: italic 13px/1.6 var(--serif); color: #8a7a58; text-align: center; }
 .bk-sum { width: 100%; display: grid; gap: 5px; margin-top: 10px; }
 .bk-sum div { display: grid; grid-template-columns: 22px 1fr 36px; align-items: center; gap: 8px; }
@@ -409,10 +417,15 @@
 .br-hero small { font-size: 12px; color: #8a7a58; }
 .br-listen { font-size: 14px; line-height: 1.65; }
 .br-rec { margin-top: 12px; display: flex; flex-direction: column; align-items: center; }
-.br-view { position: relative; width: 100%; border-radius: 10px; overflow: hidden; background: #0f2a2b; }
-.br-view canvas { display: block; width: 100%; height: 130px; }
-.br-head { position: absolute; top: 0; bottom: 0; left: 0; width: 2px; background: #e9c46a; box-shadow: 0 0 8px #e9c46a; }
-.br-idle { position: absolute; inset: 0; display: grid; place-items: center; padding: 0 24px; text-align: center; font-size: 13px; color: rgba(255, 255, 255, .7); }
+.br-view { position: relative; width: min(72vw, 260px); aspect-ratio: 1; border-radius: 50%; box-shadow: 0 6px 16px rgba(30, 20, 5, .35); }
+.br-view canvas { display: block; width: 100%; height: 100%; border-radius: 50%; }
+/* 录音指针：从圆心指出去，转一圈 = 录完 */
+.br-head { position: absolute; left: calc(50% - 1px); bottom: 50%; width: 2px; height: 46%; border-radius: 2px; transform-origin: 50% 100%; opacity: 0;
+  background: linear-gradient(to top, transparent 22%, #f3d27a 30%, #fff6d6); box-shadow: 0 0 8px #e9c46a;
+  transform: rotate(calc(var(--a0, 0rad) + var(--p, 0) * 1turn)); }
+.br-head.is-on { opacity: 1; }
+.br-idle { margin-top: 10px; text-align: center; font-size: 13px; line-height: 1.6; color: var(--ink-2); }
+.br-idle small { font-size: 11.5px; opacity: .8; }
 .br-idle[hidden] { display: none; }
 .br-btn { margin-top: 14px; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--ink); }
 .br-btn i { width: 66px; height: 66px; border-radius: 50%; background: #c4553a; box-shadow: 0 0 0 6px #fbefe2, 0 0 0 7px #e8c9b8; transition: border-radius .25s, transform .25s; }
