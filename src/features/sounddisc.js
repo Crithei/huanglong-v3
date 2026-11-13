@@ -51,19 +51,19 @@
         const aa = a + G.twist * f / F; g.lineCap = 'round'; g.globalAlpha = .3 + .7 * v; g.strokeStyle = pal(th, .2 + v * .8); g.lineWidth = w * (.35 + .5 * v);
         g.beginPath(); g.arc(c, c, rad(G, f), aa, aa + da * (1.2 + 2.4 * v)); g.stroke(); }
     } else if (kind === 'bird') {
-      for (let f = 0; f < F; f++) { const v = b[f]; if (v < .06) continue;
-        g.globalAlpha = .3 * v + .05; g.strokeStyle = pal(th, v * .8); g.lineWidth = w * .55;
-        g.beginPath(); g.arc(c, c, rad(G, f), a, a + da); g.stroke(); }
-      const hi = b.slice(F * .45 | 0).reduce((x, y) => x + y, 0) / (F - (F * .45 | 0)), top = Math.max(...b.slice(F * .45 | 0));
-      if (top > .45) { /* 高音里有一下突起：一根花刺，尖上一个亮点 */
-        const len = G.r0 + (G.R - G.r0) * (.3 + .7 * Math.min(1, top)), am = a + da / 2;
-        g.globalAlpha = .55 + .45 * top; g.strokeStyle = pal(th, .55 + hi * .5); g.lineWidth = G.S * .006; g.lineCap = 'round';
-        g.beginPath(); g.moveTo(c + Math.cos(am) * G.r0, c + Math.sin(am) * G.r0); g.lineTo(c + Math.cos(am) * len, c + Math.sin(am) * len); g.stroke();
-        g.fillStyle = pal(th, .95); g.beginPath(); g.arc(c + Math.cos(am) * len, c + Math.sin(am) * len, G.S * (.006 + .01 * top), 0, 7); g.fill();
-      }
-      for (let f = F >> 1; f < F; f++) if (b[f] > .6) { /* 亮格子上的小点 */
-        const am = a + da * .5; g.globalAlpha = b[f]; g.fillStyle = pal(th, b[f]);
-        g.beginPath(); g.arc(c + Math.cos(am) * rad(G, f), c + Math.sin(am) * rad(G, f), w * .35, 0, 7); g.fill(); }
+      /* 花瓣：每个时间片一片半透明花瓣。花瓣长短看这一片最响有多响、声音偏高还是偏低，胖瘦看整体响度；
+         叠起来是一朵花，声音起伏大就开得参差，声音均匀就是一朵规整的菊花 */
+      const am = a + da / 2;
+      let e = 0, cf = 0; for (let f = 0; f < F; f++) { e += b[f]; cf += b[f] * f; }
+      const mean = e / F, cen = e ? cf / e : F / 2, top = Math.max(...b);
+      const L = G.r0 + (G.R - G.r0) * Math.min(1, .25 + .55 * top + .35 * cen / F), wid = da * (1.6 + 2.4 * mean);
+      const at = (ang, r) => [c + Math.cos(ang) * r, c + Math.sin(ang) * r], rm = G.r0 + (L - G.r0) * .6;
+      const grd = g.createLinearGradient(...at(am, G.r0), ...at(am, L));
+      grd.addColorStop(0, pal(th, .18)); grd.addColorStop(.55, pal(th, .5 + .2 * top)); grd.addColorStop(1, pal(th, .75 + .25 * top));
+      g.globalAlpha = .2 + .3 * top; g.fillStyle = grd;
+      g.beginPath(); g.moveTo(...at(am, G.r0));
+      g.quadraticCurveTo(...at(am + wid, rm), ...at(am, L)); g.quadraticCurveTo(...at(am - wid, rm), ...at(am, G.r0)); g.fill();
+      g.globalAlpha = .35 + .35 * top; g.strokeStyle = pal(th, .88); g.lineWidth = G.S * .0025; g.stroke();
     } else if (kind === 'quiet') {
       const r = rng(hash(G.a0 + ':' + t));
       for (let f = 0; f < F; f++) { const v = b[f]; if (r() > v * 1.6 + .02) continue;
@@ -98,12 +98,13 @@
     g.strokeStyle = 'rgba(255,255,255,.18)'; g.lineWidth = 1; g.beginPath(); g.arc(c, c, G.rim - .5, 0, 7); g.stroke();
   }
 
-  /* 圆心的纸章和外圈环绕文字 */
-  function label(g, G, kind, glyph, text) {
+  /* 圆心是唱片纸标（不写字，只有类别色的细环和中心孔），外圈环绕文字 */
+  function label(g, G, kind, text) {
     const th = theme(kind), c = G.c, S = G.S;
     g.fillStyle = '#f4ecd8'; g.beginPath(); g.arc(c, c, G.r0 * .86, 0, 7); g.fill();
     g.strokeStyle = th.ink; g.lineWidth = S * .006; g.beginPath(); g.arc(c, c, G.r0 * .72, 0, 7); g.stroke();
-    if (glyph) { g.fillStyle = th.ink; g.font = `700 ${G.r0 * .78}px ${SERIF}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(glyph, c, c + G.r0 * .04); }
+    g.lineWidth = S * .003; g.beginPath(); g.arc(c, c, G.r0 * .5, 0, 7); g.stroke();
+    g.fillStyle = '#1a1712'; g.beginPath(); g.arc(c, c, G.r0 * .13, 0, 7); g.fill();
     if (!text) return;
     g.font = `500 ${S * .032}px ${SERIF}`; g.fillStyle = 'rgba(255,248,230,.72)'; g.textAlign = 'center'; g.textBaseline = 'middle';
     const r = G.txt, chars = [...text], ws = chars.map(ch => g.measureText(ch).width + S * .006), tot = ws.reduce((x, y) => x + y, 0);
@@ -111,14 +112,14 @@
     chars.forEach((ch, i) => { const am = a + ws[i] / 2 / r; g.save(); g.translate(c + Math.cos(am) * r, c + Math.sin(am) * r); g.rotate(am + Math.PI / 2); g.fillText(ch, 0, 0); g.restore(); a += ws[i] / r; });
   }
 
-  /* opts: { kind, seed, glyph, text, size } */
+  /* opts: { kind, seed, text, size } */
   function draw(cv, spec, o) {
     const S = cv.width = cv.height = o.size || 360, g = cv.getContext('2d'), G = geo(S, hash(o.seed));
     base(g, G, o.kind);
     /* 自动增益：按这一段最响的 2% 归一，安静的录音也看得出纹理 */
     const fr = decode(spec), all = fr.flat().sort((x, y) => x - y), gain = 1 / Math.max(.3, all[Math.floor(all.length * .98)] || 1);
     fr.forEach((b, t) => frame(g, G, o.kind, t, b.map(v => Math.min(1, v * gain))));
-    label(g, G, o.kind, o.glyph, o.text);
+    label(g, G, o.kind, o.text);
     return cv;
   }
   const cache = new Map();
@@ -136,9 +137,9 @@
   /* 录音时边录边画：push(i, bands) 画第 i 个时间片 */
   function live(cv, o) {
     const S = cv.width = cv.height = o.size || 360, g = cv.getContext('2d'), G = geo(S, hash(o.seed));
-    const reset = () => { base(g, G, o.kind); label(g, G, o.kind, o.glyph, o.text); };
+    const reset = () => { base(g, G, o.kind); label(g, G, o.kind, o.text); };
     reset();
-    return { reset, push: (t, b) => { frame(g, G, o.kind, t, b); label(g, G, o.kind, o.glyph, ''); }, a0: G.a0 };
+    return { reset, push: (t, b) => { frame(g, G, o.kind, t, b); label(g, G, o.kind, ''); }, a0: G.a0 };
   }
 
   /* 旧版存的是 360×100 的矩形声纹图（横轴时间，纵轴 0–10 kHz 线性），读像素换算成数据 */

@@ -27,7 +27,7 @@
 
   /* 声纹圆盘（features/sounddisc.js）：按类别换风格，按「采集点 + 录音时间」定种子 */
   const shortDate = iso => { const d = new Date(iso); return `${d.getMonth() + 1}.${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; };
-  const discOpts = (t, k, at) => ({ kind: k, seed: t.id + at, glyph: kind(k).name, text: `${place(t)} · ${shortDate(at)} · ${kind(k).label}` });
+  const discOpts = (t, k, at) => ({ kind: k, seed: t.id + at, text: `${place(t)} · ${shortDate(at)} · ${kind(k).label}` });
   const disc = (t, b, alt = '') => b.spec
     ? `<img class="bk-disc" data-disc="${t.id}" src="${HL.soundDisc.url(b.spec, discOpts(t, b.kind, b.at))}" alt="${esc(alt)}" draggable="false">`
     : `<img class="bk-disc is-legacy" data-disc="${t.id}" src="${b.img}" alt="${esc(alt)}" draggable="false">`;
