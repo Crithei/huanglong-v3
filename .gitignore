@@ -15,3 +15,7 @@ __pycache__/
 
 # Cloudflare 本地缓存
 .wrangler/
+
+# 博物画原图（几 MB 一张，只提交来源清单；重新抠图前从 CREDITS.md 的链接下载）
+assets-src/**/*.jpg
+assets-src/**/3d-raw/

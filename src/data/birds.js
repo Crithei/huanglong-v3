@@ -2,6 +2,10 @@
    内容整理自同济大学许晓青团队提供的《黄龙鸟类声纹栈道》宣传册（2026-02-03 稿）：
    栈道概况与 8 处节点、什么是声纹、叫声与鸣声、监测方法与节律数据、五块科普展牌上的鸟类信息。
    图片 assets/sound/ 也取自该宣传册。宣传册是带批注的未定稿，上线内容需团队确认。
+   nodes 里 real: true 的节点，主图换成了 2026-11-16 的栈道实拍（assets/sound/real/），文字按实拍改过；
+   photos 是节点详情里补充的实拍小图，点一下换成大图。
+   stops 的 photo3d 是「立体检视」用的照片和景深图（tools/depth-maps.py 生成，照片来自 Wikimedia Commons，CC0 / CC BY，要署名）；
+   pano 是「林中全景」：现在是模糊占位图，spots 是五只鸟在全景里的方位（yaw 水平角、pitch 仰角，度）。
    两处没有出自宣传册：戴菊的叫声描述、各鸟的 notes（声纹示意，按叫声特点画的，不是实测）。
    notes 的写法：t 起点秒、d 时长秒、f0 / f1 起止频率 kHz、
    shape 为 sweep（直线滑音）/ arc（先升后降的哨音）/ trill（快速颤音，n 个小音）。
@@ -18,14 +22,15 @@ HL.data.birds = {
     "facts": [["220 米", "全长"], ["8 处", "特色节点"], ["20–30 分钟", "建议游览"], ["3230–3250 米", "海拔"]],
     "altitude": 3240
   },
+  "pano": {"src": "assets/sound/3d/pano-blur.webp", "note": "占位全景：用栈道实拍拼接、模糊而成，拿到 360° 实拍后替换。鸟的位置按习性示意，不是实测。", "start": 0, "spots": [{"stop": "s1", "yaw": -70, "pitch": -4, "hint": "林下灌丛"}, {"stop": "s3", "yaw": 0, "pitch": 26, "hint": "冷杉树冠"}, {"stop": "s2", "yaw": 70, "pitch": -20, "hint": "溪边石滩"}, {"stop": "s4", "yaw": 145, "pitch": -16, "hint": "溪流岩石"}, {"stop": "s5", "yaw": -145, "pitch": -12, "hint": "急流边的石头"}]},
   "nodes": [
-    { "id": "entry", "name": "入口展牌", "img": "assets/sound/entry.webp", "line": "三米高的立牌，顶上一只收集声波的听筒", "detail": "米黄底、深绿图案的立牌立在木栈道起点。牌面写着栈道名和建议游览时长，旁边的展板讲什么是声纹、为什么要监测。" },
-    { "id": "boards", "name": "科普展牌", "img": "assets/sound/boards.webp", "line": "五块展牌，各讲一种鸟，带鸣声二维码", "detail": "五块展牌介绍鸣声排名前五的鸟：生境、迁徙、食性、繁殖和鸣声。每块都有一个鸣声二维码，可以把黄龙的声纹带回家。" },
+    { "id": "entry", "name": "入口展牌", "img": "assets/sound/entry.webp", "photos": ["assets/sound/real/entry.webp", "assets/sound/real/trail-1.webp"], "line": "三米高的立牌，顶上一只收集声波的听筒", "detail": "米黄底、深绿图案的立牌立在木栈道起点。牌面写着栈道名和建议游览时长，旁边的展板讲什么是声纹、为什么要监测。" },
+    { "id": "boards", "name": "科普展牌", "img": "assets/sound/boards.webp", "photos": ["assets/sound/real/pillar-1.webp", "assets/sound/real/pillar-2.webp", "assets/sound/real/trail-2.webp"], "line": "五块展牌，各讲一种鸟，带鸣声二维码", "detail": "五块展牌介绍鸣声排名前五的鸟：生境、迁徙、食性、繁殖和鸣声。每块都有一个鸣声二维码，可以把黄龙的声纹带回家。" },
     { "id": "pavilion", "name": "声景展亭", "img": "assets/sound/pavilion.webp", "line": "四个 L 形亭子，播放橙翅噪鹛的四种叫声", "detail": "亭子的折角模拟鸟的头颈。四块展板讲亲子雏鸣、晨昏合鸣、社交觅食、雌雄婚鸣：每一种叫声对应一种行为。亭下可以坐下歇脚。" },
-    { "id": "cabins", "name": "趣味木屋", "img": "assets/sound/cabins.webp", "line": "五座小木屋，伸手摸一摸，猜猜住着谁", "detail": "橙翅噪鹛的羽毛、戴菊的鸟蛋、灰鹡鸰的巢、红尾水鸲的雏鸟、白顶溪鸲爱吃的草籽和浆果，都是仿真模型。" },
-    { "id": "bones", "name": "鸟类骨骼浮雕", "img": "assets/sound/bones.webp", "line": "摸一摸翅骨，为什么中空的骨头能飞", "detail": "原木基座上的金属板嵌着打磨圆润的骨骼模型，孩子可以放心触摸：翅骨的弧度、腿骨的纤细，飞行的秘密在指尖。" },
-    { "id": "horn", "name": "互动游戏听筒", "img": "assets/sound/horn.webp", "line": "大听筒听风听雨听鸟鸣，小听筒当传话筒", "detail": "大听筒把林子里的风声、雨声和鸟鸣收进耳朵；一旁的小听筒是孩子们的传话筒。" },
-    { "id": "wall", "name": "飞鸟打卡展牌", "img": "assets/sound/wall.webp", "line": "金属板上镂出一群起飞的鸟", "detail": "金属板镂刻出振翅欲飞的鸟群，阳光掠过时闪着细碎的光，是栈道上的合影点。" },
+    { "id": "cabins", "name": "趣味木屋", "img": "assets/sound/real/cabins-1.webp", "real": true, "photos": ["assets/sound/real/cabins-2.webp"], "line": "黄色小木屋，打开小门看看住着谁", "detail": "明黄色的小木屋立在木桩上，挂着鸟名牌。打开小门，里面是仿真的鸟巢和鸟蛋。五座木屋各对应一种鸟：橙翅噪鹛的羽毛、戴菊的鸟蛋、灰鹡鸰的巢、红尾水鸲的雏鸟、白顶溪鸲爱吃的草籽和浆果。" },
+    { "id": "bones", "name": "鸟类骨骼浮雕", "img": "assets/sound/real/bones-1.webp", "real": true, "photos": ["assets/sound/real/bones-2.webp"], "line": "上排骨骼、下排鸟形，对照着摸一摸", "detail": "原木基座上两块灰色金属板：上排是四种鸟的骨骼浮雕，下排是同样四种鸟的外形，尾羽涂了颜色。浮雕打磨得很圆润，孩子可以放心上手，上下对照着摸，能摸出骨头怎样撑起翅膀和尾巴。" },
+    { "id": "horn", "name": "互动转筒", "img": "assets/sound/real/turn-1.webp", "real": true, "photos": ["assets/sound/real/turn-2.webp"], "line": "转一转白色转筒，翻一翻鸟类小方格", "detail": "木架上挂着「转一转」的牌子，三根白色转筒印着鸟，伸手一转就换一只；旁边一排小木格贴着各种鸟的图片。架子的立柱顶上停着铁艺小鸟。（宣传册里原本设计的是互动听筒，现场做成了转筒。）" },
+    { "id": "wall", "name": "飞鸟展牌", "img": "assets/sound/real/wall-2.webp", "real": true, "photos": ["assets/sound/real/wall-1.webp"], "line": "木框里十二格鸟类照片，顶上停着铁艺小鸟", "detail": "原木框架里排着三行小格，每格一张鸟的照片和鸟名，可以对照着认一认栈道周围常见的鸟。框顶和立柱上站着几只锈红色的铁艺鸟剪影，是栈道上的合影点。" },
     { "id": "hall", "name": "声纹数字展厅", "img": "assets/sound/hall.webp", "line": "林中小木屋，大屏看声纹，小屏查鸟", "detail": "4 米乘 6 米的碳化木小屋。大屏可以拖拽缩放声纹图谱、点击播放；小屏输入鸟名查声纹和习性。还有「虚拟黄龙」互动：选一只鸟，生成自己的毛绒萌鸟图鉴。" }
   ],
   "science": {
@@ -75,7 +80,7 @@ HL.data.birds = {
   ],
   "stops": [
     {
-      "id": "s1",
+      "id": "s1", "photo3d": {"src": "assets/sound/3d/s1.webp", "depth": "assets/sound/3d/s1-depth.webp", "author": "Sun Jiao (Interaccoonale)", "license": "CC BY 4.0", "page": "https://commons.wikimedia.org/wiki/File:Trochalopteron_elliotii_A9_09763.jpg"},
       "no": 1,
       "place": "科普展牌 · 声纹栈道",
       "bird": "橙翅噪鹛",
@@ -105,7 +110,7 @@ HL.data.birds = {
       ]
     },
     {
-      "id": "s2",
+      "id": "s2", "photo3d": {"src": "assets/sound/3d/s2.webp", "depth": "assets/sound/3d/s2-depth.webp", "author": "MilanIlic553", "license": "CC0", "page": "https://commons.wikimedia.org/wiki/File:Motacilla_cinerea1.jpg"},
       "no": 2,
       "place": "科普展牌 · 声纹栈道",
       "bird": "灰鹡鸰",
@@ -137,7 +142,7 @@ HL.data.birds = {
       ]
     },
     {
-      "id": "s3",
+      "id": "s3", "photo3d": {"src": "assets/sound/3d/s3.webp", "depth": "assets/sound/3d/s3-depth.webp", "author": "Alexis Lours", "license": "CC BY 4.0", "page": "https://commons.wikimedia.org/wiki/File:Goldcrest_2025_11_30.jpg"},
       "no": 3,
       "place": "科普展牌 · 声纹栈道",
       "bird": "戴菊",
@@ -166,7 +171,7 @@ HL.data.birds = {
       ]
     },
     {
-      "id": "s4",
+      "id": "s4", "photo3d": {"src": "assets/sound/3d/s4.webp", "depth": "assets/sound/3d/s4-depth.webp", "author": "Shiv's fotografia", "license": "CC BY 4.0", "page": "https://commons.wikimedia.org/wiki/File:Plumbeous_Water_Redstart_Facts.jpg"},
       "no": 4,
       "place": "科普展牌 · 声纹栈道",
       "bird": "红尾水鸲",
@@ -196,7 +201,7 @@ HL.data.birds = {
       ]
     },
     {
-      "id": "s5",
+      "id": "s5", "photo3d": {"src": "assets/sound/3d/s5.webp", "depth": "assets/sound/3d/s5-depth.webp", "author": "Shiv's fotografia", "license": "CC BY 4.0", "page": "https://commons.wikimedia.org/wiki/File:White_Capped_Redstart_facts_01.jpg"},
       "no": 5,
       "place": "科普展牌 · 声纹栈道",
       "bird": "白顶溪鸲",

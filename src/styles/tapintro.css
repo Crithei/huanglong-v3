@@ -26,9 +26,6 @@
 .tap-tape { position: absolute; left: 50%; top: -4%; width: 76px; height: 22px; transform: translateX(-50%) rotate(-6deg); background: rgba(226, 190, 96, .78);
   clip-path: polygon(0 12%, 4% 0, 9% 14%, 14% 2%, 96% 0, 100% 20%, 97% 50%, 100% 84%, 95% 100%, 5% 100%, 0 80%, 3% 48%);
   animation: tap-drop .35s cubic-bezier(.2, 1.4, .4, 1) .95s both; }
-/* 栈道手册：鸟的剪影从圆里探出来 */
-.tap-cut { position: absolute; right: -16%; bottom: -10%; width: 62%; filter: drop-shadow(0 8px 10px rgba(40, 30, 10, .3));
-  animation: tap-pop .6s cubic-bezier(.2, 1.5, .4, 1) 1s both; }
 
 /* 文字：类别色的纸条 */
 .tap-text { position: relative; z-index: 1; margin-top: min(9vw, 40px); display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
@@ -59,13 +56,55 @@
 @keyframes tap-zoom { from { transform: scale(1.35) rotate(-6deg); } }
 @keyframes tap-spin { to { transform: rotate(1turn); } }
 @keyframes tap-drop { from { opacity: 0; transform: translateX(-50%) translateY(-24px) rotate(-18deg); } }
-@keyframes tap-pop { from { opacity: 0; transform: translate(-30%, 18%) scale(.5) rotate(-12deg); } }
 @keyframes tap-up { from { opacity: 0; transform: translateY(10px); } }
 @keyframes tap-slide { from { opacity: 0; transform: translateX(-40px) rotate(-6deg); } }
 @keyframes tap-stamp { from { opacity: 0; transform: scale(2.4) rotate(-30deg); } }
 
 .tap.is-reduced *, .tap.is-reduced { animation: none !important; }
 .tap.is-reduced .tap-rings { display: none; }
+
+/* ---------- 图鉴版（栈道手册的五只鸟）：一页 19 世纪博物画 ----------
+   时间线：0 纸底 → .15 图框画出 → .25 页眉 → .35 墨稿从下往上显出 → 1.0 从左到右上色 → 1.35 中文名 → 1.5 学名 → 1.65 色卡 → 2.0 盖章 → 3.3 淡出 */
+.tap.is-plate { gap: 0; align-content: stretch; grid-template-rows: auto 1fr auto; padding: calc(38px + env(safe-area-inset-top)) 28px calc(64px + env(safe-area-inset-bottom)); }
+.tap.is-plate .tap-paper { background:
+    radial-gradient(ellipse at 50% 45%, transparent 0 45%, rgba(110, 80, 30, .1) 80%, rgba(90, 65, 25, .22) 100%),
+    radial-gradient(rgba(120, 95, 50, .08) 1px, transparent 1.4px) 0 0 / 6px 6px,
+    #f2e8d0; }
+.tp-frame { position: absolute; inset: 14px; border: 1.2px solid #6b5636; pointer-events: none; animation: tp-frame 1s cubic-bezier(.6, 0, .3, 1) .15s both; }
+.tp-frame::after { content: ''; position: absolute; inset: 4px; border: .6px solid #6b5636; }
+.tp-head { position: relative; z-index: 1; margin: 0; text-align: center; font: 600 10.5px/1.4 var(--serif); letter-spacing: .32em; color: #6b5636; animation: tap-fade .6s ease .25s both; }
+
+/* 博物画：先墨稿后上色。两张同一幅画叠在一起，用蒙版扫过 */
+.tp-art { position: relative; z-index: 1; display: grid; place-items: center; min-height: 0; margin: 10px 0 6px; }
+.tp-art img { grid-area: 1 / 1; max-width: min(100%, 420px); max-height: 100%; object-fit: contain; }
+.tp-ink { filter: grayscale(1) brightness(.42) sepia(.55) contrast(1.15); opacity: .85;
+  -webkit-mask: linear-gradient(to top, #000 45%, transparent 55%) 0 0 / 100% 220% no-repeat; mask: linear-gradient(to top, #000 45%, transparent 55%) 0 0 / 100% 220% no-repeat;
+  animation: tp-up .75s cubic-bezier(.45, 0, .3, 1) .35s both, tp-ink-out .6s ease 1.5s forwards; }
+.tp-color { filter: drop-shadow(0 6px 10px rgba(70, 50, 15, .18));
+  -webkit-mask: linear-gradient(to right, #000 45%, transparent 55%) 100% 0 / 220% 100% no-repeat; mask: linear-gradient(to right, #000 45%, transparent 55%) 100% 0 / 220% 100% no-repeat;
+  animation: tp-right .9s cubic-bezier(.5, 0, .3, 1) 1s forwards; }
+
+/* 图注：像博物画底下的拉丁文图名 */
+.tp-cap { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; text-align: center; }
+.tp-name { font: 600 26px/1.3 var(--serif); letter-spacing: .14em; color: #2f2617; animation: tap-up .5s ease 1.35s both; }
+.tp-latin { font: italic 15px/1.3 var(--serif); color: #5a4a2c; animation: tap-up .5s ease 1.5s both; }
+.tp-en { font-size: 10.5px; letter-spacing: .14em; color: #8a7a58; animation: tap-up .5s ease 1.6s both; }
+.tp-chips { display: flex; gap: 6px; margin-top: 8px; }
+.tp-chips i { width: 22px; height: 14px; background: var(--c); box-shadow: 0 1px 2px rgba(40, 30, 10, .25);
+  clip-path: polygon(0 12%, 8% 0, 92% 6%, 100% 0, 96% 88%, 100% 100%, 6% 96%, 0 100%);
+  animation: tp-chip .45s cubic-bezier(.2, 1.5, .4, 1) calc(1.65s + var(--i) * .08s) both; }
+.tap-stamp.tp-stamp { left: auto; right: 26px; top: auto; bottom: calc(178px + env(safe-area-inset-bottom)); width: 76px; height: 76px; color: #8a3b24; border-color: #8a3b24;
+  box-shadow: inset 0 0 0 4px #f2e8d0, inset 0 0 0 5.5px #8a3b24; background: rgba(242, 232, 208, .7); animation-delay: 2s; }
+.tap.is-out .tap-stamp.tp-stamp { transform: translateY(-5vh) rotate(-14deg) scale(.94); }
+.tap.is-plate.is-out .tp-art, .tap.is-plate.is-out .tp-cap { transition: transform .5s cubic-bezier(.5, 0, .7, .4); transform: translateY(-4vh) scale(.96); }
+
+@keyframes tp-frame { from { clip-path: inset(0 100% 100% 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes tp-up { from { -webkit-mask-position: 0 0; mask-position: 0 0; } to { -webkit-mask-position: 0 100%; mask-position: 0 100%; } }
+@keyframes tp-right { from { -webkit-mask-position: 100% 0; mask-position: 100% 0; } to { -webkit-mask-position: 0 0; mask-position: 0 0; } }
+@keyframes tp-ink-out { to { opacity: 0; } }
+@keyframes tp-chip { from { opacity: 0; transform: translateY(-14px) rotate(-14deg); } }
+.tap.is-reduced .tp-ink { display: none; }
+.tap.is-reduced .tp-color { -webkit-mask: none; mask: none; }
 
 /* ---------- 写芯片工具页（features/nfcwrite.js） ---------- */
 .nfc-state { display: flex; gap: 8px; align-items: flex-start; padding: 10px 12px; border-radius: 12px; font-size: 13.5px; line-height: 1.6; }

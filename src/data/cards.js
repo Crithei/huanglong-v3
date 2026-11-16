@@ -308,6 +308,48 @@ HL.data.cards = {
       ]
     },
     {
+      "id": "shop-orchid-tickets",
+      "kind": "product",
+      "title": "兰花收藏票根",
+      "subtitle": "七种黄龙野生兰花，收藏编号 1 / 7 到 7 / 7",
+      "body": "竖版水彩票根，每张一种黄龙的野生兰花，用一个英文单词点出它的样子：斜着开的盔花兰、螺旋上升的绶草、一生只开一朵的独花兰、拖着细长花距的玉凤花、像小口袋的杓兰、花瓣下垂的角盘兰、不长叶子的天麻。票面印着学名、保护等级和收藏编号。\n野生兰花请只看不采。",
+      "go": "",
+      "cta": "",
+      "url": "",
+      "author": "",
+      "fit": "contain",
+      "variants": [
+        {
+          "label": "河北盔花兰 · SLANT",
+          "img": "assets/shop/ticket-1.webp"
+        },
+        {
+          "label": "绶草 · SPIRAL",
+          "img": "assets/shop/ticket-2.webp"
+        },
+        {
+          "label": "独花兰 · SINGLE",
+          "img": "assets/shop/ticket-3.webp"
+        },
+        {
+          "label": "西藏玉凤花 · TRAIL",
+          "img": "assets/shop/ticket-4.webp"
+        },
+        {
+          "label": "黄花杓兰 · POUCH",
+          "img": "assets/shop/ticket-5.webp"
+        },
+        {
+          "label": "长瓣角盘兰 · DROOP",
+          "img": "assets/shop/ticket-6.webp"
+        },
+        {
+          "label": "天麻 · GHOST",
+          "img": "assets/shop/ticket-7.webp"
+        }
+      ]
+    },
+    {
       "id": "shop-species-badges",
       "kind": "product",
       "title": "黄龙生灵徽章",
@@ -396,6 +438,72 @@ HL.data.cards = {
         {
           "label": "四连张",
           "img": "assets/shop/stamps-four.webp"
+        }
+      ]
+    },
+    {
+      "id": "shop-postcard-park",
+      "kind": "product",
+      "title": "黄龙明信片 · 国家公园风格",
+      "subtitle": "四张一套，正反面都能翻过来看",
+      "body": "扁平插画风格的黄龙风景明信片，借了美国国家公园海报的配色和构图：雪山、彩池、钙华滩和冷杉林，每张一句「与黄龙相逢」的主题。背面是统一的邮寄面，留好了邮编格和写字的横线。\n在详情里拖动卡片可以翻到背面看。",
+      "go": "",
+      "cta": "",
+      "url": "",
+      "author": "",
+      "variants": [
+        {
+          "label": "与时光相逢",
+          "img": "assets/shop/pc-park-1.webp",
+          "back": "assets/shop/pc-park-back.webp"
+        },
+        {
+          "label": "与山野相逢",
+          "img": "assets/shop/pc-park-2.webp",
+          "back": "assets/shop/pc-park-back.webp"
+        },
+        {
+          "label": "与清寒相逢",
+          "img": "assets/shop/pc-park-3.webp",
+          "back": "assets/shop/pc-park-back.webp"
+        },
+        {
+          "label": "与造化相逢",
+          "img": "assets/shop/pc-park-4.webp",
+          "back": "assets/shop/pc-park-back.webp"
+        }
+      ]
+    },
+    {
+      "id": "shop-postcard-monet",
+      "kind": "product",
+      "title": "黄龙明信片 · 莫奈风格",
+      "subtitle": "印象派笔触的彩池，四张各配一张背面",
+      "body": "用印象派油画的笔触画黄龙的水和山：云影落在彩池里、山涧晨雾、静水倒映的山色、泉水漫过钙华滩。每张背面都配了同一幅画的小图和邮寄格。\n在详情里拖动卡片可以翻到背面看。",
+      "go": "",
+      "cta": "",
+      "url": "",
+      "author": "",
+      "variants": [
+        {
+          "label": "云落彩池间",
+          "img": "assets/shop/pc-monet-1.webp",
+          "back": "assets/shop/pc-monet-1-back.webp"
+        },
+        {
+          "label": "山涧漫晓晴",
+          "img": "assets/shop/pc-monet-2.webp",
+          "back": "assets/shop/pc-monet-2-back.webp"
+        },
+        {
+          "label": "静泽揽山晖",
+          "img": "assets/shop/pc-monet-3.webp",
+          "back": "assets/shop/pc-monet-3-back.webp"
+        },
+        {
+          "label": "泉响漫岷山",
+          "img": "assets/shop/pc-monet-4.webp",
+          "back": "assets/shop/pc-monet-4-back.webp"
         }
       ]
     },

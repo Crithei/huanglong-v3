@@ -118,7 +118,7 @@
         <g class="rt-node"><rect x="50" y="60" width="12" height="12" rx="2"/><text x="56" y="54">入口</text><rect x="98" y="38" width="12" height="12" rx="2"/><text x="104" y="32">声景展亭</text><rect x="222" y="34" width="14" height="12" rx="2"/><text x="229" y="60">数字展厅</text></g>
         <g class="rt-star">${[[132, 56], [150, 66], [168, 66], [186, 57], [203, 46]].map(([x, y]) => `<path d="M${x} ${y - 5}l1.5 3.4 3.7.4-2.8 2.5.8 3.6-3.2-1.9-3.2 1.9.8-3.6-2.8-2.5 3.7-.4Z"/>`).join('')}<text x="168" y="84">五块鸟类展牌</text></g></svg>
       <div class="facts">${T.facts.map(([a, b]) => `<span><b>${esc(a)}</b>${esc(b)}</span>`).join('')}</div>
-      <button class="hb-link" type="button" data-act="select" data-id="${T.from}">${icon('map')}在游览里看迎宾池</button>${forest('is-low')}`);
+      <div class="hb-links"><button class="hb-link" type="button" data-act="select" data-id="${T.from}">${icon('map')}在游览里看迎宾池</button>${B.pano ? `<button class="hb-link" type="button" data-act="pano-view">${icon('rotr')}林中全景</button>` : ''}</div>${forest('is-low')}`);
 
     const nodeCard = (nd, i) => `<button class="node${S.sound.nodes[nd.id] ? ' is-on' : ''}" type="button" data-act="hb-node" data-id="${nd.id}" style="--r:${[-2.2, 1.6, 1.8, -1.4][i % 4]}deg">
         ${photo(nd.img, nd.name)}<b>${esc(nd.name)}</b><small>${esc(nd.line)}</small><i class="node-tick">${S.sound.nodes[nd.id] ? '到过' : ''}</i></button>`;
@@ -169,7 +169,7 @@
     for (const s of STOPS) {
       const got = S.sound.got[s.id], q = S.sound.quiz[s.id], quiet = S.sound.quiet[s.id], note = S.sound.note[s.id];
       add('birds', `hb-bird${got ? ' is-got' : ''}`, `${run(`四 · 五鸟 · No.${s.no}`)}
-        <div class="bd-stage" style="--c:${s.colors[2]}">${got ? cut(s) : sil(s)}<i class="bd-blob"></i>${got ? '' : '<span class="bd-ask">碰一碰展牌，把它贴进来</span>'}</div>
+        <div class="bd-stage" style="--c:${s.colors[2]}">${got ? cut(s) : sil(s)}<i class="bd-blob"></i>${s.photo3d ? `<button class="bd-3d" type="button" data-act="depth-view" data-id="${s.id}" aria-label="立体检视${esc(s.bird)}的照片">${icon('layers')}立体看</button>` : ''}${got ? '' : '<span class="bd-ask">碰一碰展牌，把它贴进来</span>'}</div>
         <div class="bd-name"><small>${esc(s.pinyin)}</small><h4>${esc(s.bird)}</h4><i>${esc(s.latin)} · ${esc(s.en)}</i></div>
         ${s.protect ? strip(s.protect, 'is-red bd-protect') : ''}
         <div class="bd-size"><span>♂ ${esc(s.weight[0])} · ${esc(s.length[0])}</span><span>♀ ${esc(s.weight[1])} · ${esc(s.length[1])}</span></div>
@@ -252,9 +252,18 @@
     const nd = B.nodes.find(x => x.id === el.dataset.id), on = !!S.sound.nodes[nd.id];
     HL.openSheet({
       title: nd.name, cls: 'sound-sheet',
-      body: `<div class="nd-photo">${photo(nd.img, nd.name)}</div><p class="lead">${esc(nd.line)}</p><p>${esc(nd.detail)}</p><p class="note">图片和介绍来自《黄龙鸟类声纹栈道》宣传册。</p>`,
+      body: `<div class="nd-photo" id="ndMain">${photo(nd.img, nd.name)}</div>
+        ${nd.photos && nd.photos.length ? `<div class="nd-more" role="group" aria-label="更多实拍">${[nd.img, ...nd.photos].map((p, i) => `<button type="button" data-act="hb-node-pic" data-src="${esc(p)}" aria-pressed="${i === 0}" aria-label="看第 ${i + 1} 张"><img src="${esc(p)}" alt="" loading="lazy"></button>`).join('')}</div>` : ''}
+        <p class="lead">${esc(nd.line)}</p><p>${esc(nd.detail)}</p>
+        <p class="note">${nd.real ? '主图是 2026 年 11 月的栈道实拍；介绍参考《黄龙鸟类声纹栈道》宣传册，按现场改过。' : `主图是宣传册里的效果图${nd.photos ? '，小图是 2026 年 11 月的栈道实拍' : ''}；介绍来自《黄龙鸟类声纹栈道》宣传册。`}</p>`,
       foot: `<div class="sheet-foot"><button class="btn ${on ? 'is-on' : 'btn-primary'}" type="button" data-act="hb-node-tick" data-id="${nd.id}" aria-pressed="${on}">${icon(on ? 'check' : 'stamp')}${on ? '已盖「到过」章' : '我到过这里'}</button></div>`,
     });
+  });
+  /* 节点详情里的小图：点一下换成大图 */
+  HL.act('hb-node-pic', el => {
+    const img = $('#ndMain img');
+    if (img) img.src = el.dataset.src;
+    el.parentNode.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b === el)));
   });
   HL.act('hb-node-tick', el => {
     const id = el.dataset.id;
@@ -463,13 +472,14 @@
   window.addEventListener('pagehide', stopMic);
 
   /* ---------- 网址直达：…/?tag=s1（NFC 和二维码里写的就是它） ---------- */
-  /* 到达某个声音驿站：先播碰一碰动画（鸟的剪影从圆里探出来），再打开驿站页 */
+  /* 到达某个声音驿站：先播碰一碰动画（图鉴版：这只鸟的 19 世纪博物画先起墨稿再上色），再打开驿站页 */
   HL.soundArrive = async (tag, via) => {
     const s = byId(tag);
     if (!s) return;
     S.sound.book = 'guide';
     HL.setPage('play');
-    await HL.tapIntro({ via, book: '栈道手册', title: s.bird, place: s.place, img: 'assets/sound/boards.webp', cut: `assets/sound/bird-${s.id}.webp`, color: '#2e5d4b', no: s.no, total: STOPS.length });
+    await HL.tapIntro({ via, book: '栈道手册', title: s.bird, place: s.place, color: '#2e5d4b', no: s.no, total: STOPS.length,
+      plate: `assets/sound/plate-${s.id}.webp`, latin: s.latin, en: s.en, colors: s.colors }); // 博物画抠图见 tools/plate-cutout.py
     HL.openSoundStop(tag, true);
   };
   HL.soundFromUrl = () => {

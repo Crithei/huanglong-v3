@@ -163,6 +163,8 @@ if cards is not None:
                 err("cards.products[%d] %s：variants 每项要有 label 和 img" % (k, p.get("id", "?")))
             else:
                 check_asset(v["img"], "cards.products[%d] %s 款式「%s」" % (k, p.get("id", "?"), v["label"]))
+                if v.get("back"):
+                    check_asset(v["back"], "cards.products[%d] %s 款式「%s」的背面" % (k, p.get("id", "?"), v["label"]))
         if p.get("fit", "cover") not in ("cover", "contain"):
             err("cards.products[%d] %s：fit 只能是 cover 或 contain" % (k, p.get("id", "?")))
     for k, c in enumerate(cards.get("mine", [])):
@@ -266,6 +268,9 @@ if birds is not None:
             err("birds.trail.%s：没有景点「%s」" % (f, trail[f]))
     for n in birds.get("nodes", []):
         where = "birds.nodes %s" % n.get("id", "?")
+        for ph in n.get("photos", []):
+            if not os.path.exists(os.path.join(ROOT, ph)):
+                err("%s：photos 里的图片不存在 %s" % (where, ph))
         for f in ("id", "name", "img", "line", "detail"):
             if not n.get(f):
                 err("%s：缺少 %s" % (where, f))

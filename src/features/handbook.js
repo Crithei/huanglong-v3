@@ -183,6 +183,7 @@
           try { st.setPointerCapture(e.pointerId); } catch (err) { /* 捕获失败也能拖 */ }
         }
         const f = bk.flip;
+        if (!f) { bk.drag = null; return; } // 拖到一半书被重画（翻页状态已清空），这次拖动作废
         fold({ x: (f.dir > 0 ? f.w : -f.w) + dx * 1.9, y: f.cy + dy * .9 });
       });
       const end = e => {
@@ -196,6 +197,7 @@
           return;
         }
         const f = bk.flip;
+        if (!f) return;
         settle(e.type === 'pointerup' && (f.dir > 0 ? f.F.x < f.w * .55 : f.F.x > -f.w * .55)); // 拖过页宽四分之一左右就算翻过去
       };
       st.addEventListener('pointerup', end);

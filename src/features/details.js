@@ -39,19 +39,41 @@
     });
   };
 
-  /* 商品款式图：大图 + 一排缩略图，点缩略图换大图 */
+  /* 商品款式图：大图 + 一排缩略图，点缩略图换大图。
+     款式带 back（背面图）时，大图换成一张能旋转的纸片：拖动翻转、轻点翻面，交互沿用徽章检视器（features/badge3d.js 的 mount）。 */
+  const flipCard = (p, x) => `<div class="sheet-media cv" id="variant-card">
+      <div class="bv-stage cv-stage" role="img" aria-label="${esc(p.title + ' · ' + x.label)}，拖动可以翻到背面">
+        <div class="bv-obj">${[0, 1, 2].map(i => `<i class="cv-edge" style="transform:translateZ(${(i - 1) * .8}px)"></i>`).join('')}
+          <div class="bv-face cv-face cv-front"><img src="${esc(encodeURI(x.img))}" alt="" draggable="false"><i class="cv-gloss"></i></div>
+          <div class="bv-face cv-face cv-back"><img src="${esc(encodeURI(x.back))}" alt="" draggable="false"><i class="cv-gloss"></i></div></div></div>
+      <p class="bv-tip">拖动翻转，轻点翻到背面</p></div>`;
+  const mountCard = () => {
+    const c = document.getElementById('variant-card');
+    if (!c) return;
+    const img = c.querySelector('.cv-front img');
+    const fit = () => { if (img.naturalWidth) c.style.setProperty('--ar', `${img.naturalWidth} / ${img.naturalHeight}`); };
+    img.complete ? fit() : img.addEventListener('load', fit, { once: true });
+    HL.badge3d.mount(c);
+  };
   const variantsBlock = p => {
-    const v = p.variants;
-    return `<div class="sheet-media variant-main"><img id="variant-img" src="${esc(encodeURI(v[0].img))}" alt="${esc(p.title + ' · ' + v[0].label)}"></div>
+    const v = p.variants, flip = v.some(x => x.back);
+    return `${flip ? flipCard(p, v[0]) : `<div class="sheet-media variant-main"><img id="variant-img" src="${esc(encodeURI(v[0].img))}" alt="${esc(p.title + ' · ' + v[0].label)}"></div>`}
       ${v.length > 1 ? `<div class="variants" role="group" aria-label="款式">${v.map((x, i) =>
-        `<button type="button" data-act="product-variant" data-src="${esc(encodeURI(x.img))}" data-alt="${esc(p.title + ' · ' + x.label)}" aria-pressed="${i === 0}"><img src="${esc(encodeURI(x.img))}" alt="" loading="lazy"><span>${esc(x.label)}</span></button>`).join('')}</div>` : ''}
+        `<button type="button" data-act="product-variant" data-pid="${esc(p.id)}" data-i="${i}" data-src="${esc(encodeURI(x.img))}" data-alt="${esc(p.title + ' · ' + x.label)}" aria-pressed="${i === 0}"><img src="${esc(encodeURI(x.img))}" alt="" loading="lazy"><span>${esc(x.label)}</span></button>`).join('')}</div>` : ''}
       <p class="note">商品图为设计效果图，实物以上架时为准。</p>`;
   };
   HL.act('product-variant', el => {
+    el.parentNode.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b === el)));
+    const card = document.getElementById('variant-card');
+    if (card) { /* 纸片：整张换掉重新挂上，回到正面 */
+      const p = idx.product[el.dataset.pid];
+      card.outerHTML = flipCard(p, p.variants[+el.dataset.i]);
+      mountCard();
+      return;
+    }
     const img = document.getElementById('variant-img');
     if (!img) return;
     img.src = el.dataset.src; img.alt = el.dataset.alt;
-    el.parentNode.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b === el)));
   });
 
   HL.openProduct = id => {
@@ -65,6 +87,7 @@
         : '<span class="hint">示意商品，购买入口待接入</span>'}
         <button class="btn ${on ? 'is-on' : 'btn-ghost'}" type="button" data-act="want" data-id="${id}" aria-pressed="${on}">${icon(on ? 'check' : 'heart')}${on ? '已在想要清单' : '想要'}</button></div>`,
     });
+    mountCard();
   };
 
   /* 内容卡片详情。按钮规则：

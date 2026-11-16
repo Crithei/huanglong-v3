@@ -1,0 +1,47 @@
+/* 立体检视与林中全景（逻辑见 features/depthview.js）。全屏层，纸色底，和碰一碰的图鉴版同一套气质。 */
+.dv { position: fixed; inset: 0; z-index: 95; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  padding: calc(56px + env(safe-area-inset-top)) 18px calc(28px + env(safe-area-inset-bottom)); color: var(--ink);
+  background: radial-gradient(ellipse at 50% 42%, #f6eedb 0 40%, #e9dcbd 100%); opacity: 0; transition: opacity .3s ease; }
+.dv.is-in { opacity: 1; } .dv.is-out { opacity: 0; pointer-events: none; }
+.dv-close { position: absolute; z-index: 3; top: calc(12px + env(safe-area-inset-top)); right: 12px; background: rgba(255, 253, 246, .85); }
+.dv-head { margin: 0; font: 600 10.5px/1.4 var(--serif); letter-spacing: .32em; color: #6b5636; }
+.dv-tip { margin: 0; font-size: 12px; color: #8a7a58; letter-spacing: .08em; text-align: center; }
+.dv-gyro { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight: 600; color: #fff; background: var(--deep); }
+.dv-gyro .i { width: 15px; height: 15px; }
+
+/* 立体检视：照片装在白边相框里，上面一层随角度移动的玻璃反光 */
+.dv-frame { position: relative; width: min(100%, 520px); padding: 8px; background: #fffdf6; box-shadow: 0 14px 30px rgba(60, 40, 10, .28), 0 0 0 1px rgba(0, 0, 0, .05); transform: rotate(-.6deg); }
+.dv-canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+.dv-frame .dv-canvas { height: auto; }
+.dv-flat { display: block; width: 100%; }
+.dv-glare { position: absolute; inset: 8px; pointer-events: none; mix-blend-mode: soft-light;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 40%), rgba(255, 255, 255, .55), transparent 55%); }
+.dv-cap { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
+.dv-cap b { font: 600 24px/1.3 var(--serif); letter-spacing: .14em; color: #2f2617; }
+.dv-cap i { font: italic 14px var(--serif); color: #5a4a2c; }
+.dv-cap small { margin-top: 4px; font-size: 10.5px; color: #8a7a58; }
+.dv-cap a { color: inherit; text-decoration: underline; }
+
+/* 林中全景：画布铺满，鸟的点位是圆形照片 */
+.dv-pano { padding: 0; background: #1b2418; }
+.pano-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.pano-spots { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.pano-spot { position: absolute; left: 0; top: 0; display: flex; flex-direction: column; align-items: center; gap: 3px; pointer-events: auto; transition: opacity .25s; will-change: transform; }
+.pano-spot img { width: 58px; height: 58px; border-radius: 50%; object-fit: cover; border: 3px solid #fffdf6; box-shadow: 0 0 0 2px var(--c), 0 6px 14px rgba(0, 0, 0, .35); animation: pano-pulse 2.4s ease-in-out infinite; }
+.pano-spot b { padding: 2px 8px; font: 600 12px var(--serif); color: #2f2617; background: rgba(255, 253, 246, .92); box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
+  clip-path: polygon(0 10%, 3% 0, 97% 5%, 100% 30%, 98% 100%, 4% 95%); }
+.pano-spot small { font-size: 10px; color: #fff; text-shadow: 0 1px 3px rgba(0, 0, 0, .8); }
+.pano-top { position: absolute; z-index: 2; top: calc(16px + env(safe-area-inset-top)); left: 16px; right: 64px; display: flex; flex-direction: column; gap: 4px; }
+.pano-top .dv-head { color: #fffdf6; text-shadow: 0 1px 3px rgba(0, 0, 0, .6); }
+.pano-top small { font-size: 10.5px; line-height: 1.5; color: rgba(255, 253, 246, .85); text-shadow: 0 1px 3px rgba(0, 0, 0, .7); }
+.pano-compass { position: absolute; z-index: 2; left: 16px; bottom: calc(24px + env(safe-area-inset-bottom)); width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid rgba(255, 253, 246, .8); background: rgba(0, 0, 0, .25); }
+.pano-compass i { position: absolute; left: 50%; top: 4px; bottom: 50%; width: 2px; margin-left: -1px; background: #e9c46a; transform-origin: 50% 100%; border-radius: 2px; }
+.pano-tip { position: absolute; z-index: 2; bottom: calc(32px + env(safe-area-inset-bottom)); left: 64px; right: 16px; color: #fffdf6; text-shadow: 0 1px 3px rgba(0, 0, 0, .7); text-align: left; }
+.dv-pano .dv-gyro { position: absolute; z-index: 2; bottom: calc(68px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); }
+@keyframes pano-pulse { 50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--c) 35%, transparent), 0 6px 14px rgba(0, 0, 0, .35); } }
+
+/* 栈道手册里的入口 */
+.hb-links { display: flex; flex-wrap: wrap; gap: 6px 10px; }
+.bd-3d { position: absolute; z-index: 3; right: 6px; top: 6px; display: inline-flex; align-items: center; gap: 4px; padding: 4px 9px; font: 600 11px var(--serif); color: #fffdf6; background: rgba(42, 36, 24, .78); border-radius: 999px; }
+.bd-3d .i { width: 12px; height: 12px; }
+@media (prefers-reduced-motion: reduce) { .pano-spot img { animation: none; } }

@@ -293,7 +293,12 @@
 .sd-block textarea { width: 100%; padding: 10px 12px; border: 0; border-radius: 12px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); font: inherit; font-size: 14px; resize: none; }
 .sd-block textarea + .btn { margin-top: 8px; min-height: 38px; font-size: 13.5px; }
 .nd-photo { margin: 8px 6px 16px; }
-.nd-photo .pc-photo { aspect-ratio: 16 / 10; }
+.nd-photo .pc-photo { aspect-ratio: 4 / 3; }
+/* 节点详情的补充实拍：一排小图，点了换大图 */
+.nd-more { display: flex; gap: 8px; margin: -6px 6px 14px; overflow-x: auto; }
+.nd-more button { flex: none; width: 64px; height: 48px; padding: 2px; background: #fffdf6; box-shadow: 0 1px 3px rgba(50, 35, 10, .25); opacity: .7; transition: opacity .2s, transform .2s; }
+.nd-more button[aria-pressed="true"] { opacity: 1; transform: translateY(-2px); box-shadow: 0 0 0 2px var(--deep), 0 2px 5px rgba(50, 35, 10, .3); }
+.nd-more img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 @media (prefers-reduced-motion: no-preference) {
   /* 封面上的提示轻轻往左晃，告诉人可以翻 */

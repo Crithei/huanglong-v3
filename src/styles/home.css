@@ -114,3 +114,17 @@
   #p-home .rise.is-in { opacity: 1; translate: 0 0; }
   #p-home .hero > img, #p-home .hero-title, #p-home .hero-body { will-change: translate; }
 }
+
+/* 能旋转的纸片（明信片）：交互沿用徽章检视器（.bv-stage / .bv-obj，见 features/badge3d.js），这里只管纸的样子 */
+.sheet-media.cv { position: relative; display: grid; justify-items: center; padding: 22px 0 8px; background: radial-gradient(120% 90% at 50% 40%, #f7f2e6, #e9e1cf); overflow: hidden; aspect-ratio: auto; }
+.cv .cv-stage { width: 86%; height: auto; aspect-ratio: var(--ar, 1400 / 993); perspective: 1100px; }
+.cv .cv-face { overflow: hidden; border-radius: 3px; background: #fbf8f1; box-shadow: 0 0 0 1px rgba(60, 45, 20, .08); }
+.cv .cv-face img { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.cv .cv-front { transform: translateZ(1.3px); }
+.cv .cv-back { transform: rotateY(180deg) translateZ(1.3px); }
+.cv .cv-edge { border-radius: 3px; background: #efe8d8; box-shadow: 0 0 0 .5px rgba(120, 100, 60, .35); }
+/* 纸面哑光：一道很淡的反光随角度滑过 */
+.cv .cv-gloss { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: soft-light;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, .55) 48%, transparent 66%) var(--gx, 50%) 0 / 260% 100% no-repeat; }
+.cv::after { content: ''; width: 70%; height: 12px; margin-top: 12px; border-radius: 50%; background: radial-gradient(closest-side, rgba(60, 45, 20, .28), transparent); transform: scaleX(calc(1 - var(--side, 0) * .6)); }
+.cv .bv-tip { order: 3; margin: 6px 0 0; }
