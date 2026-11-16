@@ -169,7 +169,9 @@
     for (const s of STOPS) {
       const got = S.sound.got[s.id], q = S.sound.quiz[s.id], quiet = S.sound.quiet[s.id], note = S.sound.note[s.id];
       add('birds', `hb-bird${got ? ' is-got' : ''}`, `${run(`四 · 五鸟 · No.${s.no}`)}
-        <div class="bd-stage" style="--c:${s.colors[2]}">${got ? cut(s) : sil(s)}<i class="bd-blob"></i>${s.photo3d ? `<button class="bd-3d" type="button" data-act="depth-view" data-id="${s.id}" aria-label="立体检视${esc(s.bird)}的照片">${icon('layers')}立体看</button>` : ''}${got ? '' : '<span class="bd-ask">碰一碰展牌，把它贴进来</span>'}</div>
+        <div class="bd-stage" style="--c:${s.colors[2]}">${s.photo3d
+          ? `<button class="bd-look" type="button" data-act="depth-view" data-id="${s.id}" aria-label="点击立体观察${esc(s.bird)}">${got ? cut(s) : sil(s)}</button><span class="bd-hint" aria-hidden="true">${icon('zoom')}点击观察</span><small class="bd-credit">照片 ${esc(s.photo3d.author)} · ${esc(s.photo3d.license)}</small>`
+          : (got ? cut(s) : sil(s))}<i class="bd-blob"></i>${got ? '' : '<span class="bd-ask">碰一碰展牌，把它贴进来</span>'}</div>
         <div class="bd-name"><small>${esc(s.pinyin)}</small><h4>${esc(s.bird)}</h4><i>${esc(s.latin)} · ${esc(s.en)}</i></div>
         ${s.protect ? strip(s.protect, 'is-red bd-protect') : ''}
         <div class="bd-size"><span>♂ ${esc(s.weight[0])} · ${esc(s.length[0])}</span><span>♀ ${esc(s.weight[1])} · ${esc(s.length[1])}</span></div>

@@ -11,7 +11,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC, OUT = os.path.join(ROOT, 'assets-src', 'birds'), os.path.join(ROOT, 'assets', 'sound', '3d')
 REAL = os.path.join(ROOT, 'assets', 'sound', 'real')
 # 选 CC0 / CC BY 的照片（不用 BY-SA，省去改编作品同授权的麻烦）
-PHOTOS = {'s1': 's1-photo.jpg', 's2': 's2-photo-a.jpg', 's3': 's3-photo-a.jpg', 's4': 's4-photo.jpg', 's5': 's5-photo-c.jpg'}
+PHOTOS = {'s1': 's1-photo.jpg', 's2': 's2-photo-b.jpg', 's3': 's3-photo-a.jpg', 's4': 's4-photo.jpg', 's5': 's5-photo-c.jpg'}
 SIZE = 1280
 
 

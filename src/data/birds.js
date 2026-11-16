@@ -110,7 +110,7 @@ HL.data.birds = {
       ]
     },
     {
-      "id": "s2", "photo3d": {"src": "assets/sound/3d/s2.webp", "depth": "assets/sound/3d/s2-depth.webp", "author": "MilanIlic553", "license": "CC0", "page": "https://commons.wikimedia.org/wiki/File:Motacilla_cinerea1.jpg"},
+      "id": "s2", "photo3d": {"src": "assets/sound/3d/s2.webp", "depth": "assets/sound/3d/s2-depth.webp", "author": "Petr Knezour", "license": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Konipas_horsk%C3%BD_u_vody.jpg"},
       "no": 2,
       "place": "科普展牌 · 声纹栈道",
       "bird": "灰鹡鸰",

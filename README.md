@@ -139,9 +139,10 @@ python tools/check.py
 - `assets/guide/photos/`：数字人回答配图 45 张，同样来自交接包图库，索引在 `src/data/photos.js`，作者与协议写在每条的 `credit`、大图下方有显示。景区实景 18 张来自 Wikimedia Commons；生物多样性 7 张照片来自 iNaturalist（CC BY / CC0），另 20 张是项目自绘的图纸与物种设定图。兰花图库 150 张没有许可说明，暂未收入。单文件版不内嵌这些图。
 - `assets/species/`、`assets/shop/`：十枚生灵徽章，以及文创商店的兰花徽章、兰花胸针、兰花书签（正反面，2026-11-09 素材包「11.9图片」）、贴纸、邮票、鸟类明信片、羚牛玩偶效果图，来自项目组素材包「11-5」和「兰花文创」；黄龙明信片（国家公园风格、莫奈风格，含背面）和兰花收藏票根 7 张来自素材包「11.16图片」。都已转成 webp 并压缩尺寸。
 - `src/data/sounds.js`：声景手册的 9 个采集点，为本项目原型设计。
-- `assets/sound/`：听见黄龙栈道手册的照片、鸟类抠图和几何小鸟，截自同济大学许晓青团队的《黄龙鸟类声纹栈道》宣传册（2026-02-03 稿，未定稿，公开使用前需团队确认）。
+- `assets/sound/`：听见黄龙栈道手册的照片和几何小鸟，截自同济大学许晓青团队的《黄龙鸟类声纹栈道》宣传册（2026-02-03 稿，未定稿，公开使用前需团队确认）。
+- `assets/sound/bird-s1.webp` … `bird-s5.webp`：鸟页上的彩色鸟，从 Wikimedia Commons 照片抠出（`tools/bird-cutout.py`，IS-Net 分割模型），和立体检视用同一张照片：橙翅噪鹛 Sun Jiao（CC BY 4.0）、灰鹡鸰 Petr Knezour（CC BY-SA 4.0，抠图同样按 CC BY-SA 4.0 发布）、戴菊 Alexis Lours（CC BY 4.0）、红尾水鸲与白顶溪鸲 Shiv's fotografia（CC BY 4.0）。鸟页上标了作者和授权。
 - `assets/sound/real/`：声纹栈道 2026-11-16 现场实拍（入口、栈道、趣味木屋、骨骼浮雕、互动转筒、飞鸟展牌、鸟名立柱），项目组自拍。
-- `assets/sound/3d/`：立体检视用的鸟类照片和景深图（景深图由 Depth Anything V2 生成，属于改编），照片来自 Wikimedia Commons：橙翅噪鹛：Sun Jiao (Interaccoonale)（CC BY 4.0）；灰鹡鸰：MilanIlic553（CC0）；戴菊：Alexis Lours（CC BY 4.0）；红尾水鸲：Shiv's fotografia（CC BY 4.0）；白顶溪鸲：Shiv's fotografia（CC BY 4.0）。检视页里每张都标了作者、授权和原链接。`pano-blur.webp` 是用栈道实拍拼接模糊的占位全景。
+- `assets/sound/3d/`：立体检视用的鸟类照片和景深图（景深图由 Depth Anything V2 生成，属于改编），照片来自 Wikimedia Commons：橙翅噪鹛：Sun Jiao (Interaccoonale)（CC BY 4.0）；灰鹡鸰：Petr Knezour（CC BY-SA 4.0）；戴菊：Alexis Lours（CC BY 4.0）；红尾水鸲：Shiv's fotografia（CC BY 4.0）；白顶溪鸲：Shiv's fotografia（CC BY 4.0）。检视页里每张都标了作者、授权和原链接。`pano-blur.webp` 是用栈道实拍拼接模糊的占位全景。
 - `assets/sound/plate-s1.webp` … `plate-s5.webp`：碰一碰动画用的 19 世纪博物画抠图，都是公有领域：John Gould 与 William Hart《亚洲鸟类》（橙翅噪鹛）、Naumann《德国鸟类自然史》（灰鹡鸰）、John Gould《英国鸟类》（戴菊）、Henderson 与 Hume《从拉合尔到叶尔羌》（红尾水鸲）、Frederick John Shore 印度鸟类水彩手稿（白顶溪鸲）。原图来自 Wikimedia Commons，来源链接见 `assets-src/birds/CREDITS.md`，抠图脚本 `tools/plate-cutout.py`。
 - `assets/play/`：首页「随行互动」两张卡片的配图，是本项目一滴水第四章完成态的三维模型和彩池实验室池群画面的截图。
 - 其余插图（景点示意图）由代码生成。
