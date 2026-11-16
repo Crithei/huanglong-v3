@@ -1,0 +1,89 @@
+/* 碰一碰开场动画（逻辑见 features/tapintro.js）。--k 是这一页的主题色：声景手册用采集点的类别色，栈道手册用墨绿。
+   时间线：0 纸底 → .1 涟漪 → .35 照片剪开 → .7 环形字 → .95 标题纸条 / 剪影 → 1.45 盖章 → 1.7 提示 → 2.6 淡出 */
+.tap { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; align-content: center; gap: 22px; overflow: hidden; cursor: pointer;
+  color: var(--ink); transition: opacity .5s ease, filter .5s ease; }
+.tap-paper { position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 50% 38%, transparent 0 30%, rgba(80, 60, 20, .08) 75%, rgba(60, 45, 15, .2) 100%),
+    radial-gradient(rgba(120, 95, 50, .09) 1px, transparent 1.4px) 0 0 / 7px 7px,
+    #f4ecd8;
+  animation: tap-fade .3s ease both; }
+
+/* 声波涟漪：和声纹唱片的纹路呼应 */
+.tap-rings { position: absolute; left: 50%; top: 42%; width: 0; height: 0; }
+.tap-rings i { position: absolute; left: -36vmin; top: -36vmin; width: 72vmin; height: 72vmin; border-radius: 50%;
+  border: 1.5px solid var(--k); opacity: 0; animation: tap-ring 2.3s cubic-bezier(.2, .6, .3, 1) calc(.1s + var(--i) * .26s) both; }
+.tap-rings i:nth-child(even) { border-style: dashed; border-width: 1px; }
+
+/* 中心：照片从圆心剪开，外圈环形字慢慢转 */
+.tap-core { position: relative; z-index: 1; width: min(58vw, 240px); aspect-ratio: 1; margin-top: -4vh; }
+.tap-photo { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; background: #e8dcc0;
+  box-shadow: 0 0 0 6px #fffdf6, 0 0 0 7.5px rgba(0, 0, 0, .08), 0 14px 30px rgba(40, 30, 10, .28);
+  animation: tap-open .75s cubic-bezier(.65, 0, .25, 1) .35s both; }
+.tap-photo img { width: 100%; height: 100%; object-fit: cover; animation: tap-zoom 2.4s cubic-bezier(.2, .6, .2, 1) .35s both; }
+.tap-ring { position: absolute; inset: -17%; width: 134%; height: 134%; overflow: visible; animation: tap-fade .5s ease .7s both, tap-spin 22s linear .7s infinite; }
+.tap-ring text { font: 600 9.5px var(--serif); letter-spacing: 1.5px; fill: var(--k); }
+.tap-tape { position: absolute; left: 50%; top: -4%; width: 76px; height: 22px; transform: translateX(-50%) rotate(-6deg); background: rgba(226, 190, 96, .78);
+  clip-path: polygon(0 12%, 4% 0, 9% 14%, 14% 2%, 96% 0, 100% 20%, 97% 50%, 100% 84%, 95% 100%, 5% 100%, 0 80%, 3% 48%);
+  animation: tap-drop .35s cubic-bezier(.2, 1.4, .4, 1) .95s both; }
+/* 栈道手册：鸟的剪影从圆里探出来 */
+.tap-cut { position: absolute; right: -16%; bottom: -10%; width: 62%; filter: drop-shadow(0 8px 10px rgba(40, 30, 10, .3));
+  animation: tap-pop .6s cubic-bezier(.2, 1.5, .4, 1) 1s both; }
+
+/* 文字：类别色的纸条 */
+.tap-text { position: relative; z-index: 1; margin-top: min(9vw, 40px); display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.tap-verb { font-size: 11.5px; letter-spacing: .32em; color: var(--k); font-weight: 600; animation: tap-up .45s ease .8s both; }
+.tap-title { padding: 6px 18px 8px; font: 600 25px/1.3 var(--serif); letter-spacing: .06em; color: #fff; background: var(--k); box-shadow: 0 3px 8px rgba(40, 30, 10, .22);
+  clip-path: polygon(0 10%, 3% 0, 30% 6%, 62% 0, 97% 5%, 100% 30%, 98% 72%, 100% 100%, 70% 94%, 36% 100%, 4% 95%, 1% 60%);
+  transform: rotate(-1.5deg); animation: tap-slide .5s cubic-bezier(.2, 1.2, .4, 1) .95s both; }
+.tap-place { font: 13px var(--serif); color: #6b5d40; animation: tap-up .45s ease 1.1s both; }
+
+/* 盖章：落下去的那一下有点弹 */
+.tap-stamp { position: absolute; z-index: 2; left: calc(50% + min(29vw, 120px) - 30px); top: calc(42% - min(29vw, 120px) - 4vh - 18px);
+  width: 84px; height: 84px; display: grid; place-content: center; text-align: center; border-radius: 50%; color: var(--k);
+  border: 2.5px solid var(--k); box-shadow: inset 0 0 0 4px #f4ecd8, inset 0 0 0 5.5px var(--k); background: rgba(244, 236, 216, .82);
+  transform: rotate(-14deg); animation: tap-stamp .32s cubic-bezier(.3, 1.7, .5, 1) 1.45s both; }
+.tap-stamp small { font-size: 10px; letter-spacing: .2em; }
+.tap-stamp b { font: 700 24px/1.05 var(--serif); }
+.tap-stamp em { font-style: normal; font-size: 12px; margin-left: 2px; opacity: .8; }
+.tap-skip { position: absolute; bottom: calc(28px + env(safe-area-inset-bottom)); left: 0; right: 0; margin: 0; text-align: center; font-size: 12px; letter-spacing: .2em; color: #8a7a58; animation: tap-fade .5s ease 1.7s both; }
+
+/* 退场：整体轻轻上浮、淡出，下面的页面露出来 */
+.tap.is-out { opacity: 0; pointer-events: none; }
+.tap.is-out .tap-core, .tap.is-out .tap-text, .tap.is-out .tap-stamp { transition: transform .5s cubic-bezier(.5, 0, .7, .4); transform: translateY(-5vh) scale(.94); }
+.tap.is-out .tap-stamp { transform: translateY(-5vh) rotate(-14deg) scale(.94); }
+
+@keyframes tap-fade { from { opacity: 0; } }
+@keyframes tap-ring { 0% { opacity: 0; transform: scale(.12); } 12% { opacity: .7; } 100% { opacity: 0; transform: scale(1.6); } }
+@keyframes tap-open { from { clip-path: circle(0% at 50% 50%); } to { clip-path: circle(50% at 50% 50%); } }
+@keyframes tap-zoom { from { transform: scale(1.35) rotate(-6deg); } }
+@keyframes tap-spin { to { transform: rotate(1turn); } }
+@keyframes tap-drop { from { opacity: 0; transform: translateX(-50%) translateY(-24px) rotate(-18deg); } }
+@keyframes tap-pop { from { opacity: 0; transform: translate(-30%, 18%) scale(.5) rotate(-12deg); } }
+@keyframes tap-up { from { opacity: 0; transform: translateY(10px); } }
+@keyframes tap-slide { from { opacity: 0; transform: translateX(-40px) rotate(-6deg); } }
+@keyframes tap-stamp { from { opacity: 0; transform: scale(2.4) rotate(-30deg); } }
+
+.tap.is-reduced *, .tap.is-reduced { animation: none !important; }
+.tap.is-reduced .tap-rings { display: none; }
+
+/* ---------- 写芯片工具页（features/nfcwrite.js） ---------- */
+.nfc-state { display: flex; gap: 8px; align-items: flex-start; padding: 10px 12px; border-radius: 12px; font-size: 13.5px; line-height: 1.6; }
+.nfc-state .i { flex: none; width: 17px; height: 17px; margin-top: 3px; }
+.nfc-state.is-ok { background: rgba(18, 102, 109, .08); color: var(--deep); }
+.nfc-state.is-no { background: #fbefe2; color: #9a4a2e; margin-top: 8px; }
+.nfc-base { margin: 10px 0 4px; font-size: 12px; color: var(--ink-2); word-break: break-all; }
+.nfc-sheet code { font: 11.5px ui-monospace, Menlo, Consolas, monospace; }
+.nfc-read { width: 100%; margin-top: 8px; }
+.nfc-h { margin: 18px 0 6px; font: 600 15px var(--serif); }
+.nfc-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.nfc-list li { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: start; padding: 10px; border-radius: 12px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+.nfc-no { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: var(--k); color: #fff; font: 600 13px var(--serif); font-style: normal; }
+.nfc-t { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.nfc-t b { font-size: 14px; } .nfc-t small { font-size: 11.5px; color: var(--ink-2); }
+.nfc-t code { margin-top: 2px; color: var(--ink-2); word-break: break-all; }
+.nfc-b { display: flex; flex-direction: column; gap: 5px; }
+.nfc-b .btn-sm { min-height: 30px; padding: 0 12px; font-size: 12.5px; }
+.nfc-msg { font-size: 12.5px; font-weight: 600; }
+.nfc-msg:empty { display: none; }
+.nfc-msg.is-wait { color: #b07a1c; } .nfc-msg.is-ok { color: var(--deep); } .nfc-msg.is-err { color: #b0442a; }

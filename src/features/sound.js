@@ -240,9 +240,6 @@
     book.render(host);
     const cnt = $('#play-sound-count');
     if (cnt) cnt.textContent = `已贴上 ${doneCount()} / ${STOPS.length} 只鸟`;
-    const scan = $('#sound-scan');
-    if (scan) scan.innerHTML = `<b>${icon('pin')}原型：模拟在展牌前碰一碰</b><p>声纹栈道上有五块鸟类科普展牌，每块都有鸣声二维码。设想在展牌上加 NFC：手机碰一下或扫一下，就把这只鸟贴进手册。</p>
-      <div class="chips">${STOPS.map(s => `<button class="chip${S.sound.got[s.id] ? ' is-got' : ''}" type="button" data-act="sound-scan" data-id="${s.id}">No.${s.no} ${S.sound.got[s.id] ? esc(s.bird) : '展牌'}</button>`).join('')}</div>`;
   };
   const birdPage = id => book.find(p => p.cls.startsWith('hb-bird') && p.html.includes(`data-id="${id}"`));
   HL.act('sound-which', el => { S.sound.book = el.dataset.v; save(); HL.soundRender(); });
@@ -466,13 +463,20 @@
   window.addEventListener('pagehide', stopMic);
 
   /* ---------- 网址直达：…/?tag=s1（NFC 和二维码里写的就是它） ---------- */
-  HL.soundFromUrl = () => {
-    const params = new URLSearchParams(location.search), tag = params.get('tag');
-    if (!tag || !byId(tag)) return;
-    params.delete('tag');
-    history.replaceState(null, '', location.pathname + (params.toString() ? '?' + params : '') + location.hash);
+  /* 到达某个声音驿站：先播碰一碰动画（鸟的剪影从圆里探出来），再打开驿站页 */
+  HL.soundArrive = async (tag, via) => {
+    const s = byId(tag);
+    if (!s) return;
     S.sound.book = 'guide';
     HL.setPage('play');
+    await HL.tapIntro({ via, book: '栈道手册', title: s.bird, place: s.place, img: 'assets/sound/boards.webp', cut: `assets/sound/bird-${s.id}.webp`, color: '#2e5d4b', no: s.no, total: STOPS.length });
     HL.openSoundStop(tag, true);
+  };
+  HL.soundFromUrl = () => {
+    const params = new URLSearchParams(location.search), tag = params.get('tag'), via = params.get('via');
+    if (!tag || !byId(tag)) return;
+    params.delete('tag'); params.delete('via');
+    history.replaceState(null, '', location.pathname + (params.toString() ? '?' + params : '') + location.hash);
+    HL.soundArrive(tag, via);
   };
 })();

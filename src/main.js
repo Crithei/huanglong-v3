@@ -23,4 +23,5 @@
   HL.parallax.init(); // 首页滑动视差，见 ui/parallax.js
   HL.bankFromUrl(); // ?rec=w-fall 直接打开那个采集点的录音页，见 features/soundbank.js
   HL.soundFromUrl(); // 网址带 ?tag=s1 时直接打开那个声音驿站（NFC、二维码用），见 features/sound.js
+  HL.nfcFromUrl(); // ?nfc=write 打开写芯片工具（安卓 Chrome），见 features/nfcwrite.js
 })();

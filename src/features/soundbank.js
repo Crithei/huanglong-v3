@@ -163,9 +163,6 @@
     migrate();
     const cnt = $('#play-sound-count');
     if (cnt) cnt.textContent = `已采集 ${done()} / ${TG.length} 段`;
-    const scan = $('#sound-scan');
-    if (scan) scan.innerHTML = `<b>${icon('audio')}原型：直接开始采集</b><p>实地也可以在这九个地方立小牌子，碰一碰或扫一扫就打开对应的录音页（网址 …/?rec=w-fall）。</p>
-      <div class="chips">${TG.map(t => `<button class="chip${S.sound.bank[t.id] ? ' is-got' : ''}" type="button" data-act="bank-rec" data-id="${t.id}">${kind(t.kind).name} · ${esc(t.title)}</button>`).join('')}</div>`;
   };
   const targetPage = id => book.find(p => p.html.includes(`data-act="bank-rec" data-id="${id}"`) || p.html.includes(`data-act="bank-play" data-id="${id}" aria-label`));
   HL.act('bank-goto', el => book.goTo(targetPage(el.dataset.id)));
@@ -375,13 +372,20 @@
   document.addEventListener('click', e => { if (e.target.closest && e.target.closest('[data-act="reset"]')) clipClear(); }, true);
 
   /* 网址直达：…/?rec=w-fall（以后在地点的小牌子上贴 NFC 或二维码） */
-  HL.bankFromUrl = () => {
-    const params = new URLSearchParams(location.search), id = params.get('rec');
-    if (!id || !byId(id)) return;
-    params.delete('rec');
-    history.replaceState(null, '', location.pathname + (params.toString() ? '?' + params : '') + location.hash);
+  /* 到达某个采集点：先播碰一碰动画（features/tapintro.js），再打开录音页。via 是 nfc / qr / 空 */
+  HL.bankArrive = async (id, via) => {
+    const t = byId(id);
+    if (!t) return;
     S.sound.book = 'collect'; save();
     HL.setPage('play');
+    await HL.tapIntro({ via, book: '声景手册', title: t.title, place: place(t), img: stPhoto(t), color: kind(t.kind).color, no: TG.indexOf(t) + 1, total: TG.length });
     HL.openBankRec(id);
+  };
+  HL.bankFromUrl = () => {
+    const params = new URLSearchParams(location.search), id = params.get('rec'), via = params.get('via');
+    if (!id || !byId(id)) return;
+    params.delete('rec'); params.delete('via');
+    history.replaceState(null, '', location.pathname + (params.toString() ? '?' + params : '') + location.hash);
+    HL.bankArrive(id, via);
   };
 })();

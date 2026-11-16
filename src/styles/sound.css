@@ -243,11 +243,6 @@
 .press b { margin-right: 6px; color: #2e6e66; } .press small { display: block; color: #9a8a66; }
 
 /* 互动页上的模拟碰一碰 */
-.sound-scan { margin-top: 14px; padding: 12px; border-radius: 16px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
-.sound-scan > b { display: flex; align-items: center; gap: 6px; font-size: 13.5px; color: var(--deep); }
-.sound-scan > b .i { width: 16px; height: 16px; }
-.sound-scan p { margin: 4px 0 8px; font-size: 12px; color: var(--ink-2); }
-.sound-scan .chips button.is-got { background: rgba(196, 85, 58, .12); color: #a8432c; }
 .sound-credit { margin: 10px 2px 0; font-size: 11.5px; line-height: 1.6; color: var(--ink-2); }
 
 /* ---------- 驿站弹层 ---------- */

@@ -28,7 +28,6 @@
           <button type="button" role="tab" data-act="sound-which" data-v="collect"><b>声景手册</b><small>沿途录下水、风、鸟和安静</small></button>
         </div>
         <div id="sound-book"></div>
-        <div class="sound-scan" id="sound-scan"></div>
         <p class="sound-credit" id="sound-credit"></p>
       </section>
 
