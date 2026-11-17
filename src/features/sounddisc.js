@@ -165,5 +165,13 @@
     });
   }
 
-  HL.soundDisc = { T, F, edge, encode, decode, draw, url, live, fromImage };
+  /* 首页卡片用的唱片：游客录过就用最近的一张（安静类太暗，跳过），没录过用一张示意的水声唱片 */
+  function cover() {
+    const bank = (HL.S.sound && HL.S.sound.bank) || {}, got = Object.entries(bank).filter(([, b]) => b.spec && b.kind !== 'quiet').sort((a, b) => (a[1].at < b[1].at ? 1 : -1));
+    if (got.length) { const [id, b] = got[0]; return url(b.spec, { kind: b.kind, seed: id + b.at, text: '声景手册 · 我的声音标本', size: 300 }); }
+    const r = rng(7), frames = Array.from({ length: T }, (_, t) => Array.from({ length: F }, (_, f) => Math.max(0, Math.min(1, .5 + .2 * Math.sin(t * .35 + f * .2) + .15 * r() - f * .006))));
+    return url(encode(frames), { kind: 'water', seed: 'home-cover', text: '声景手册 · 沿途收集水声、风声、鸟鸣', size: 300 });
+  }
+
+  HL.soundDisc = { T, F, edge, encode, decode, draw, url, live, fromImage, cover };
 })();

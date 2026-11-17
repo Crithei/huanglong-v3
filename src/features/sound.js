@@ -245,6 +245,16 @@
   };
   const birdPage = id => book.find(p => p.cls.startsWith('hb-bird') && p.html.includes(`data-id="${id}"`));
   HL.act('sound-which', el => { S.sound.book = el.dataset.v; save(); HL.soundRender(); });
+  /* 首页「随行互动」的手册卡片：切到互动页，翻开那一本 */
+  HL.openBook = v => {
+    HL.closeSheet();
+    S.sound.book = v === 'collect' ? 'collect' : 'guide'; save();
+    if (S.page !== 'play') HL.setPage('play');
+    HL.soundRender();
+    const sec = $('#h-sound');
+    if (sec) requestAnimationFrame(() => sec.closest('section').scrollIntoView({ block: 'start', behavior: reduced() ? 'auto' : 'smooth' }));
+  };
+  HL.act('book-open', el => HL.openBook(el.dataset.v));
   HL.act('hb-bird', el => book.goTo(birdPage(el.dataset.id)));
   /* 页内的小互动：只重画当前页，不翻页 */
   const redraw = () => book.redraw();
@@ -293,8 +303,10 @@
       title: `No.${s.no} 声音驿站`, cls: 'sound-sheet',
       body: `
         ${fresh ? `<div class="sd-stamped" aria-live="polite"><span class="sd-stamp">贴</span><div><b>已贴进栈道手册</b><small>${esc(fmtDate(got))}</small></div></div>` : ''}
-        <div class="sd-hero pc-paper" style="--c:${s.colors[2]}">${tape()}${cut(s, fresh ? 'is-new' : '')}<i class="bd-blob"></i>
-          <div class="sd-head"><small>${esc(s.pinyin)}</small><h3>${esc(s.bird)}</h3><i>${esc(s.latin)}</i><i>${esc(s.en)}</i></div></div>
+        <div class="sd-hero pc-paper" style="--c:${s.colors[2]}">${tape()}${s.photo3d
+          ? `<button class="sd-look" type="button" data-act="depth-view" data-id="${s.id}" aria-label="点击立体观察${esc(s.bird)}">${cut(s, fresh ? 'is-new' : '')}<span class="bd-hint" aria-hidden="true">${icon('zoom')}点击观察</span></button>`
+          : cut(s, fresh ? 'is-new' : '')}<i class="bd-blob"></i>
+          <div class="sd-head"><small>${esc(s.pinyin)}</small><h3>${esc(s.bird)}</h3><i>${esc(s.latin)}</i><i>${esc(s.en)}</i>${s.photo3d ? `<small class="sd-credit">照片 ${esc(s.photo3d.author)} · ${esc(s.photo3d.license)}</small>` : ''}</div></div>
         <div class="sd-keys">${s.protect ? `<span class="is-red">${esc(s.protect)}</span>` : ''}${s.keys.map(k => `<span>${esc(k)}</span>`).join('')}</div>
         <div class="bd-size"><span>♂ ${esc(s.weight[0])} · ${esc(s.length[0])}</span><span>♀ ${esc(s.weight[1])} · ${esc(s.length[1])}</span></div>
         <div class="sd-sono">${HL.sonogram(s, { axes: true, dark: true })}

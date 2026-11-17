@@ -1,4 +1,4 @@
-/* 首页：主视觉 → 快捷入口 → 精选景观 → 停留示意（沿途色带） → 随行互动（一滴水、彩池实验室） → 文创商店。
+/* 首页：主视觉 → 快捷入口 → 精选景观 → 停留示意（沿途色带） → 随行互动（一滴水、彩池实验室、栈道手册、声景手册） → 文创商店。
    文案和精选景点都在 src/data/（meta.js、cards.js），这里只管排版。 */
 (() => {
   'use strict';
@@ -47,7 +47,7 @@
       </section>
 
       <section class="sec" aria-labelledby="h-play">
-        <div class="sec-h"><h2 id="h-play">随行互动</h2><span class="aside">两个科普互动</span></div>
+        <div class="sec-h"><h2 id="h-play">随行互动</h2><span class="aside">四个互动</span></div>
         <div class="play-grid">
           <button class="play-card" type="button" data-act="tab" data-page="play">
             <span class="shot shot-water"><img src="assets/play/water-final.webp" alt="一滴水第四章「长成彩池」完成后的三维模型" loading="lazy" decoding="async"></span>
@@ -56,6 +56,14 @@
           <button class="play-card lab" type="button" data-act="lab-open">
             <span class="shot shot-lab"><img src="assets/play/lab-pools.webp" alt="彩池实验室里相连的池群" loading="lazy" decoding="async"></span>
             <div class="t"><b>彩池实验室</b></div>
+          </button>
+          <button class="play-card book-guide" type="button" data-act="book-open" data-v="guide">
+            <span class="shot shot-guide"><img src="assets/sound/plate-s1.webp" alt="栈道手册：Gould 画的橙翅噪鹛" loading="lazy" decoding="async"></span>
+            <div class="t"><b>栈道手册</b></div>
+          </button>
+          <button class="play-card book-bank" type="button" data-act="book-open" data-v="collect">
+            <span class="shot shot-bank"><img src="${esc(HL.soundDisc ? HL.soundDisc.cover() : '')}" alt="声景手册：一张声纹唱片" loading="lazy" decoding="async"></span>
+            <div class="t"><b>声景手册</b></div>
           </button>
         </div>
       </section>

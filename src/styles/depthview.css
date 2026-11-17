@@ -49,7 +49,29 @@
 .bd-hint { position: absolute; z-index: 2; right: 8px; top: 6px; display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px 2px 6px; font: 600 10.5px var(--serif); color: #2a2418; background: rgba(255, 253, 246, .88); border-radius: 999px; box-shadow: 0 1px 3px rgba(50, 35, 10, .25); pointer-events: none; animation: bd-hint 2.8s ease-in-out infinite; }
 .bd-hint .i { width: 11px; height: 11px; }
 @keyframes bd-hint { 50% { transform: translateY(-2px); } }
+/* 驿站弹层的鸟图：同样点了进入立体检视，提示放在图的右下角 */
+.sd-look { position: relative; z-index: 1; display: block; width: 100%; cursor: zoom-in; transition: transform .2s; }
+.sd-look:active { transform: scale(.97) rotate(-1deg); }
+.sd-look .bd-hint { top: auto; right: 0; bottom: -4px; }
 /* 鸟图来自 Wikimedia Commons 的照片，CC BY / BY-SA 要署名 */
+.sd-credit { display: block; margin-top: 4px; font-size: 9px; line-height: 1.3; color: #8a7a58; }
 .bd-credit { position: absolute; z-index: 2; left: 10px; top: 8px; max-width: 42%; font-size: 8.5px; line-height: 1.3; color: rgba(42, 36, 24, .7); }
 @media (prefers-reduced-motion: reduce) { .bd-hint { animation: none; } }
 @media (prefers-reduced-motion: reduce) { .pano-spot img { animation: none; } }
+
+/* ---------- 高斯泼溅测试页 ?splat=test（features/splattest.js）---------- */
+.dv.st { padding: 0; background: #1a1e18; color: #fffdf6; }
+.st-canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+.st-top { position: absolute; z-index: 2; top: calc(14px + env(safe-area-inset-top)); left: 14px; right: 60px; display: flex; flex-direction: column; gap: 8px; }
+.st-top .dv-head { color: #fffdf6; }
+.st-birds { display: flex; flex-wrap: wrap; gap: 6px; }
+.st-birds button { padding: 5px 11px; border-radius: 999px; font-size: 12.5px; font-weight: 600; color: #fffdf6; background: rgba(255, 253, 246, .14); }
+.st-birds button[aria-pressed="true"] { color: #2a2418; background: #fffdf6; }
+.st .dv-modes { align-self: flex-start; background: rgba(255, 253, 246, .14); }
+.st .dv-modes button { color: #fffdf6; }
+.st .dv-modes button[aria-pressed="true"] { color: #2a2418; background: #fffdf6; }
+.st-info { position: absolute; z-index: 2; left: 14px; bottom: calc(96px + env(safe-area-inset-bottom)); font: 12px ui-monospace, Menlo, Consolas, monospace; color: rgba(255, 253, 246, .85); text-shadow: 0 1px 2px #000; }
+.st-info::after { content: attr(data-fps); margin-left: 10px; color: #e9c46a; }
+.st-tip { position: absolute; z-index: 2; left: 14px; right: 14px; bottom: calc(50px + env(safe-area-inset-bottom)); color: rgba(255, 253, 246, .8); text-align: left; }
+.st-note { position: absolute; z-index: 2; left: 14px; right: 14px; bottom: calc(14px + env(safe-area-inset-bottom)); font-size: 10px; color: rgba(255, 253, 246, .55); }
+.st .dv-gyro { position: absolute; z-index: 2; right: 14px; bottom: calc(120px + env(safe-area-inset-bottom)); }

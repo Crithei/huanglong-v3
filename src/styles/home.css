@@ -98,13 +98,25 @@
 .play-card .shot::after { content: ""; position: absolute; left: -4%; right: -4%; bottom: -10px; height: 20px; border-radius: 50%; box-shadow: 0 -3px 0 #f4ecd4; }
 .play-card .shot-water::after { background: var(--ink); }
 .play-card .shot-lab::after { background: #12666d; }
+/* 两本手册：栈道手册是纸色底上的博物画，声景手册是赭石底上的声纹唱片，和两本书的封面同色 */
+.play-card.book-guide { background: #2e5d4b; }
+.shot-guide { background: radial-gradient(ellipse at 50% 45%, #f6eedb 0%, #ebdfc3 100%); }
+.play-card .shot-guide img { object-fit: contain; padding: 8px 10px 14px; }
+.play-card .shot-guide::after { background: #2e5d4b; }
+.play-card.book-bank { background: #8e4a25; }
+.shot-bank { background: radial-gradient(120% 80% at 50% 0%, #b5652f, #8e4a25 70%); display: grid; place-items: center; }
+.play-card .shot-bank img { width: 78%; height: auto; aspect-ratio: 1; border-radius: 50%; object-fit: cover; box-shadow: 0 6px 14px rgba(40, 15, 0, .45); }
+.play-card .shot-bank::after { background: #8e4a25; }
 .play-card .t { display: block; padding: 6px 12px 11px; }
 .play-card b { display: block; font: 600 15.5px/1.35 var(--serif); white-space: nowrap; }
 /* 待机：模型轻轻浮动，池群画面缓慢推近 */
 @media (prefers-reduced-motion: no-preference) {
   .shot-water img { animation: shot-float 6s ease-in-out infinite; }
   .shot-lab img { animation: shot-drift 14s ease-in-out infinite alternate; }
+  .shot-guide img { animation: shot-float 7s ease-in-out infinite; }
+  .shot-bank img { animation: shot-spin 40s linear infinite; }
 }
+@keyframes shot-spin { to { transform: rotate(1turn); } }
 @keyframes shot-float { 50% { transform: translateY(-4px); } }
 @keyframes shot-drift { from { transform: scale(1); } to { transform: scale(1.08) translate(-2%, -2%); } }
 

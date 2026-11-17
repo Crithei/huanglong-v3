@@ -19,3 +19,7 @@ __pycache__/
 # 博物画原图（几 MB 一张，只提交来源清单；重新抠图前从 CREDITS.md 的链接下载）
 assets-src/**/*.jpg
 assets-src/**/3d-raw/
+
+# SHARP 生成的 3D 高斯场景：模型权重只许研究用途，每只约 34 MB（超过 Cloudflare 单文件 25 MB 上限），只在本地给测试页用
+assets/sound/3d/*.splat
+assets/sound/3d/splat-meta.json
