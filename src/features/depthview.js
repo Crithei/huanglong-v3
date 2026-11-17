@@ -86,24 +86,23 @@
         if(h>=t){float a=ph-pt,b=h-t,k=a/(a-b+1e-5);p=uv+off*(mix(pt,t,k)-focus);break;}pt=t;ph=h;p=q;}}
       gl_FragColor=texture2D(img,clamp(p,.001,.999));}`;
   /* 焦平面：取景深图里最近那一成像素的深度（通常就是鸟） */
-  const focusOf = dep => {
+  const focusOf = (dep, pct = .92) => {
     const c = document.createElement('canvas'); c.width = 96; c.height = Math.round(96 * dep.naturalHeight / dep.naturalWidth);
     const x = c.getContext('2d'); x.drawImage(dep, 0, 0, c.width, c.height);
     const px = x.getImageData(0, 0, c.width, c.height).data, a = [];
     for (let i = 0; i < px.length; i += 4) a.push(px[i] / 255);
-    a.sort((p, q) => p - q); return a[Math.floor(a.length * .92)] || .8;
+    a.sort((p, q) => p - q); return a[Math.floor(a.length * pct)] || .8;
   };
 
-  HL.depthView = {
-    async open(id) {
-      const s = byId(id), P = s && s.photo3d;
-      if (!P) return;
+  /* 通用查看器：鸟和景点实景照共用。c = { head, title, sub, credit（HTML）, src, depth, pct（不动面取景深的哪个分位）, max（最大位移） } */
+  async function show(c) {
+      const P = c;
       const { el, close } = layer('dv-depth', `
         <button class="dv-close icon-btn" type="button" aria-label="关闭">${icon('x')}</button>
-        <p class="dv-head">立体检视 · No.${s.no}</p>
-        <div class="dv-frame"><canvas class="dv-canvas" role="img" aria-label="${esc(s.bird)}的照片，倾斜手机或拖动可以看出前后层次"></canvas><i class="dv-glare"></i></div>
-        <div class="dv-cap"><b>${esc(s.bird)}</b><i>${esc(s.latin)}</i>
-          <small>照片：${esc(P.author)} · ${esc(P.license)} · <a href="${esc(P.page)}" target="_blank" rel="noopener">Wikimedia Commons</a></small></div>
+        <p class="dv-head">${esc(c.head)}</p>
+        <div class="dv-frame"><canvas class="dv-canvas" role="img" aria-label="${esc(c.title)}的照片，倾斜手机或拖动可以看出前后层次"></canvas><i class="dv-glare"></i></div>
+        <div class="dv-cap"><b>${esc(c.title)}</b>${c.sub ? `<i>${esc(c.sub)}</i>` : ''}
+          <small>${c.credit}</small></div>
         <p class="dv-tip">${gyro.has() ? '倾斜手机看前后层次，也可以用手指拖' : '用手指拖动看前后层次'}</p>${gyroBtn()}`);
       const cv = el.querySelector('.dv-canvas'), g = gl(cv);
       if (!g) { el.querySelector('.dv-tip').textContent = '这个浏览器不支持 WebGL，只能看平面照片。'; cv.replaceWith(Object.assign(new Image(), { src: P.src, className: 'dv-flat' })); return; }
@@ -114,12 +113,12 @@
       texture(g, 0, img); texture(g, 1, dep);
       g.uniform1i(g.getUniformLocation(pr, 'img'), 0); g.uniform1i(g.getUniformLocation(pr, 'dep'), 1);
       g.uniform1f(g.getUniformLocation(pr, 'zoom'), 1.07);
-      g.uniform1f(g.getUniformLocation(pr, 'focus'), focusOf(dep));
+      g.uniform1f(g.getUniformLocation(pr, 'focus'), focusOf(dep, c.pct || .92));
       const uOff = g.getUniformLocation(pr, 'off');
       g.viewport(0, 0, cv.width, cv.height);
 
       let tx = 0, ty = 0, x = 0, y = 0, drag = null, base = null, lastTouch = 0;
-      const MAX = .03; // 最大位移占画面宽度的比例；背景约移动这个值的七成，留在 zoom 1.07 放大出来的余量里
+      const MAX = c.max || .03; // 最大位移占画面宽度的比例，留在 zoom 1.07 放大出来的余量里
       cv.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, tx, ty }; cv.setPointerCapture(e.pointerId); lastTouch = performance.now(); });
       cv.addEventListener('pointermove', e => {
         if (!drag) return; const r = cv.getBoundingClientRect();
@@ -147,8 +146,26 @@
       };
       requestAnimationFrame(frame);
       el.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  }
+
+  HL.depthView = {
+    /* 鸟：不动面放在鸟所在的深度（最近那一成），清晰的鸟几乎不动 */
+    open(id) {
+      const s = byId(id), P = s && s.photo3d;
+      if (!P) return;
+      show({ head: `立体检视 · No.${s.no}`, title: s.bird, sub: s.latin, src: P.src, depth: P.depth, pct: .92, max: .03,
+        credit: `照片：${esc(P.author)} · ${esc(P.license)} · <a href="${esc(P.page)}" target="_blank" rel="noopener">Wikimedia Commons</a>` });
+    },
+    /* 景点实景照：远近连续，不动面放在中景（景深中位数），近景和远景往相反方向移 */
+    openScene(id) {
+      const s = HL.idx.station[id], P = s && s.photo;
+      if (!P || !P.depth) return;
+      const url = HL.safeUrl(P.page);
+      show({ head: '立体检视 · 精选景观', title: s.name, sub: s.category, src: P.src, depth: P.depth, pct: .5, max: .04,
+        credit: `照片：${url ? `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(P.credit)}</a>` : esc(P.credit)}` });
     },
   };
+  HL.act('scene-view', el => HL.depthView.openScene(el.dataset.id));
 
   /* ---------- 林中全景 ---------- */
   const PANO_FS = `precision mediump float;varying vec2 v;uniform sampler2D tex;uniform float yaw,pitch,tf,asp;

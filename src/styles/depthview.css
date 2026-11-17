@@ -75,3 +75,11 @@
 .st-tip { position: absolute; z-index: 2; left: 14px; right: 14px; bottom: calc(50px + env(safe-area-inset-bottom)); color: rgba(255, 253, 246, .8); text-align: left; }
 .st-note { position: absolute; z-index: 2; left: 14px; right: 14px; bottom: calc(14px + env(safe-area-inset-bottom)); font-size: 10px; color: rgba(255, 253, 246, .55); }
 .st .dv-gyro { position: absolute; z-index: 2; right: 14px; bottom: calc(120px + env(safe-area-inset-bottom)); }
+
+/* 精选景观：首页卡片右上角一枚「可立体观察」小标；景点详情的大图点了进入立体检视 */
+.spot { position: relative; }
+.spot-3d { position: absolute; z-index: 2; right: 8px; top: 8px; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; color: #fffdf6; background: rgba(23, 51, 45, .78); box-shadow: 0 0 0 1.5px rgba(255, 253, 246, .85), 0 2px 6px rgba(0, 0, 0, .3); }
+.spot-3d .i { width: 13px; height: 13px; }
+.sheet-media.scene-look { position: relative; display: block; width: 100%; padding: 0; cursor: zoom-in; }
+.sheet-media.scene-look img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.scene-look .bd-hint { top: auto; bottom: 10px; right: 10px; }

@@ -52,7 +52,7 @@ HL.data.stations = [
     "facts": [],
     "stamp": "assets/stamps/welcome-pond.svg",
     "photo": {
-      "src": "assets/welcome-ponds.jpg",
+      "src": "assets/welcome-ponds.jpg", "depth": "assets/photos/depth/welcome-pond.webp",
       "credit": "Kounosu，CC BY-SA 3.0，Wikimedia Commons",
       "page": "https://commons.wikimedia.org/wiki/File:Welcome-Ponds_Huanglong_Sichuan_China.jpg"
     }
@@ -121,7 +121,7 @@ HL.data.stations = [
     ],
     "stamp": "assets/stamps/flying-waterfall.svg",
     "photo": {
-      "src": "assets/photos/flying-waterfall.jpg",
+      "src": "assets/photos/flying-waterfall.jpg", "depth": "assets/photos/depth/flying-waterfall.webp",
       "credit": "rheins，CC BY 3.0，Wikimedia Commons",
       "page": "https://commons.wikimedia.org/wiki/File:%E9%A3%9E%E7%80%91%E6%B5%81%E8%BE%89_-_Marvellous_Flying_Waterfll_-_2011.10_-_panoramio.jpg"
     }
@@ -176,7 +176,7 @@ HL.data.stations = [
     "facts": [],
     "stamp": "assets/stamps/liantai-fall.svg",
     "photo": {
-      "src": "assets/photos/liantai-fall.jpg",
+      "src": "assets/photos/liantai-fall.jpg", "depth": "assets/photos/depth/liantai-fall.webp",
       "credit": "Leungcwd，CC BY-SA 3.0，Wikimedia Commons",
       "page": "https://commons.wikimedia.org/wiki/File:%E9%BB%83%E9%BE%8D-%E8%93%AE%E5%8F%B0%E9%A3%9B%E7%80%91.JPG"
     }
@@ -236,7 +236,7 @@ HL.data.stations = [
     "facts": [],
     "stamp": "assets/stamps/wash-body-viewpoint.svg",
     "photo": {
-      "src": "assets/photos/wash-body-viewpoint.jpg",
+      "src": "assets/photos/wash-body-viewpoint.jpg", "depth": "assets/photos/depth/wash-body-viewpoint.webp",
       "credit": "Leungcwd，CC BY-SA 3.0，Wikimedia Commons",
       "page": "https://commons.wikimedia.org/wiki/File:%E9%BB%83%E9%BE%8D-%E6%B4%97%E8%BA%AB%E6%B4%9E.JPG"
     }
@@ -299,7 +299,7 @@ HL.data.stations = [
     ],
     "stamp": "assets/stamps/jinsha-pudi.svg",
     "photo": {
-      "src": "assets/photos/jinsha-pudi.jpg",
+      "src": "assets/photos/jinsha-pudi.jpg", "depth": "assets/photos/depth/jinsha-pudi.webp",
       "credit": "Kounosu，CC BY-SA 3.0，Wikimedia Commons",
       "page": "https://commons.wikimedia.org/wiki/File:Golden-Sand-Field_Huanglong_Sichuan_China.jpg"
     }
@@ -372,7 +372,7 @@ HL.data.stations = [
     ],
     "stamp": "assets/stamps/bonsai-pond.svg",
     "photo": {
-      "src": "assets/photos/bonsai-pond.jpg",
+      "src": "assets/photos/bonsai-pond.jpg", "depth": "assets/photos/depth/bonsai-pond.webp",
       "credit": "rheins，CC BY 3.0，Wikimedia Commons",
       "page": "https://commons.wikimedia.org/wiki/File:%E7%9B%86%E6%99%AF%E6%B1%A0_-_Bonsai_Pond_-_2011.10_-_panoramio.jpg"
     }
@@ -437,7 +437,7 @@ HL.data.stations = [
     ],
     "stamp": "assets/stamps/mirror-pond.svg",
     "photo": {
-      "src": "assets/photos/mirror-pond.jpg",
+      "src": "assets/photos/mirror-pond.jpg", "depth": "assets/photos/depth/mirror-pond.webp",
       "credit": "Leungcwd，CC BY-SA 3.0，Wikimedia Commons",
       "page": "https://commons.wikimedia.org/wiki/File:%E9%BB%83%E9%BE%8D-%E6%98%8E%E9%8F%A1%E5%80%92%E6%98%A0%E6%B1%A0.JPG"
     }
@@ -507,7 +507,7 @@ HL.data.stations = [
     ],
     "stamp": "assets/stamps/suoluo-pond.svg",
     "photo": {
-      "src": "assets/photos/suoluo-pond.jpg",
+      "src": "assets/photos/suoluo-pond.jpg", "depth": "assets/photos/depth/suoluo-pond.webp",
       "credit": "Leungcwd，CC BY-SA 3.0，Wikimedia Commons",
       "page": "https://commons.wikimedia.org/wiki/File:%E9%BB%83%E9%BE%8D-%E5%A8%91%E8%98%BF%E6%98%A0%E5%BD%A9%E6%B1%A0.JPG"
     }
@@ -571,7 +571,7 @@ HL.data.stations = [
     ],
     "stamp": "assets/stamps/zhengyan-chi.svg",
     "photo": {
-      "src": "assets/photos/zhengyan-chi.jpg",
+      "src": "assets/photos/zhengyan-chi.jpg", "depth": "assets/photos/depth/zhengyan-chi.webp",
       "credit": "rheins，CC BY 3.0，Wikimedia Commons",
       "page": "https://commons.wikimedia.org/wiki/File:%E4%BA%89%E8%89%B3%E6%B1%A0%E5%85%A8%E6%99%AF_-_Panorama_of_Beauty-Competing_Pond_-_2011.10_-_panoramio.jpg"
     }
@@ -624,7 +624,7 @@ HL.data.stations = [
     "facts": [],
     "stamp": "assets/stamps/immortal-bridge.svg",
     "photo": {
-      "src": "assets/photos/immortal-bridge.jpg",
+      "src": "assets/photos/immortal-bridge.jpg", "depth": "assets/photos/depth/immortal-bridge.webp",
       "credit": "rheins，CC BY 3.0，Wikimedia Commons",
       "page": "https://commons.wikimedia.org/wiki/File:%E6%8E%A5%E4%BB%99%E6%A1%A5_-_Immortal_Guilding_Bridge_-_2011.10_-_panoramio.jpg"
     }
@@ -687,7 +687,7 @@ HL.data.stations = [
     ],
     "stamp": "assets/stamps/huanglong-middle-temple.svg",
     "photo": {
-      "src": "assets/photos/huanglong-middle-temple.jpg",
+      "src": "assets/photos/huanglong-middle-temple.jpg", "depth": "assets/photos/depth/huanglong-middle-temple.webp",
       "credit": "Jmhullot，CC BY 3.0，Wikimedia Commons",
       "page": "https://commons.wikimedia.org/wiki/File:Huanglong_middle_temple.jpg"
     }
@@ -754,7 +754,7 @@ HL.data.stations = [
     ],
     "stamp": "assets/stamps/huanglong-ancient-temple.svg",
     "photo": {
-      "src": "assets/photos/huanglong-ancient-temple.jpg",
+      "src": "assets/photos/huanglong-ancient-temple.jpg", "depth": "assets/photos/depth/huanglong-ancient-temple.webp",
       "credit": "Jmhullot，CC BY 3.0，Wikimedia Commons",
       "page": "https://commons.wikimedia.org/wiki/File:Huanglong_ancient_temple.jpg"
     }
@@ -879,7 +879,7 @@ HL.data.stations = [
     ],
     "stamp": "assets/stamps/five-color-pond.svg",
     "photo": {
-      "src": "assets/five-colored-pond.jpg",
+      "src": "assets/five-colored-pond.jpg", "depth": "assets/photos/depth/five-color-pond.webp",
       "credit": "Kounosu，CC BY-SA 3.0，Wikimedia Commons",
       "page": "https://commons.wikimedia.org/wiki/File:Water-of-Five-colored-Pond_Huanglong_Sichuan_China.jpg"
     }

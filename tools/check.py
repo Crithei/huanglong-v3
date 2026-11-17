@@ -110,6 +110,8 @@ if stations is not None:
             if not s["photo"].get("credit"):
                 err("%s：照片必须写 credit（作者与授权）" % where)
             check_asset(s["photo"].get("src", ""), where)
+            if s["photo"].get("depth"):
+                check_asset(s["photo"]["depth"], where + " 景深图")
 
 # ---------- 设施 ----------
 if facilities is not None:

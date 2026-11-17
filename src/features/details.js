@@ -23,7 +23,9 @@
     const s = idx.station[id], wished = S.wish.includes(id);
     HL.openSheet({
       title: s.name,
-      body: `${HL.media(s, 'sheet-media')}
+      body: `${s.photo && s.photo.depth
+          ? `<button class="sheet-media scene-look" type="button" data-act="scene-view" data-id="${s.id}" style="--c:${s.tint}" aria-label="点击立体观察${esc(s.name)}"><img src="${esc(s.photo.src)}" alt="${esc(s.name)}实景"><span class="bd-hint" aria-hidden="true">${icon('zoom')}点击观察</span></button>`
+          : HL.media(s, 'sheet-media')}
         <p class="lead">${esc(s.tagline)}</p>
         <p>${esc(s.intro || s.summary)}</p>
         ${HL.factChips(s)}

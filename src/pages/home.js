@@ -33,7 +33,7 @@
         <div class="scroller">
           ${M.featured.map(id => idx.station[id]).map(s => `
             <button class="spot" type="button" data-act="station" data-id="${s.id}">
-              ${HL.media(s)}
+              ${HL.media(s)}${s.photo && s.photo.depth ? `<span class="spot-3d" aria-hidden="true">${icon('layers')}</span>` : ''}
               <span class="tag">${s.photo ? esc(s.category) : '示意图'}</span>
               <b>${esc(s.name)}</b><span>${esc(s.tagline)}</span>
             </button>`).join('')}

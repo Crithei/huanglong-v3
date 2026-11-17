@@ -1,7 +1,8 @@
 """给五种鸟的照片生成景深图，供「立体检视」（features/depthview.js）做手机倾斜视差；顺便生成林中全景的模糊贴图。
 照片原图在 assets-src/birds/（来源和授权见 CREDITS.md），用 Depth Anything V2 Small 估计深度（本机运行，第一次会下载约 100 MB 模型）。
 输出：assets/sound/3d/s1.webp（彩图）+ s1-depth.webp（灰度，越白越近），以及 pano-blur.webp（2:1 等距柱状投影的模糊全景）。
-用法：python tools/depth-maps.py [--pano | --refine]   需要 transformers（这台电脑装在 D:/hl-tools/py，见开发指南）
+用法：python tools/depth-maps.py [--pano | --refine | --scenes]（--scenes：景点实景照的景深，输出 assets/photos/depth/）
+   需要 transformers（这台电脑装在 D:/hl-tools/py，见开发指南）
 """
 import os
 import numpy as np
@@ -90,9 +91,34 @@ def pano():
     print('pano', img.size, os.path.getsize(p) // 1024, 'KB')
 
 
+def scenes():
+    """景点实景照（stations.js 里有 photo 的景点）的景深图，给首页精选景观和景点详情的立体检视用。
+    风景照的远近是连续的（近岸、中景林子、远山），不能像鸟那样切前景、背景：只轻度平滑，近景轮廓外扩几像素免得拉丝，
+    网页上把不动面放在中景（景深中位数），近景和远景往相反方向移。输出 assets/photos/depth/<景点 id>.webp。"""
+    import json
+    from scipy import ndimage as ndi
+    from transformers import pipeline
+    t = open(os.path.join(ROOT, 'src', 'data', 'stations.js'), encoding='utf8').read()
+    stations = json.loads(t[t.index('['):t.rindex(']') + 1])
+    out = os.path.join(ROOT, 'assets', 'photos', 'depth'); os.makedirs(out, exist_ok=True)
+    pipe = pipeline('depth-estimation', model='depth-anything/Depth-Anything-V2-Small-hf')
+    for s in stations:
+        if not s.get('photo'): continue
+        im = Image.open(os.path.join(ROOT, s['photo']['src'])).convert('RGB')
+        im.thumbnail((SIZE, SIZE), Image.LANCZOS)
+        d = np.asarray(pipe(im)['depth'].resize(im.size, Image.BICUBIC)).astype(float)
+        lo, hi = np.percentile(d, 2), np.percentile(d, 99.5)
+        d = np.clip((d - lo) / (hi - lo + 1e-6), 0, 1)
+        d = ndi.gaussian_filter(ndi.grey_dilation(d, size=(5, 5)), 1.5)
+        p = os.path.join(out, s['id'] + '.webp')
+        Image.fromarray((d * 255).astype('uint8')).save(p, 'WEBP', quality=86, method=6)
+        print(s['id'], im.size, os.path.getsize(p) // 1024, 'KB', '中位', round(float(np.median(d)), 3))
+
+
 if __name__ == '__main__':
     import sys
     os.makedirs(OUT, exist_ok=True)
-    if '--pano' in sys.argv: pano()                     # 只重做全景
+    if '--scenes' in sys.argv: scenes()                 # 景点实景照的景深图
+    elif '--pano' in sys.argv: pano()                   # 只重做全景
     elif '--refine' in sys.argv: depth_maps(False)      # 只重做深度预处理（读 assets-src/birds/3d-raw/，不跑模型）
     else: depth_maps(); pano()
