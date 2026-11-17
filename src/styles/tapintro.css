@@ -106,6 +106,26 @@
 .tap.is-reduced .tp-ink { display: none; }
 .tap.is-reduced .tp-color { -webkit-mask: none; mask: none; }
 
+/* ---------- 点云版（栈道手册五只鸟的默认，逻辑见 tapintro.js 的 pointsIntro）----------
+   深色底；文字和印章用 .is-go 开始计时：1.7 秒浮出名字，2.2 秒盖章，和画布里收拢成鸟的时间对上 */
+.tap.is-points { gap: 0; background: #121713; color: #f4ecd8; }
+.tq-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.tq-head { position: absolute; z-index: 1; top: calc(30px + env(safe-area-inset-top)); left: 0; right: 0; margin: 0; text-align: center; font: 600 11px var(--serif); letter-spacing: .34em; color: #9fd3c7; opacity: 0; }
+.tq-cap { position: absolute; z-index: 1; left: 0; right: 0; bottom: calc(17vh + env(safe-area-inset-bottom)); display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; opacity: 0; }
+.tq-cap b { font: 600 30px/1.25 var(--serif); letter-spacing: .16em; }
+.tq-cap i { font: italic 14px var(--serif); color: rgba(244, 236, 216, .78); }
+.tq-cap small { font-size: 11px; letter-spacing: .14em; color: rgba(244, 236, 216, .6); }
+.tap-stamp.tq-stamp { left: auto; right: 24px; top: auto; bottom: calc(26vh + env(safe-area-inset-bottom)); width: 74px; height: 74px; color: #e9c46a; border-color: #e9c46a;
+  box-shadow: inset 0 0 0 4px #121713, inset 0 0 0 5.5px #e9c46a; background: rgba(18, 23, 19, .6); opacity: 0; animation: none; }
+.tap.is-points .tap-skip { color: rgba(244, 236, 216, .5); opacity: 0; animation: none; }
+.tap.is-points.is-go .tq-head { animation: tq-in .6s ease .1s forwards; }
+.tap.is-points.is-go .tq-cap { animation: tq-rise .7s cubic-bezier(.2, .8, .3, 1) 1.7s forwards; }
+.tap.is-points.is-go .tq-stamp { animation: tap-stamp .32s cubic-bezier(.3, 1.7, .5, 1) 2.2s both; opacity: 1; }
+.tap.is-points.is-go .tap-skip { animation: tq-in .5s ease 1.2s forwards; }
+.tap.is-points.is-out .tq-cap, .tap.is-points.is-out .tq-stamp { transition: transform .5s; transform: translateY(-4vh); }
+@keyframes tq-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes tq-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
 /* ---------- 写芯片工具页（features/nfcwrite.js） ---------- */
 .nfc-state { display: flex; gap: 8px; align-items: flex-start; padding: 10px 12px; border-radius: 12px; font-size: 13.5px; line-height: 1.6; }
 .nfc-state .i { flex: none; width: 17px; height: 17px; margin-top: 3px; }

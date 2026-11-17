@@ -1,0 +1,21 @@
+/* 点云滚动页 ?flock=1（features/flock.js）。画布固定在背后，文字层滚动；每段 130vh，和脚本里的 secH 对应。 */
+.fl { position: fixed; inset: 0; z-index: 95; background: #121713; color: #f4ecd8; }
+.fl-canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: pan-y; }
+.fl-close { position: absolute; z-index: 3; top: calc(12px + env(safe-area-inset-top)); right: 12px; background: rgba(255, 253, 246, .9); }
+.fl-scroll { position: absolute; inset: 0; z-index: 2; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; pointer-events: auto; }
+.fl-sec { position: relative; height: 130vh; display: flex; flex-direction: column; justify-content: flex-start; padding: 66vh 22px 0; pointer-events: none; } /* 鸟成形时（这一段滚到顶），文字正好在下半屏 */
+.fl-sec > * { pointer-events: auto; }
+.fl-intro { justify-content: center; align-items: flex-start; padding-top: 18vh; }
+.fl-intro h2 { margin: 6px 0 0; font: 600 34px/1.25 var(--serif); letter-spacing: .06em; }
+.fl-kicker { margin: 0; font: 600 11px var(--serif); letter-spacing: .36em; color: #9fd3c7; }
+.fl-hint { margin-top: 40vh; font-size: 12px; letter-spacing: .3em; color: rgba(244, 236, 216, .6); animation: fl-bob 2s ease-in-out infinite; }
+@keyframes fl-bob { 50% { transform: translateY(6px); } }
+.fl-cap { max-width: 330px; padding: 14px 16px; border-left: 3px solid var(--c); background: linear-gradient(90deg, rgba(18, 23, 19, .82), rgba(18, 23, 19, .35)); backdrop-filter: blur(2px); }
+.fl-cap small { font-size: 10.5px; letter-spacing: .14em; color: rgba(244, 236, 216, .7); }
+.fl-cap h3 { margin: 4px 0 0; font: 600 26px/1.25 var(--serif); letter-spacing: .12em; }
+.fl-cap i { font: italic 13.5px var(--serif); color: rgba(244, 236, 216, .8); }
+.fl-cap p { margin: 8px 0 6px; font-size: 13px; line-height: 1.7; color: rgba(244, 236, 216, .88); }
+.fl-credit { font-size: 9.5px; color: rgba(244, 236, 216, .5); }
+.fl-end { height: 70vh; justify-content: center; align-items: center; gap: 14px; text-align: center; color: rgba(244, 236, 216, .75); font-size: 13px; }
+.fl-load { position: absolute; z-index: 3; left: 0; right: 0; top: 46%; margin: 0; text-align: center; font-size: 13px; letter-spacing: .2em; color: rgba(244, 236, 216, .7); }
+@media (prefers-reduced-motion: reduce) { .fl-hint { animation: none; } }

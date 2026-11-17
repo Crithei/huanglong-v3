@@ -1,20 +1,22 @@
 /* 写 NFC 芯片的工具页：网址带 ?nfc=write 时打开（不在页面上放入口，给布置现场的人用）。
    用安卓手机的 Chrome 打开线上网址，点某个点位的「写入」，把空白芯片贴到手机背面就写好了（Web NFC，只有安卓 Chrome 支持，必须是 https）。
-   每个芯片写一条网址记录：…/?rec=采集点&via=nfc（声景手册）或 …/?tag=s1&via=nfc（栈道手册）。
+   每个芯片写一条网址记录：…/?rec=采集点&via=nfc（声景手册）、…/?tag=s1&via=nfc（栈道手册，博物画图鉴动画）
+   或 …/?tag=s1&via=nfc&fx=points（栈道手册，点云动画；另起一批芯片，两种并存）。
    iPhone 不能用网页写，只能读：可以复制网址，用 NFC Tools 之类的 App 写。这里不提供「锁定芯片」，锁定不可撤销，要锁请在 App 里做。 */
 (() => {
   'use strict';
   const { $, esc, icon } = HL;
   const can = 'NDEFReader' in window;
   const base = () => location.origin + location.pathname;
-  const urlFor = (key, id) => `${base()}?${key}=${id}&via=nfc`;
+  const urlFor = (key, id, fx) => `${base()}?${key}=${id}&via=nfc${fx ? `&fx=${fx}` : ''}`;
 
   function points() {
     const TG = HL.data.sounds.targets, K = HL.data.sounds.kinds, ST = HL.data.birds.stops;
     const place = t => t.place || HL.idx.station[t.station].name;
     return [
       { group: '声景手册 · 采集点', items: TG.map((t, i) => ({ key: 'rec', id: t.id, no: i + 1, title: t.title, place: place(t), color: K.find(k => k.id === t.kind).color })) },
-      { group: '栈道手册 · 声音驿站', items: ST.map(s => ({ key: 'tag', id: s.id, no: s.no, title: s.bird, place: s.place, color: '#2e5d4b' })) },
+      { group: '栈道手册 · 声音驿站（博物画图鉴动画）', items: ST.map(s => ({ key: 'tag', id: s.id, no: s.no, title: s.bird, place: s.place, color: '#2e5d4b' })) },
+      { group: '栈道手册 · 声音驿站（点云动画）', items: ST.map(s => ({ key: 'tag', id: s.id, fx: 'points', no: s.no, title: s.bird, place: s.place, color: '#12161a' })) },
     ];
   }
 
@@ -35,11 +37,11 @@
         ${points().map(g => `<h3 class="nfc-h">${esc(g.group)}</h3>
           <ul class="nfc-list">${g.items.map(p => `<li style="--k:${p.color}">
             <i class="nfc-no">${p.no}</i>
-            <div class="nfc-t"><b>${esc(p.title)}</b><small>${esc(p.place)}</small><code>?${p.key}=${p.id}&amp;via=nfc</code><span class="nfc-msg" id="nfc-${p.id}" role="status"></span></div>
+            <div class="nfc-t"><b>${esc(p.title)}</b><small>${esc(p.place)}</small><code>?${p.key}=${p.id}&amp;via=nfc${p.fx ? `&amp;fx=${p.fx}` : ''}</code><span class="nfc-msg" id="nfc-${p.id}${p.fx ? '-' + p.fx : ''}" role="status"></span></div>
             <div class="nfc-b">
-              ${can ? `<button class="btn btn-primary btn-sm" type="button" data-act="nfc-write" data-key="${p.key}" data-id="${p.id}">写入</button>` : ''}
-              <button class="btn btn-ghost btn-sm" type="button" data-act="nfc-copy" data-key="${p.key}" data-id="${p.id}">复制</button>
-              <button class="btn btn-ghost btn-sm" type="button" data-act="nfc-try" data-key="${p.key}" data-id="${p.id}">预览</button>
+              ${can ? `<button class="btn btn-primary btn-sm" type="button" data-act="nfc-write" data-key="${p.key}" data-id="${p.id}" data-fx="${p.fx || ''}">写入</button>` : ''}
+              <button class="btn btn-ghost btn-sm" type="button" data-act="nfc-copy" data-key="${p.key}" data-id="${p.id}" data-fx="${p.fx || ''}">复制</button>
+              <button class="btn btn-ghost btn-sm" type="button" data-act="nfc-try" data-key="${p.key}" data-id="${p.id}" data-fx="${p.fx || ''}">预览</button>
             </div></li>`).join('')}</ul>`).join('')}
         <p class="note">一个芯片写一个点位。写之前先把芯片贴在要放的位置旁边编好号，写完用「读取」核对一遍再固定。</p>`,
     });
@@ -47,7 +49,7 @@
 
   HL.act('nfc-write', async el => {
     stop();
-    const { key, id } = el.dataset, msg = $('#nfc-' + id), url = urlFor(key, id);
+    const { key, id, fx } = el.dataset, msg = $('#nfc-' + id + (fx ? '-' + fx : '')), url = urlFor(key, id, fx);
     ctrl = new AbortController();
     const timer = setTimeout(stop, 25000);
     msg.textContent = '请把芯片贴到手机背面…'; msg.className = 'nfc-msg is-wait';
@@ -76,7 +78,7 @@
         const rec = e.message.records.find(r => r.recordType === 'url' || r.recordType === 'absolute-url');
         const url = rec ? new TextDecoder().decode(rec.data) : '';
         const q = url ? new URL(url).searchParams : new URLSearchParams(), id = q.get('rec') || q.get('tag');
-        const p = points().flatMap(g => g.items).find(x => x.id === id);
+        const fx = q.get('fx') || undefined, p = points().flatMap(g => g.items).find(x => x.id === id && x.fx === fx);
         msg.className = 'nfc-msg ' + (p ? 'is-ok' : 'is-err');
         msg.textContent = !rec ? `这张芯片里没有网址（序列号 ${e.serialNumber || '未知'}）。`
           : p ? `${p.no}. ${p.title}（${p.place}）：${url}` : `网址不是本项目的点位：${url}`;
@@ -89,14 +91,14 @@
   });
 
   HL.act('nfc-copy', async el => {
-    const url = urlFor(el.dataset.key, el.dataset.id);
+    const url = urlFor(el.dataset.key, el.dataset.id, el.dataset.fx);
     try { await navigator.clipboard.writeText(url); HL.toast('已复制网址'); } catch (e) { HL.toast(url); }
   });
 
   /* 预览：不用芯片，直接播一遍碰一碰的动画 */
   HL.act('nfc-try', el => {
     stop(); HL.closeSheet();
-    if (el.dataset.key === 'rec') HL.bankArrive(el.dataset.id, 'nfc'); else HL.soundArrive(el.dataset.id, 'nfc');
+    if (el.dataset.key === 'rec') HL.bankArrive(el.dataset.id, 'nfc'); else HL.soundArrive(el.dataset.id, 'nfc', el.dataset.fx);
   });
 
   const close = HL.closeSheet;

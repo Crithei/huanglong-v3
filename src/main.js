@@ -25,4 +25,5 @@
   HL.soundFromUrl(); // 网址带 ?tag=s1 时直接打开那个声音驿站（NFC、二维码用），见 features/sound.js
   HL.nfcFromUrl(); // ?nfc=write 打开写芯片工具（安卓 Chrome），见 features/nfcwrite.js
   HL.splatFromUrl(); // ?splat=test 打开高斯泼溅测试页（场景文件只在本地），见 features/splattest.js
+  HL.flockFromUrl(); // ?flock=1 打开点云滚动页（测试），见 features/flock.js
 })();

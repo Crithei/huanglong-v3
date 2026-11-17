@@ -142,6 +142,7 @@ python tools/check.py
 - `assets/sound/`：听见黄龙栈道手册的照片和几何小鸟，截自同济大学许晓青团队的《黄龙鸟类声纹栈道》宣传册（2026-02-03 稿，未定稿，公开使用前需团队确认）。
 - `assets/sound/bird-s1.webp` … `bird-s5.webp`：鸟页上的彩色鸟，从 Wikimedia Commons 照片抠出（`tools/bird-cutout.py`，IS-Net 分割模型），和立体检视用同一张照片：橙翅噪鹛 Sun Jiao（CC BY 4.0）、灰鹡鸰 Petr Knezour（CC BY-SA 4.0，抠图同样按 CC BY-SA 4.0 发布）、戴菊 Alexis Lours（CC BY 4.0）、红尾水鸲与白顶溪鸲 Shiv's fotografia（CC BY 4.0）。鸟页上标了作者和授权。
 - `assets/sound/real/`：声纹栈道 2026-11-16 现场实拍（入口、栈道、趣味木屋、骨骼浮雕、互动转筒、飞鸟展牌、鸟名立柱），项目组自拍。
+- `assets/sound/flock/`：点云滚动页（`?flock=1`）的五只鸟点云，从和立体检视同一批 Commons 照片生成（作者与授权同下），页面上每只都标了署名。
 - `assets/sound/3d/`：立体检视用的鸟类照片和景深图（景深图由 Depth Anything V2 生成，属于改编），照片来自 Wikimedia Commons：橙翅噪鹛：Sun Jiao (Interaccoonale)（CC BY 4.0）；灰鹡鸰：Petr Knezour（CC BY-SA 4.0）；戴菊：Alexis Lours（CC BY 4.0）；红尾水鸲：Shiv's fotografia（CC BY 4.0）；白顶溪鸲：Shiv's fotografia（CC BY 4.0）。检视页里每张都标了作者、授权和原链接。`pano-blur.webp` 是用栈道实拍拼接模糊的占位全景。
 - `assets/sound/plate-s1.webp` … `plate-s5.webp`：碰一碰动画用的 19 世纪博物画抠图，都是公有领域：John Gould 与 William Hart《亚洲鸟类》（橙翅噪鹛）、Naumann《德国鸟类自然史》（灰鹡鸰）、John Gould《英国鸟类》（戴菊）、Henderson 与 Hume《从拉合尔到叶尔羌》（红尾水鸲）、Frederick John Shore 印度鸟类水彩手稿（白顶溪鸲）。原图来自 Wikimedia Commons，来源链接见 `assets-src/birds/CREDITS.md`，抠图脚本 `tools/plate-cutout.py`。
 - `assets/play/`：首页「随行互动」两张卡片的配图，是本项目一滴水第四章完成态的三维模型和彩池实验室池群画面的截图。

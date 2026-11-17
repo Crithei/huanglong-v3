@@ -487,20 +487,21 @@
 
   /* ---------- 网址直达：…/?tag=s1（NFC 和二维码里写的就是它） ---------- */
   /* 到达某个声音驿站：先播碰一碰动画（图鉴版：这只鸟的 19 世纪博物画先起墨稿再上色），再打开驿站页 */
-  HL.soundArrive = async (tag, via) => {
+  HL.soundArrive = async (tag, via, fx) => {
     const s = byId(tag);
     if (!s) return;
     S.sound.book = 'guide';
     HL.setPage('play');
     await HL.tapIntro({ via, book: '栈道手册', title: s.bird, place: s.place, color: '#2e5d4b', no: s.no, total: STOPS.length,
-      plate: `assets/sound/plate-${s.id}.webp`, latin: s.latin, en: s.en, colors: s.colors }); // 博物画抠图见 tools/plate-cutout.py
+      plate: `assets/sound/plate-${s.id}.webp`, latin: s.latin, en: s.en, colors: s.colors,  // 博物画抠图见 tools/plate-cutout.py
+      points: fx === 'points' ? s.id : null });  // 默认博物画图鉴版；网址带 fx=points 用点云版（另写一批芯片）
     HL.openSoundStop(tag, true);
   };
   HL.soundFromUrl = () => {
-    const params = new URLSearchParams(location.search), tag = params.get('tag'), via = params.get('via');
+    const params = new URLSearchParams(location.search), tag = params.get('tag'), via = params.get('via'), fx = params.get('fx');
     if (!tag || !byId(tag)) return;
-    params.delete('tag'); params.delete('via');
+    params.delete('tag'); params.delete('via'); params.delete('fx');
     history.replaceState(null, '', location.pathname + (params.toString() ? '?' + params : '') + location.hash);
-    HL.soundArrive(tag, via);
+    HL.soundArrive(tag, via, fx);
   };
 })();
