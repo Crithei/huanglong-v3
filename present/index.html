@@ -102,54 +102,70 @@
 (() => {
   'use strict';
   const DEMO_KEY = 'huanglong.v3.demo';
-  /* 演示存档：已在四处打卡，可以展示解锁的章节、印章和徽章；不影响游客自己的进度 */
-  const DEMO_STATE = { page: 'home', visited: ['welcome-pond', 'jinsha-pudi', 'wash-body-viewpoint', 'five-color-pond'], persona: 'huaxi' };
+  /* 演示存档：已在四处打卡、点亮两枚生灵徽章、栈道手册贴上两只鸟，可以展示解锁的章节、印章和徽章；不影响游客自己的进度 */
+  const AT = '2026-11-16T10:20:00+08:00';
+  const DEMO_STATE = { page: 'home', visited: ['welcome-pond', 'jinsha-pudi', 'wash-body-viewpoint', 'five-color-pond'], persona: 'huaxi',
+    seen: ['golden-pheasant', 'blue-eared-pheasant'], seenAt: { 'golden-pheasant': AT, 'blue-eared-pheasant': AT },
+    sound: { got: { s1: AT, s4: AT } } };
 
   const app = document.getElementById('app');
   const win = () => app.contentWindow;
   const H = () => (win() && win().HL && win().HL.S ? win().HL : null);
   const $in = s => win().document.querySelector(s);
 
-  /* 左侧界面状态：哪一页、哪个面板、有没有打开弹层；一滴水和实验室内嵌在互动页，按「是否在屏幕中间」判断 */
+  /* 左侧界面状态：哪一页、哪个面板、打开的是哪种弹层；一滴水、实验室、两本手册内嵌在互动页，按「是否在屏幕中间」判断。
+     弹层按内容分：导游对话、生灵徽章（金属检视器 .bv）、文创商品（有「想要」按钮）、声景采集、栈道驿站与节点、其余算景点详情。
+     碰一碰动画（.tap）和立体检视 / 林中全景（.dv）盖在最上层，单独记。 */
   function appState() {
     const h = H(); if (!h) return null;
     const open = id => { const el = $in(id); return !!el && !el.hidden; };
-    const sheet = open('#layer') ? ($in('.sheet.guide') ? 'guide' : 'detail') : null;
-    const onScreen = id => { const el = $in(id); if (!el || h.S.page !== 'play') return false; const r = el.getBoundingClientRect(), vh = win().innerHeight; return r.top < vh * .6 && r.bottom > vh * .3; };
-    return { page: h.S.page, panel: h.S.panel, sheet, water: onScreen('#water-view'), lab: onScreen('#lab-view'), collect: onScreen('#play-collect') };
+    const sheet = !open('#layer') ? null
+      : $in('.sheet.guide') ? 'guide' : $in('#layer .bv') ? 'species' : $in('#layer [data-act="want"]') ? 'product'
+      : $in('.sheet.bank-sheet') ? 'bank' : $in('.sheet.sound-sheet') ? 'sound' : 'detail';
+    /* 互动页一次只认一块：屏幕 45% 高度那条线落在哪一块里（手册连同标题、切换按钮算一整节） */
+    const onScreen = id => { let el = $in(id); if (!el || h.S.page !== 'play') return false; if (id === '#sound-book') el = el.closest('section') || el;
+      const r = el.getBoundingClientRect(), y = win().innerHeight * .45; return r.top <= y && r.bottom > y; };
+    const homeAt = id => { const el = $in(id); if (!el || h.S.page !== 'home') return false; const r = el.getBoundingClientRect(); return r.top < win().innerHeight * .5; };
+    return { page: h.S.page, panel: h.S.panel, sheet, tap: !!$in('.tap:not(.is-out)'), dv: !!$in('.dv:not(.is-out)'), pano: !!$in('.dv-pano:not(.is-out)'),
+      water: onScreen('#water-view'), lab: onScreen('#lab-view'), collect: onScreen('#play-collect'),
+      book: onScreen('#sound-book') ? h.S.sound.book : null, shop: homeAt('#h-shop') };
   }
   function closeOverlays(h) {
+    const tap = $in('.tap:not(.is-out)');
+    if (tap) { tap.click(); setTimeout(() => h.closeSheet(), 0); } // 碰一碰动画：点一下就结束；结束后它会打开驿站弹层，随手关掉
+    win().document.querySelectorAll('.dv-close').forEach(b => b.click()); // 立体检视、林中全景
     h.closeSheet();
     if (h.labPause) h.labPause();
   }
-  const plain = st => !st.sheet && !st.water && !st.lab;
+  const plain = st => !st.sheet && !st.water && !st.lab && !st.tap && !st.dv && !st.book;
   const scrollTo = (sel, offset = 0) => setTimeout(() => { const el = $in(sel); if (!el) return; el.scrollIntoView({ block: 'start' }); const box = el.closest('.page, #panel-body, .water-body'); if (box) box.scrollTop -= offset; }, 250);
 
   /* ---------- 每一页：讲什么、左边调成什么样、怎么认出左边正处在这一页 ---------- */
   const SLIDES = [
     { nav: '封面', kicker: '文旅伴游 · 黄龙景区', title: '一部手机，陪你走完黄龙沟',
-      lead: '这是一款给黄龙游客用的伴游小程序原型：进沟前了解景点，路上看地图、排路线、问导游，到站打卡收集印章，还能用小游戏弄懂彩池是怎么长出来的。',
+      lead: '这是一款给黄龙游客用的伴游小程序原型：进沟前了解景点，路上看地图、排路线、问导游，到站碰一碰芯片打卡，沿着声纹栈道认鸟、录下山里的声音，还能用小游戏弄懂彩池是怎么长出来的。',
       points: [
-        ['看得懂', '每个景点有实景照片、看点和背后的故事，随时问数字人导游'],
+        ['看得懂', '每个景点有实景照片、看点和背后的故事，照片能转着看出远近层次，随时问数字人导游'],
         ['走得顺', '腾讯地图上看景点和设施，按自己的时间排一条路线'],
-        ['玩得到', '到站解锁「一滴水」小游戏，在彩池实验室亲手种一片彩池'],
-        ['留得下', '打卡收集手绘印章和主题徽章，把这趟旅程存进山水护照'],
+        ['玩得到', '「一滴水」小游戏和彩池实验室讲钙华，两本手册带你听鸟、录声音'],
+        ['留得下', '印章、金属质感的生灵徽章、声纹唱片，再到文创商店里的明信片和徽章'],
       ],
       notes: ['左边是可以直接操作的真实页面，右边翻页时左边会跟着跳，在左边点也会翻到对应讲解。', '接下来按一位游客一天的行程，把功能走一遍。'],
       apply: h => { closeOverlays(h); h.setPage('home'); scrollTo('#p-home .hero'); },
       passive: true, match: st => plain(st) && st.page === 'home' },
 
     { nav: '首页', kicker: '出发前', title: '进沟前，先认识黄龙',
-      lead: '打开首页，一屏就能知道黄龙沟有哪些景点、整条路线大概怎么走、有哪些值得期待的地方。',
+      lead: '打开首页，一屏就能知道黄龙沟有哪些景点、整条路线大概怎么走、有哪些值得期待的地方。往下滑，画面带一点纵深视差。',
       points: [
-        ['一条色带看懂全程', '14 个景点按游览顺序排开，色块越宽，越值得多停一会儿'],
-        ['精选景观', '五彩池、争艳彩池、金沙铺地……点开就是实景照片和介绍'],
-        ['常用入口一步直达', '地图、路线、数字人导游、高原反应服务都在首页'],
+        ['精选景观', '13 处实景照片，角上有层叠小标的照片都能进立体检视'],
+        ['停留示意', '14 个景点按游览顺序排开，色块越宽，越值得多停一会儿'],
+        ['随行互动', '一滴水、彩池实验室、栈道手册、声景手册四张卡片，点一下直接翻开'],
+        ['文创商店', '兰花文创、生灵徽章、明信片，和沿途收集的内容呼应'],
       ],
-      tries: [['看沿途色带', h => { closeOverlays(h); h.setPage('home'); scrollTo('#p-home .strata', 80); }], ['打开五彩池', h => h.openStation('five-color-pond')]],
-      notes: ['可以让听众点色带上的任意一段，直接跳到那个景点。'],
+      tries: [['看停留示意', h => { closeOverlays(h); h.setPage('home'); scrollTo('#h-strata', 10); }], ['看随行互动', h => { closeOverlays(h); h.setPage('home'); scrollTo('#h-play', 10); }]],
+      notes: ['可以让听众点停留示意上的任意一段，直接跳到那个景点。'],
       apply: h => { closeOverlays(h); h.setPage('home'); scrollTo('#p-home .hero'); },
-      match: st => plain(st) && st.page === 'home' },
+      match: st => plain(st) && st.page === 'home' && !st.shop },
 
     { nav: '景点详情', kicker: '查看景点', title: '这一站有什么好看',
       lead: '每个景点都有一页详情：实景照片、一段好读的介绍、几个关键数字，还有不容错过的看点。',
@@ -161,7 +177,19 @@
       ],
       tries: [['看黄龙古寺', h => h.openStation('huanglong-ancient-temple')], ['看争艳彩池', h => h.openStation('zhengyan-chi')]],
       apply: h => { closeOverlays(h); h.setPage('home'); h.openStation('five-color-pond'); },
-      match: st => st.sheet === 'detail' },
+      match: st => st.sheet === 'detail' && !st.dv },
+
+    { nav: '立体检视', kicker: '查看景点 · 立体检视', title: '一张照片，转出远近层次',
+      lead: '点开景点大图，照片会跟着手机的倾斜微微错开：近处的池沿和远处的雪山往相反方向移，像隔着一扇窗看过去。',
+      points: [
+        ['13 处实景都能看', '每张照片配一张景深图，由开源的 Depth Anything 模型离线算好'],
+        ['跟着重力感应动', '手机上转动手机就能看；电脑上拖动画面也行'],
+        ['鸟也能这样看', '栈道手册里五只鸟的高清照片同样能点进立体检视'],
+      ],
+      tries: [['看五彩池', h => { closeOverlays(h); h.depthView.openScene('five-color-pond'); }], ['看迎宾池', h => { closeOverlays(h); h.depthView.openScene('welcome-pond'); }], ['看橙翅噪鹛', h => { closeOverlays(h); h.depthView.open('s1'); }]],
+      notes: ['在左边按住画面左右拖，最能看出前后景错开的效果。'],
+      apply: h => { closeOverlays(h); h.depthView.openScene('five-color-pond'); },
+      match: st => st.dv && !st.pano },
 
     { nav: '腾讯地图', kicker: '游览 · 地图', title: '在地图上找到每一站',
       lead: '游览页上方是腾讯地图，景点、游线和沿途设施都标在上面；点地图上的点，下方就切到那一站的攻略。',
@@ -222,6 +250,19 @@
       apply: h => { closeOverlays(h); h.goTour('station'); h.selectStation('flying-waterfall'); },
       match: st => plain(st) && st.page === 'tour' && st.panel === 'station' },
 
+    { nav: '碰一碰', kicker: '现场 · NFC 芯片', title: '手机碰一下展牌，这一站就到了',
+      lead: '栈道展牌上贴着 NFC 芯片，手机碰一下直接打开网页，先播一段到达动画，再进这一站的内容。不用装 App，扫二维码也是同一个入口。',
+      points: [
+        ['博物画图鉴版', '栈道五只鸟各配一幅 19 世纪博物画：图框展开，墨稿起笔再上色，盖上「已到达」章'],
+        ['点云版', '另起一批芯片：这只鸟羽色的光点排成声波涟漪，旋转着收拢成鸟'],
+        ['声景手册采集点', '水声、林声、安静点也贴了芯片，碰一下直接进录音'],
+        ['写芯片不用 App', '安卓 Chrome 打开写入页，点一下、贴一下就写好；两种动画的芯片可以并存'],
+      ],
+      tries: [['图鉴版 · 橙翅噪鹛', h => { closeOverlays(h); h.soundArrive('s1', 'nfc'); }], ['点云版 · 灰鹡鸰', h => { closeOverlays(h); h.soundArrive('s2', 'nfc', 'points'); }], ['声景 · 瀑布水声', h => { closeOverlays(h); h.bankArrive('w-fall', 'nfc'); }]],
+      notes: ['动画约 3 秒半，点一下画面可以跳过。', '现场芯片写的网址：…/?tag=s1&via=nfc（图鉴版），加 &fx=points 是点云版；写入页地址 ?nfc=write。'],
+      apply: h => { closeOverlays(h); h.soundArrive('s1', 'nfc'); },
+      match: st => st.tap || ((st.sheet === 'sound' || st.sheet === 'bank') && !st.dv) },
+
     { nav: '一滴水', kicker: '互动小游戏 · 一滴水', title: '跟着一滴水，走完四个小游戏',
       lead: '一滴雪山融水从山上流下，经过「水流、溶解、出露、沉积」四章，最后变成彩池边的一层钙华。每章一个小游戏，玩完就懂黄龙的彩池从哪来。',
       points: [
@@ -247,16 +288,54 @@
       apply: h => { closeOverlays(h); h.openLab(); },
       match: st => st.lab },
 
-    { nav: '印章与徽章', kicker: '互动 · 山水护照', title: '把这趟旅程收进护照',
-      lead: '打过卡的景点会在护照上盖下手绘印章，集齐一定数量就能点亮主题徽章。',
+    { nav: '栈道手册', kicker: '听见黄龙 · 栈道手册', title: '沿着声纹栈道，认识五种鸟',
+      lead: '迎宾池到莲台飞瀑之间有一段声纹栈道。栈道手册按宣传册重做成一本能翻页的小书：栈道上的节点、什么时候能听到谁、五只鸟各一页。',
       points: [
-        ['六枚手绘印章', '迎宾池、飞瀑流辉、金沙铺地、盆景池、争艳彩池、五彩池'],
-        ['三枚主题徽章', '山水初见、山水同行、细节发现者，记录你走了多远、看得多细'],
-        ['黄龙生灵', '到站显出动物剪影，在现场找到观察线索就点亮一枚生灵徽章'],
+        ['节点用实拍', '互动转筒、飞鸟展牌等节点换成 2026 年 11 月的栈道实拍，到过就盖「到过」章'],
+        ['五只鸟各一页', '高清照片抠图，点鸟进立体检视；听叫声、认声纹、安静半分钟各得一枚章'],
+        ['林中全景', '一张林子的全景图，转动手机环顾四周，找出藏在里面的五只鸟'],
+        ['集章页', '贴满五只鸟得「声景聆听者」'],
       ],
-      tries: [['看护照与徽章', h => { closeOverlays(h); h.setPage('play'); scrollTo('#h-stamps', 10); }]],
+      tries: [['翻到橙翅噪鹛', h => h.actions['hb-bird']({ dataset: { id: 's1' } })], ['打开林中全景', h => { closeOverlays(h); h.panoView.open(); }]],
+      notes: ['手册可以左右拖着翻页，也能点上方章节跳转。', '研究数据和鸟类资料引自同济大学许晓青团队的《黄龙鸟类声纹栈道》宣传册，照片来自 Wikimedia Commons 并署名。'],
+      apply: h => { closeOverlays(h); h.openBook('guide'); },
+      match: st => (st.book === 'guide' && !st.sheet && !st.dv && !st.tap) || st.pano },
+
+    { nav: '声景手册', kicker: '听见黄龙 · 声景手册', title: '把山里的声音录成唱片',
+      lead: '声景手册列了九个采集点：瀑布的轰鸣、冷杉林的风、上午的合唱、明镜前的安静……到了就录 10 秒，录完变成一张圆形的声纹唱片。',
+      points: [
+        ['圆形声纹', '圆心是低音，外圈是高音，指针转一圈就录完'],
+        ['按类别换风格', '水声、风声、鸟鸣、安静、人声各有一套画法和配色，归错了可以手动改'],
+        ['只存在手机上', '录音和声纹不上传；分类按频谱特征粗略判断，不是 AI 识别'],
+      ],
+      tries: [['打开瀑布采集点', h => { closeOverlays(h); h.openBankRec('w-fall'); }], ['打开古寺采集点', h => { closeOverlays(h); h.openBankRec('f-temple'); }]],
+      notes: ['录音要麦克风权限，现场演示可以对着一段水声录一下，看唱片怎么长出来。'],
+      apply: h => { closeOverlays(h); h.openBook('collect'); },
+      match: st => st.book === 'collect' && !st.sheet && !st.dv && !st.tap },
+
+    { nav: '印章与徽章', kicker: '互动 · 山水护照', title: '把这趟旅程收进护照',
+      lead: '打过卡的景点会在护照上盖下手绘印章，集齐一定数量就能点亮主题徽章；在现场找到线索，还能点亮一枚金属质感的生灵徽章。',
+      points: [
+        ['手绘印章', '14 个景点一套 SVG 印章，打卡就盖上'],
+        ['三枚主题徽章', '山水初见、山水同行、细节发现者，记录你走了多远、看得多细'],
+        ['黄龙生灵', '十种动物，到站显出剪影，找到观察线索就点亮'],
+        ['能转着看的徽章', '拖动或倾斜手机，看徽章的厚度和描边反光；背面刻着点亮日期和邮戳'],
+      ],
+      tries: [['看红腹锦鸡徽章', h => { closeOverlays(h); h.actions.species({ dataset: { id: 'golden-pheasant' } }); }], ['看大熊猫（未点亮）', h => { closeOverlays(h); h.actions.species({ dataset: { id: 'giant-panda' } }); }]],
       apply: h => { closeOverlays(h); h.setPage('play'); scrollTo('#h-stamps', 10); },
-      match: st => plain(st) && st.page === 'play' && st.collect },
+      match: st => (plain(st) && st.page === 'play' && st.collect) || st.sheet === 'species' },
+
+    { nav: '文创商店', kicker: '首页 · 文创商店', title: '把黄龙带回家',
+      lead: '首页最后一栏是文创商店，商品和沿途收集的内容呼应：兰花、生灵徽章、印章、山间鸟类。',
+      points: [
+        ['明信片正反面对应', '两套明信片能像徽章一样拖着转，翻过来就是背面'],
+        ['兰花文创', '徽章、胸针、书签和一套兰花票根'],
+        ['和收集联动', '生灵徽章套装能直接跳到「我点亮的生灵」，喜欢的加进「想要」清单'],
+      ],
+      tries: [['转一转明信片', h => { closeOverlays(h); h.openProduct('shop-postcard-park'); }], ['看兰花票根', h => { closeOverlays(h); h.openProduct('shop-orchid-tickets'); }]],
+      notes: ['商品图是设计效果图，购买入口还没接。'],
+      apply: h => { closeOverlays(h); h.setPage('home'); scrollTo('#h-shop', 10); },
+      match: st => (plain(st) && st.shop) || st.sheet === 'product' },
 
     { nav: '贴心服务', kicker: '服务', title: '高原上的贴心服务',
       lead: '黄龙海拔超过 3000 米，服务页把游客最需要的帮助放在最前面。',
@@ -273,8 +352,9 @@
       points: [
         ['出发前', '首页认识黄龙，挑几个想去的景点，按自己的时间排好路线'],
         ['路上', '地图上看位置，随时问导游，找厕所和医疗点'],
-        ['到站', '打卡收印章，解锁一滴水小游戏，玩着弄懂钙华'],
-        ['之后', '护照里留下印章和徽章，记住这一趟'],
+        ['到站', '碰一碰芯片打卡收印章，解锁一滴水小游戏，玩着弄懂钙华'],
+        ['栈道上', '翻栈道手册认鸟，录几段水声、林声，收成声纹唱片'],
+        ['之后', '护照里留下印章和生灵徽章，文创商店把它们带回家'],
       ],
       apply: h => { closeOverlays(h); h.setPage('home'); },
       passive: true, match: st => plain(st) && st.page === 'home' },
@@ -282,9 +362,9 @@
     { nav: '接下来', kicker: '欢迎试用', title: '接下来还会有更多',
       lead: '手机浏览器打开 huanglong.nyxal.site 就能体验；接下来会继续让它更好用。',
       points: [
-        ['数字手账', '把照片、印章和感想拼成一页游记，可以分享给朋友'],
+        ['芯片铺到现场', '栈道和采集点按写入页逐个贴芯片，真机上调好动画和重力感应'],
+        ['数字手账', '把照片、印章、声纹唱片和感想拼成一页游记，可以分享给朋友'],
         ['微信小程序', '不用下载，扫码就能在景区里用'],
-        ['更多讲解与互动', '接入更多导游讲解和互动作品'],
       ],
       apply: h => { closeOverlays(h); h.setPage('home'); },
       passive: true, match: st => plain(st) && st.page === 'home' },
@@ -316,7 +396,7 @@
   function go(i, fromApp = false) {
     cur = Math.max(0, Math.min(SLIDES.length - 1, i));
     render();
-    if (!fromApp) { const h = H(); if (h) { silentUntil = Date.now() + 900; try { SLIDES[cur].apply(h); } catch (e) { console.warn(e); } } }
+    if (!fromApp) { const h = H(); if (h) { silentUntil = Date.now() + 1500; try { SLIDES[cur].apply(h); } catch (e) { console.warn(e); } } }
   }
   function flash(text) { syncEl.textContent = text; syncEl.classList.add('flash'); clearTimeout(flash.t); flash.t = setTimeout(() => { syncEl.classList.remove('flash'); syncEl.textContent = ''; }, 1600); }
 
@@ -336,7 +416,7 @@
   slideEl.onclick = e => {
     const b = e.target.closest('[data-try]'); if (!b) return;
     const h = H(); if (!h) return;
-    silentUntil = Date.now() + 900;
+    silentUntil = Date.now() + 1500;
     try { SLIDES[cur].tries[Number(b.dataset.try)][1](h); } catch (err) { console.warn(err); }
   };
   const notesBtn = document.getElementById('toggleNotes');
