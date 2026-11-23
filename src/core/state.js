@@ -29,6 +29,7 @@
     seen: [],                       // 已点亮的生灵徽章（到站后找到观察线索），见 data/badges.js 的 species
     seenAt: {},                     // 生灵徽章点亮的时间（ISO 字符串），徽章背面和邮戳用
     sound: null,                    // 听见黄龙：声音驿站收集、认声纹、安静挑战、记录、手册翻到第几页，见 features/sound.js（由 sanitize 补全）
+    discover: null,                 // 发现手记：显示哪一本、每本翻到第几页、哪些站「在现场看过」，见 features/discover.js（由 sanitize 补全）
   });
 
   /* 水滴四章：交给 v1 的状态机校验（vendor/huanglong-water/follow-state.js）。
@@ -112,6 +113,14 @@
       })(),
     };
     ['quiz', 'quiet', 'note'].forEach(k => { for (const id of Object.keys(v.sound[k])) if (!got[id]) delete v.sound[k][id]; }); // 没收集的站不能有后面几枚章
+    /* 发现手记：只保留 data/discover.js 里有的书和站（键是「书 id:页 id」） */
+    const dv = v.discover && typeof v.discover === 'object' ? v.discover : {}, fb = (HL.data.discover && HL.data.discover.books) || [];
+    const fkeys = new Set(fb.flatMap(b => b.pages.filter(p => p.type === 'stop').map(p => `${b.id}:${p.id}`)));
+    v.discover = {
+      book: fb.some(b => b.id === dv.book) ? dv.book : (fb[0] ? fb[0].id : ''),
+      page: Object.fromEntries(fb.map(b => [b.id, dv.page && Number.isInteger(dv.page[b.id]) && dv.page[b.id] >= 0 ? dv.page[b.id] : 0])),
+      seen: Object.fromEntries(Object.entries(dv.seen && typeof dv.seen === 'object' ? dv.seen : {}).filter(([k, x]) => fkeys.has(k) && typeof x === 'string' && !isNaN(Date.parse(x)))),
+    };
     return v;
   }
 

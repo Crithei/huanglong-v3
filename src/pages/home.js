@@ -47,7 +47,7 @@
       </section>
 
       <section class="sec" aria-labelledby="h-play">
-        <div class="sec-h"><h2 id="h-play">随行互动</h2><span class="aside">四个互动</span></div>
+        <div class="sec-h"><h2 id="h-play">随行互动</h2><span class="aside">五个互动</span></div>
         <div class="play-grid">
           <button class="play-card" type="button" data-act="tab" data-page="play">
             <span class="shot shot-water"><img src="assets/play/water-final.webp" alt="一滴水第四章「长成彩池」完成后的三维模型" loading="lazy" decoding="async"></span>
@@ -64,6 +64,10 @@
           <button class="play-card book-bank" type="button" data-act="book-open" data-v="collect">
             <span class="shot shot-bank"><img src="${esc(HL.soundDisc ? HL.soundDisc.cover() : '')}" alt="声景手册：一张声纹唱片" loading="lazy" decoding="async"></span>
             <div class="t"><b>声景手册</b></div>
+          </button>
+          <button class="play-card book-fx" type="button" data-act="fx-open">
+            <span class="fx-shelf" aria-hidden="true">${(D.discover ? D.discover.books : []).map(b => `<i style="--bk:${esc(b.color)}"><em>${esc(b.no)}</em>${esc(b.name)}</i>`).join('')}</span>
+            <div class="t"><b>发现手记</b><small>四本研学手册：水文、生态、保育、色彩</small></div>
           </button>
         </div>
       </section>

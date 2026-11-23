@@ -1,0 +1,152 @@
+/* 发现手记（features/discover.js）：沿用栈道手册的纸、胶带、剪纸山林（styles/sound.css），每本换一种主色 --bk。 */
+
+/* ---------- 互动页：四本切换 ---------- */
+.fx-switch button { position: relative; padding-left: 38px; }
+.fx-switch i { position: absolute; left: 9px; top: 9px; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%;
+  font: 600 10.5px var(--serif); font-style: normal; color: #fff; background: var(--bk); }
+.hb-switch.fx-switch button[aria-selected="true"], .hb-switch.fx-switch button:last-child[aria-selected="true"] { background: var(--bk); }
+.fx-switch button[aria-selected="true"] i { background: rgba(255, 255, 255, .22); }
+
+/* ---------- 书的外形：标签、书脊跟着主色 ---------- */
+.fx-hb .hb-tabs button[aria-selected="true"] { background: var(--bk); }
+.fx-hb .hb-spine { background: radial-gradient(circle at 9px 50%, #20302b 0 3.2px, transparent 3.6px) 0 10px / 18px 26px repeat-y,
+  linear-gradient(90deg, color-mix(in srgb, var(--bk) 80%, #000), var(--bk)); }
+
+/* 封面、封底 */
+.fx-cover, .fx-back { background-color: var(--bk); background-image: radial-gradient(rgba(255, 255, 255, .06) 1px, transparent 1.3px),
+  radial-gradient(120% 70% at 50% 0%, color-mix(in srgb, var(--bk) 70%, #fff), transparent 70%); background-size: 11px 13px, 100% 100%; }
+.fx-cover .pc-forest .f1, .fx-back .pc-forest .f1 { fill: color-mix(in srgb, var(--bk) 75%, #fff); }
+.fx-cover .pc-forest .f2, .fx-back .pc-forest .f2 { fill: color-mix(in srgb, var(--bk) 70%, #000); }
+.fx-cover .pc-forest .f3, .fx-back .pc-forest .f3 { fill: color-mix(in srgb, var(--bk) 45%, #000); }
+.fx-cover .cv-photo { aspect-ratio: 4 / 3; width: 62%; }
+.fx-cover .cv-title h3 { font-size: 30px; letter-spacing: 5px; }
+.fx-q { margin: 8px 6px 0; font: 600 15.5px/1.4 var(--serif); text-align: center; }
+.fx-cover .cv-motto { margin-top: 4px; }
+.fx-back-no { font: 600 64px/1 var(--serif); opacity: .25; letter-spacing: 0; }
+
+/* 目录 */
+.fx-toc h4 { font-size: 18px; }
+.fx-route { margin: 0 0 6px; }
+.fx-tocl { gap: 2px; }
+.fx-tocl button { padding: 3px 8px; }
+.fx-tocl span { display: flex; align-items: baseline; gap: 6px; }
+.fx-tocl b { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 12px; }
+.fx-tocl small { order: -1; flex: none; width: 6.4em; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 9.5px; color: var(--bk); }
+.fx-tocl em { color: var(--bk); }
+
+/* ---------- 页面通用 ---------- */
+.fx-page h4 { font-size: 17.5px; line-height: 1.3; margin-bottom: 7px; }
+.fx-page .hb-run span:first-child { color: var(--bk); font-weight: 600; }
+.fx-ask { margin: 7px 0 5px; font-size: 12px; line-height: 1.55; }
+.fx-page .pc-strip.is-green { background: var(--bk); }
+
+/* 贴上去的照片：整张转一点角度；标注、编号点和照片一起转 */
+.fx-fig { position: relative; display: flex; flex-direction: column; align-items: stretch; }
+.fx-fig[hidden] { display: none; }
+.fx-shot { position: relative; display: block; width: 100%; padding: 0; transform: rotate(var(--r)); text-align: left; }
+.fx-shot .pc-photo { --r: 0deg; aspect-ratio: 16 / 9; }
+.fx-3d { position: absolute; z-index: 3; right: 9px; bottom: 10px; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: rgba(20, 30, 25, .55); }
+.fx-3d .i { width: 14px; height: 14px; }
+.fx-cap { margin-top: 4px; font-size: 10.5px; line-height: 1.4; color: #8a7a58; }
+.fx-anno { position: absolute; z-index: 2; inset: 5px 5px 6px; width: calc(100% - 10px); height: calc(100% - 11px); opacity: 0; transition: opacity .25s; pointer-events: none; }
+.fx-annowrap { position: relative; }
+.fx-annowrap.is-anno .fx-anno { opacity: 1; }
+.fx-btn.fx-annobtn { position: absolute; z-index: 4; left: 8px; top: 9px; box-shadow: 0 1px 4px rgba(0, 0, 0, .3); }
+.fx-pin { position: absolute; z-index: 2; width: 22px; height: 22px; transform: translate(-50%, -50%); display: grid; place-items: center; border: 2px solid #fff9e6; border-radius: 50%;
+  font: 700 11px/1 var(--sans, inherit); font-style: normal; color: #fff9e6; background: #233e34; box-shadow: 0 1px 3px rgba(0, 0, 0, .4); }
+
+/* 择一：两站换着看 */
+.fx-pick { display: flex; align-items: center; gap: 5px; margin-bottom: 7px; }
+.fx-pick button { padding: 3px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 600; color: #6a5c40; background: #e8dfc6; }
+.fx-pick button[aria-selected="true"] { color: #fff; background: var(--bk); }
+.fx-pick small { margin-left: auto; font-size: 10px; color: #9a8a66; }
+.has-pick .fx-shot .pc-photo { aspect-ratio: 16 / 8; }
+/* 两图对读：并排两张 */
+.fx-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.fx-pair .fx-shot .pc-photo { aspect-ratio: 1; }
+.fx-pair .fx-cap { font-weight: 600; color: var(--bk); }
+
+/* 观察线索 */
+.fx-clues { margin: 0; display: grid; gap: 4px; }
+.fx-clues div { padding: 4px 8px; border-left: 3px solid var(--bk); background: rgba(255, 253, 246, .75); }
+.fx-clues dt { font: 600 11.5px/1.4 var(--serif); color: #2a2418; }
+.fx-clues dd { margin: 0; font-size: 11px; line-height: 1.45; color: #5d5038; }
+.fx-clues.is-grid { grid-template-columns: 1fr 1fr; }
+.fx-clues.is-grid div { padding: 3px 7px; }
+
+/* 页脚：资料怎么说、在现场看过、带走的一句 */
+.fx-foot { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 7px; }
+.fx-btn { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 600;
+  color: var(--bk); background: #fffdf6; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--bk) 45%, transparent); }
+.fx-btn .i { width: 13px; height: 13px; }
+.fx-btn[aria-pressed="true"], .fx-seen.is-on { color: #fff; background: var(--bk); box-shadow: none; }
+.fx-keep { margin: 6px 0 0; padding-top: 5px; border-top: 1px dashed #d6c79e; font: italic 11.5px/1.45 var(--serif); color: #7d6e4c; text-align: center; }
+
+/* 资料怎么说：从页脚升起的一张纸 */
+.fx-more { position: absolute; z-index: 6; left: 14px; right: 8px; bottom: 8px; max-height: 76%; overflow-y: auto; padding: 14px 14px 12px; border-radius: 4px;
+  background: #fffdf6; box-shadow: 0 -4px 18px rgba(50, 35, 10, .3); transform: translateY(115%); transition: transform .3s cubic-bezier(.3, .8, .3, 1); }
+.fx-more.is-open { transform: none; }
+.fx-more b { display: block; margin: 6px 0 4px; font: 600 14.5px/1.35 var(--serif); color: #2a2418; }
+.fx-more p { margin: 0; font-size: 12px; line-height: 1.65; color: #4a3f2a; }
+.fx-more .fx-svg { margin-top: 8px; }
+.fx-x { position: absolute; top: 6px; right: 6px; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; color: #6a5c40; background: rgba(60, 40, 10, .06); }
+.fx-x .i { width: 14px; height: 14px; }
+
+/* ---------- 概念图 ---------- */
+.fx-svg { display: block; width: 100%; height: auto; margin: 4px 0 2px; background: #fbf7ea; border-radius: 4px; box-shadow: 0 1px 3px rgba(50, 35, 10, .15); }
+.fx-svg text { font: 600 21px var(--sans, sans-serif); fill: #2a2418; }
+.fx-svg text.is-dim { font-weight: 400; fill: #7d6e4c; }
+.fx-svg.is-mini { width: 62%; margin: 6px auto 0; }
+.fx-svg.is-mini text { font-size: 19px; }
+.fx-rays text { font-size: 19px; }
+.fx-rays path[class^="beam"] { transition: opacity .25s, stroke-width .25s; }
+.fx-rays[data-show="reflect"] .beam-bottom, .fx-rays[data-show="bottom"] .beam-reflect { opacity: .15; }
+.fx-rays[data-show="reflect"] .beam-reflect, .fx-rays[data-show="bottom"] .beam-bottom { stroke-width: 6; }
+.fx-beams { display: flex; gap: 6px; margin: 6px 0 2px; }
+
+/* ---------- 插页：点一句看证据 ---------- */
+.fx-quiz { display: grid; gap: 5px; margin-top: 6px; }
+.fx-quiz > .pc-strip { justify-self: start; margin-bottom: 2px; }
+.fx-opt { display: block; width: 100%; padding: 6px 10px; text-align: left; border-radius: 6px; background: #fffdf6; box-shadow: 0 1px 3px rgba(50, 35, 10, .16); }
+.fx-opt b { display: block; font: 600 12.5px/1.4 var(--serif); color: #2a2418; }
+.fx-opt small { display: none; margin-top: 3px; font-size: 11px; line-height: 1.5; color: #5d5038; }
+.fx-opt.is-picked small { display: block; }
+.fx-opt.is-yes { box-shadow: inset 3px 0 0 #3a7d55, 0 1px 3px rgba(50, 35, 10, .16); }
+.fx-opt.is-no { box-shadow: inset 3px 0 0 #c4553a, 0 1px 3px rgba(50, 35, 10, .16); }
+.fx-opt.is-picked.is-yes b::after { content: " · 能由眼前证明"; font: 600 10.5px var(--sans, inherit); color: #3a7d55; }
+.fx-opt.is-picked.is-no b::after { content: " · 还需要证据"; font: 600 10.5px var(--sans, inherit); color: #c4553a; }
+
+/* ---------- 回看 ---------- */
+.fx-rows { display: grid; gap: 8px; margin: 4px 0 6px; }
+.fx-rows.is-3 { grid-template-columns: repeat(3, 1fr); }
+.fx-rows.is-2 { grid-template-columns: repeat(2, 1fr); }
+.fx-rows.is-2 .pc-photo { aspect-ratio: 4 / 3; }
+.fx-row { transform: rotate(var(--r)); text-align: center; }
+.fx-row .pc-photo { --r: 0deg; aspect-ratio: 1; padding: 3px 3px 4px; }
+.fx-row .pc-tape { width: 30px; height: 11px; top: -6px; }
+.fx-row b { display: block; margin-top: 4px; font: 600 14px/1.2 var(--serif); color: var(--bk); }
+.fx-row small { display: block; font-size: 10px; line-height: 1.35; color: #7d6e4c; }
+.fx-acts { display: grid; gap: 5px; margin: 4px 0; }
+.fx-act[aria-pressed="true"] { box-shadow: inset 3px 0 0 var(--bk), 0 1px 3px rgba(50, 35, 10, .16); }
+.fx-act[aria-pressed="true"] b::before { content: "✓ "; color: var(--bk); }
+.fx-act small { display: block; }
+.fx-review .hb-quote { border-left-color: var(--bk); background: color-mix(in srgb, var(--bk) 8%, transparent); color: #3a3122; font-size: 11.5px; }
+.fx-review .hb-small { font-size: 10.5px; }
+.fx-seal { display: flex; align-items: center; gap: 8px; margin-top: 6px; font-size: 11px; line-height: 1.35; color: #7d6e4c; }
+.fx-seal i { width: 34px; height: 34px; display: grid; place-items: center; border: 2px solid color-mix(in srgb, var(--bk) 55%, transparent); border-radius: 50%;
+  font: 600 15px var(--serif); font-style: normal; color: color-mix(in srgb, var(--bk) 70%, transparent); transform: rotate(-8deg); }
+.fx-seal.is-done i { color: #fff; background: var(--bk); border-color: var(--bk); }
+
+/* 依据与图片 */
+.fx-src { margin: 0 0 6px; padding-left: 1.1em; font-size: 10.5px; line-height: 1.55; color: #4a3f2a; }
+.fx-src li + li { margin-top: 4px; }
+.fx-sources .hb-small { font-size: 10px; }
+
+/* ---------- 首页卡片：一排四本书脊 ---------- */
+.play-card.book-fx { grid-column: 1 / -1; background: #3a3426; }
+.fx-shelf { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 12px 12px 4px; }
+.fx-shelf i { display: flex; flex-direction: column; justify-content: space-between; height: 74px; padding: 7px 8px; border-radius: 3px 8px 8px 3px; font: 600 13px/1.25 var(--serif); font-style: normal;
+  color: #fff6e6; background: var(--bk); box-shadow: inset 5px 0 0 rgba(0, 0, 0, .2), 0 2px 5px rgba(0, 0, 0, .3); }
+.fx-shelf i:nth-child(odd) { transform: rotate(-1.5deg); } .fx-shelf i:nth-child(even) { transform: rotate(1.2deg) translateY(2px); }
+.fx-shelf em { font: 600 10px var(--sans, inherit); font-style: normal; opacity: .7; letter-spacing: 1px; }
+.play-card.book-fx .t small { display: block; margin-top: 1px; font-size: 11.5px; opacity: .75; font-weight: 400; }

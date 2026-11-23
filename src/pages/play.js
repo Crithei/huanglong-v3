@@ -31,6 +31,11 @@
         <p class="sound-credit" id="sound-credit"></p>
       </section>
 
+      <section class="sec play-sec" aria-labelledby="h-discover">
+        <div class="sec-h"><h2 id="h-discover">发现手记</h2><span class="aside" id="play-fx-count"></span></div>
+        ${HL.discoverSection ? HL.discoverSection() : ''}
+      </section>
+
       <div id="play-collect"></div>`;
     HL.waterMount(); HL.labMount();
   }
@@ -40,7 +45,7 @@
     const badges = HL.badgeStatus();
     $('#play-water-count').textContent = `${HL.waterDone()} / 4 章`;
     $('#play-lab-count').textContent = S.lab.stickerAt ? '已收下贴纸' : `发现 ${S.lab.found.length} / 3`;
-    HL.waterRefresh(); HL.labRefresh(); HL.soundRender();
+    HL.waterRefresh(); HL.labRefresh(); HL.soundRender(); if (HL.discoverRender) HL.discoverRender();
     $('#play-collect').innerHTML = `
       <section class="sec" aria-labelledby="h-stamps">
         <div class="sec-h"><h2 id="h-stamps">山水护照</h2><span class="aside">收下 ${S.visited.length} / ${ST.length} 枚</span></div>

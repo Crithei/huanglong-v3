@@ -411,6 +411,42 @@ for text in js.values():
         if n not in icons:
             err("代码里用了不存在的图标「%s」" % n)
 
+# ---------- 发现手记 data/discover.js ----------
+discover = load_data("discover")
+if discover is not None and stations is not None:
+    photo_ok = {s["id"] for s in stations if (s.get("photo") or {}).get("src")}
+    figs = set(re.findall(r"^    (\w+): `<svg", read("src/features/discover.js"), flags=re.M))
+    for b in discover.get("books", []):
+        bid = b.get("id", "?")
+        for f in ["id", "no", "name", "title", "color", "short", "route", "question", "intro", "cover", "sources", "pages"]:
+            if not b.get(f):
+                err("discover.%s：缺少 %s" % (bid, f))
+        want = [b.get("cover")]
+        seen_pid = set()
+        for p in b.get("pages", []):
+            pid = "%s:%s" % (bid, p.get("id"))
+            if p.get("id") in seen_pid:
+                err("discover：页 id 重复 %s" % pid)
+            seen_pid.add(p.get("id"))
+            if p.get("type") not in ("stop", "insert", "review"):
+                err("discover %s：type 只能是 stop / insert / review" % pid)
+            if not p.get("title") or not p.get("tag") or not p.get("keep"):
+                err("discover %s：缺少 title / tag / keep" % pid)
+            if p.get("type") == "stop":
+                ids_ = [p["station"]] if p.get("station") else [x[0] for x in (p.get("pick") or p.get("pair") or [])]
+                if not ids_:
+                    err("discover %s：stop 页要有 station、pick 或 pair" % pid)
+                want += ids_
+            want += [r[2] for r in p.get("rows", [])]
+            for k in ("fig", "moreFig"):
+                if p.get(k) and p[k] not in figs:
+                    err("discover %s：概念图「%s」在 features/discover.js 里没有" % (pid, p[k]))
+            if p.get("more") and len(p["more"]) != 2:
+                err("discover %s：more 要写成 [标题, 正文]" % pid)
+        for i in want:
+            if i not in photo_ok:
+                err("discover.%s：景点 %s 不存在或没有照片" % (bid, i))
+
 # ---------- 结果 ----------
 for w in warnings:
     print("提醒  " + w)
