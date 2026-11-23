@@ -68,8 +68,8 @@
 
 /* 观察线索 */
 .fx-clues { margin: 0; display: grid; gap: 4px; }
-.fx-clues div { padding: 4px 8px; border-left: 3px solid var(--bk); background: rgba(255, 253, 246, .75); }
-.fx-clues dt { font: 600 11.5px/1.4 var(--serif); color: #2a2418; }
+.fx-clues div { padding: 4px 9px; border-radius: 6px; background: color-mix(in srgb, var(--bk) 9%, #fffdf6); }
+.fx-clues dt { font: 600 11.5px/1.4 var(--serif); color: color-mix(in srgb, var(--bk) 75%, #000); }
 .fx-clues dd { margin: 0; font-size: 11px; line-height: 1.45; color: #5d5038; }
 .fx-clues.is-grid { grid-template-columns: 1fr 1fr; }
 .fx-clues.is-grid div { padding: 3px 7px; }
@@ -111,8 +111,8 @@
 .fx-opt b { display: block; font: 600 12.5px/1.4 var(--serif); color: #2a2418; }
 .fx-opt small { display: none; margin-top: 3px; font-size: 11px; line-height: 1.5; color: #5d5038; }
 .fx-opt.is-picked small { display: block; }
-.fx-opt.is-yes { box-shadow: inset 3px 0 0 #3a7d55, 0 1px 3px rgba(50, 35, 10, .16); }
-.fx-opt.is-no { box-shadow: inset 3px 0 0 #c4553a, 0 1px 3px rgba(50, 35, 10, .16); }
+.fx-opt.is-yes { background: #eef5ee; box-shadow: inset 0 0 0 1.5px #3a7d55; }
+.fx-opt.is-no { background: #fbefe9; box-shadow: inset 0 0 0 1.5px #c4553a; }
 .fx-opt.is-picked.is-yes b::after { content: " · 能由眼前证明"; font: 600 10.5px var(--sans, inherit); color: #3a7d55; }
 .fx-opt.is-picked.is-no b::after { content: " · 还需要证据"; font: 600 10.5px var(--sans, inherit); color: #c4553a; }
 
@@ -127,10 +127,11 @@
 .fx-row b { display: block; margin-top: 4px; font: 600 14px/1.2 var(--serif); color: var(--bk); }
 .fx-row small { display: block; font-size: 10px; line-height: 1.35; color: #7d6e4c; }
 .fx-acts { display: grid; gap: 5px; margin: 4px 0; }
-.fx-act[aria-pressed="true"] { box-shadow: inset 3px 0 0 var(--bk), 0 1px 3px rgba(50, 35, 10, .16); }
+.fx-act[aria-pressed="true"] { background: color-mix(in srgb, var(--bk) 9%, #fffdf6); box-shadow: inset 0 0 0 1.5px var(--bk); }
 .fx-act[aria-pressed="true"] b::before { content: "✓ "; color: var(--bk); }
 .fx-act small { display: block; }
-.fx-review .hb-quote { border-left-color: var(--bk); background: color-mix(in srgb, var(--bk) 8%, transparent); color: #3a3122; font-size: 11.5px; }
+.fx-review .hb-quote { background: color-mix(in srgb, var(--bk) 9%, transparent); color: #3a3122; font-size: 11.5px; }
+.fx-review .hb-quote::before { color: var(--bk); }
 .fx-review .hb-small { font-size: 10.5px; }
 .fx-seal { display: flex; align-items: center; gap: 8px; margin-top: 6px; font-size: 11px; line-height: 1.35; color: #7d6e4c; }
 .fx-seal i { width: 34px; height: 34px; display: grid; place-items: center; border: 2px solid color-mix(in srgb, var(--bk) 55%, transparent); border-radius: 50%;
@@ -146,7 +147,7 @@
 .play-card.book-fx { grid-column: 1 / -1; background: #3a3426; }
 .fx-shelf { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 12px 12px 4px; }
 .fx-shelf i { display: flex; flex-direction: column; justify-content: space-between; height: 74px; padding: 7px 8px; border-radius: 3px 8px 8px 3px; font: 600 13px/1.25 var(--serif); font-style: normal;
-  color: #fff6e6; background: var(--bk); box-shadow: inset 5px 0 0 rgba(0, 0, 0, .2), 0 2px 5px rgba(0, 0, 0, .3); }
+  color: #fff6e6; background: var(--bk); box-shadow: 0 2px 5px rgba(0, 0, 0, .3); }
 .fx-shelf i:nth-child(odd) { transform: rotate(-1.5deg); } .fx-shelf i:nth-child(even) { transform: rotate(1.2deg) translateY(2px); }
 .fx-shelf em { font: 600 10px var(--sans, inherit); font-style: normal; opacity: .7; letter-spacing: 1px; }
 .play-card.book-fx .t small { display: block; margin-top: 1px; font-size: 11.5px; opacity: .75; font-weight: 400; }
