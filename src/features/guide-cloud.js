@@ -1,5 +1,7 @@
-/* 数字人导游 · 云端回答来源（WorkBuddy 云：知识库检索 + 大模型流式作答）。
-   流程沿用「黄龙数字人网页端交接包」：按角色板块检索 6 条知识片段 → 组装规则 → 流式生成 → 引用编号与依据折叠。
+/* 数字人导游 · 云端回答来源（WorkBuddy 云：知识库检索 + 数字人站点的问答接口）。
+   流程沿用「黄龙数字人网页端交接包」：按角色板块检索 6 条知识片段 → 组装规则 → 生成回答 → 引用编号与依据折叠。
+   生成这一步：云端大模型接口现在要登录才能用，改走数字人站点自己的 /api/ask?sharecode=…（服务端用服务账号调大模型，游客免登录）。
+   它一次返回全文 { answer, model }，这里按打字机效果逐段显示。分享码是数字人站点公开页面里就带着的，写在 data/guide.js。
    v3 加了两件事：
      1. 把「游客此刻」告诉模型：在哪一站、哪些站细看 / 路过、打过哪些卡、规划条件、一滴水进度；
      2. 模型可以在回答末尾写一行 <<cmd {"name":…,"args":{…}}>>，这里按白名单校验后变成对话里的按钮，
@@ -14,6 +16,7 @@
   if (!G || !G.cloud || !G.cloud.enabled) return;
 
   let cloud = null, sdkLoading = null;
+  const SID = (crypto.randomUUID && crypto.randomUUID()) || String(Date.now()) + Math.random().toString(36).slice(2); // 问答接口按会话记日志
   const history = [];            // 最近几轮 { role, content }，切换角色不清空
   let pendingPlan = null;        // 等游客确认的规划条件
 
@@ -216,14 +219,24 @@
       const messages = [{ role: 'system', content: systemPrompt(p, chunks) }, ...history.slice(-G.cloud.history), { role: 'user', content: q }];
       let text = '';
       try {
-        for await (const part of cloud.llm.chat.completions.create({ model: G.cloud.model, messages, stream: true, temperature: 0.4, reasoning_effort: 'none' })) {
-          const d = part.choices && part.choices[0] && part.choices[0].delta && part.choices[0].delta.content;
-          if (d) { text += d; if (onStream) onStream(format(text)); }
-        }
+        const scores = chunks.map(c => Number(c.score ?? c.rank)).filter(Number.isFinite);
+        const base = (HL.config && HL.config.cloudProxy) || G.cloud.endpoint;
+        const r = await fetch(`${base}${G.cloud.ask}?sharecode=${encodeURIComponent(G.cloud.sharecode)}`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages, sessionId: SID, assistant: p.name, question: q, topScore: scores.length ? Math.max(...scores) : null }),
+        });
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok || !j.answer) { const e = new Error(j.code || j.error || 'HTTP ' + r.status); e.error = { code: j.code || '' }; throw e; }
+        text = String(j.answer);
       } catch (e) {
-        if (!text) return fallback(q, ctx, e);
+        return fallback(q, ctx, e);
       }
       if (!text.trim()) return fallback(q, ctx, new Error('empty'));
+      /* 打字机：服务端已经生成全文，这里分段显示 */
+      if (onStream && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const shown = text.replace(CMD, '');
+        for (let n = 6; n < shown.length; n += 6) { onStream(format(shown.slice(0, n))); await new Promise(r => setTimeout(r, 22)); }
+      }
       history.push({ role: 'user', content: q }, { role: 'assistant', content: text.replace(CMD, '').trim() });
       let html = format(text), acts = [];
       for (const m of text.matchAll(CMD)) {
@@ -241,7 +254,8 @@
   async function fallback(q, ctx, err) {
     const code = String((err && err.error && err.error.code) || (err && err.message) || '');
     const why = code.startsWith('auth_') ? '云端没有放行当前网址（来源校验未通过）'
-      : code.startsWith('quota_') ? '云端额度暂时不足' : '暂时连不上云端';
+      : code.startsWith('quota_') ? '云端额度暂时不足' : code === 'rate_limited' ? '提问太频繁，云端让歇一会儿'
+      : code.startsWith('bot_') ? '数字人服务账号配置异常' : '暂时连不上云端';
     console.warn('[HL] 数字人云端回答失败，改用内置回答：', code || err);
     const local = await HL.guide.rules.reply(q, ctx);
     return { ...local, note: `${why}，以下来自内置景点资料` };

@@ -123,12 +123,12 @@
       : $in('.sheet.guide') ? 'guide' : $in('#layer .bv') ? 'species' : $in('#layer [data-act="want"]') ? 'product'
       : $in('.sheet.bank-sheet') ? 'bank' : $in('.sheet.sound-sheet') ? 'sound' : 'detail';
     /* 互动页一次只认一块：屏幕 45% 高度那条线落在哪一块里（手册连同标题、切换按钮算一整节） */
-    const onScreen = id => { let el = $in(id); if (!el || h.S.page !== 'play') return false; if (id === '#sound-book') el = el.closest('section') || el;
+    const onScreen = id => { let el = $in(id); if (!el || h.S.page !== 'play') return false; if (id === '#sound-book' || id === '#fx-book') el = el.closest('section') || el;
       const r = el.getBoundingClientRect(), y = win().innerHeight * .45; return r.top <= y && r.bottom > y; };
     const homeAt = id => { const el = $in(id); if (!el || h.S.page !== 'home') return false; const r = el.getBoundingClientRect(); return r.top < win().innerHeight * .5; };
     return { page: h.S.page, panel: h.S.panel, sheet, tap: !!$in('.tap:not(.is-out)'), dv: !!$in('.dv:not(.is-out)'), pano: !!$in('.dv-pano:not(.is-out)'),
       water: onScreen('#water-view'), lab: onScreen('#lab-view'), collect: onScreen('#play-collect'),
-      book: onScreen('#sound-book') ? h.S.sound.book : null, shop: homeAt('#h-shop') };
+      book: onScreen('#sound-book') ? h.S.sound.book : null, fx: onScreen('#fx-book') && h.S.discover ? h.S.discover.book : null, shop: homeAt('#h-shop') };
   }
   function closeOverlays(h) {
     const tap = $in('.tap:not(.is-out)');
@@ -137,7 +137,7 @@
     h.closeSheet();
     if (h.labPause) h.labPause();
   }
-  const plain = st => !st.sheet && !st.water && !st.lab && !st.tap && !st.dv && !st.book;
+  const plain = st => !st.sheet && !st.water && !st.lab && !st.tap && !st.dv && !st.book && !st.fx;
   const scrollTo = (sel, offset = 0) => setTimeout(() => { const el = $in(sel); if (!el) return; el.scrollIntoView({ block: 'start' }); const box = el.closest('.page, #panel-body, .water-body'); if (box) box.scrollTop -= offset; }, 250);
 
   /* ---------- 每一页：讲什么、左边调成什么样、怎么认出左边正处在这一页 ---------- */
@@ -147,7 +147,7 @@
       points: [
         ['看得懂', '每个景点有实景照片、看点和背后的故事，照片能转着看出远近层次，随时问数字人导游'],
         ['走得顺', '腾讯地图上看景点和设施，按自己的时间排一条路线'],
-        ['玩得到', '「一滴水」小游戏和彩池实验室讲钙华，两本手册带你听鸟、录声音'],
+        ['玩得到', '「一滴水」小游戏和彩池实验室讲钙华，两本手册带你听鸟、录声音，四本发现手记带着问题去看'],
         ['留得下', '印章、金属质感的生灵徽章、声纹唱片，再到文创商店里的明信片和徽章'],
       ],
       notes: ['左边是可以直接操作的真实页面，右边翻页时左边会跟着跳，在左边点也会翻到对应讲解。', '接下来按一位游客一天的行程，把功能走一遍。'],
@@ -159,7 +159,7 @@
       points: [
         ['精选景观', '13 处实景照片，角上有层叠小标的照片都能进立体检视'],
         ['停留示意', '14 个景点按游览顺序排开，色块越宽，越值得多停一会儿'],
-        ['随行互动', '一滴水、彩池实验室、栈道手册、声景手册四张卡片，点一下直接翻开'],
+        ['随行互动', '一滴水、彩池实验室、栈道手册、声景手册，加上一排四本发现手记，点一下直接翻开'],
         ['文创商店', '兰花文创、生灵徽章、明信片，和沿途收集的内容呼应'],
       ],
       tries: [['看停留示意', h => { closeOverlays(h); h.setPage('home'); scrollTo('#h-strata', 10); }], ['看随行互动', h => { closeOverlays(h); h.setPage('home'); scrollTo('#h-play', 10); }]],
@@ -313,6 +313,19 @@
       apply: h => { closeOverlays(h); h.openBook('collect'); },
       match: st => st.book === 'collect' && !st.sheet && !st.dv && !st.tap },
 
+    { nav: '发现手记', kicker: '互动 · 发现手记', title: '带着一个问题，沿途找答案',
+      lead: '四本研学手册：水文地质、生态联系、退化保育、色彩感知。每本一个问题，到哪一站就翻哪一页，先看清眼前的现象，再分清哪些要靠资料解释。',
+      points: [
+        ['四个主题', '水为什么成池、成滩、成瀑；植物只是背景吗；今天如此还是长久在变；这一眼的颜色从哪来'],
+        ['照片上找线索', '点「看线索」给实景照叠标注；两站任选其一；两张照片对读'],
+        ['分清看见和推断', '研究依据收在「资料怎么说」；插页里点一句话，看它还缺什么证据'],
+        ['在现场看过', '每站可以盖一个「看过」，回看页把几站的发现串起来'],
+      ],
+      tries: [['翻开水文地质', h => { closeOverlays(h); h.openDiscover('hydro'); }], ['翻开退化保育', h => { closeOverlays(h); h.openDiscover('care'); }], ['看辨别证据插页', h => { closeOverlays(h); h.S.discover.book = 'care'; h.S.discover.page.care = 6; h.openDiscover('care'); }]],
+      notes: ['内容改编自项目组《黄龙沟四主题发现手册》现场试读版，照片全用站内景点照，署名在每本最后一页。', '插页「辨别证据」最适合现场演示：点「这里一直在变干」，看它为什么还说不出。'],
+      apply: h => { closeOverlays(h); h.openDiscover(h.S.discover.book); },
+      match: st => !!st.fx && !st.sheet && !st.dv && !st.tap },
+
     { nav: '印章与徽章', kicker: '互动 · 山水护照', title: '把这趟旅程收进护照',
       lead: '打过卡的景点会在护照上盖下手绘印章，集齐一定数量就能点亮主题徽章；在现场找到线索，还能点亮一枚金属质感的生灵徽章。',
       points: [
@@ -353,7 +366,7 @@
         ['出发前', '首页认识黄龙，挑几个想去的景点，按自己的时间排好路线'],
         ['路上', '地图上看位置，随时问导游，找厕所和医疗点'],
         ['到站', '碰一碰芯片打卡收印章，解锁一滴水小游戏，玩着弄懂钙华'],
-        ['栈道上', '翻栈道手册认鸟，录几段水声、林声，收成声纹唱片'],
+        ['栈道上', '翻栈道手册认鸟，录几段水声、林声，收成声纹唱片；带一本发现手记，到哪站翻哪页'],
         ['之后', '护照里留下印章和生灵徽章，文创商店把它们带回家'],
       ],
       apply: h => { closeOverlays(h); h.setPage('home'); },

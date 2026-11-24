@@ -8,6 +8,8 @@ HL.data.guide = {
     "oauthRelayBaseUrl": "https://www.workbuddy.cn/v2/as/genie-baas/oauth",
     "publishableKey": "wbpk_5uqd5EJsnHMy2yziBmiHC7_wrAA2tMTPu31knL8enox693BsH3loCyN",
     "model": "deepseek-v4.1-flash",
+    "ask": "/api/ask",
+    "sharecode": "3UJFL7IRGL",
     "sdk": "vendor/workbuddy/workbuddy-cloud-sdk.global.js",
     "topK": 6,
     "history": 6

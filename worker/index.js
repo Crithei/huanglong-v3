@@ -58,6 +58,7 @@ const CLOUD_UPSTREAM = 'https://huanglong-digital-human.app.workbuddy.host';
 const CLOUD_ALLOWED = [
   /^\/\.cloud\/database\/rest\/(?:v1\/)?rpc\/kb_search$/, // SDK 实际请求不带 v1，部署包文档里带
   /^\/\.cloud\/llm\/(?:[\w-]+\/)*chat\/completions$/,
+  /^\/api\/ask$/, // 数字人站点的问答接口（服务账号调大模型，带 ?sharecode），云端大模型改成要登录后改走它
 ];
 
 async function proxyCloud(request, url) {

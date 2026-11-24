@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 数字人入口头像，和 index.html 里 .fab 的内联 SVG 同源；换版本时把 <svg> 里的内容整段贴回 index.html -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="480" height="480">
+  <title>数字人入口头像 · 水彩默认头像（无五官，备用）</title>
+    <defs>
+      <!-- 水彩：边缘用噪声轻轻扭一下，颜色叠几层半透明 -->
+      <filter id="fabWc" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".22" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="1"/></filter>
+      <filter id="fabBleed" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".3" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="1.8"/><feGaussianBlur stdDeviation=".5"/></filter>
+      <filter id="fabGrain"><feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="1" seed="11"/><feColorMatrix values="0 0 0 0 .45  0 0 0 0 .38  0 0 0 0 .25  0 0 0 .22 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+      <radialGradient id="fabPaper" cx="50%" cy="40%" r="65%"><stop offset="0" stop-color="#fbf8ef"/><stop offset="1" stop-color="#ece4cf"/></radialGradient>
+      <radialGradient id="fabPool" cx="45%" cy="35%" r="70%"><stop offset="0" stop-color="#bff0e6"/><stop offset=".55" stop-color="#6cc9c0"/><stop offset="1" stop-color="#2f8f8d"/></radialGradient>
+      <linearGradient id="fabBody" x1=".2" y1="0" x2=".6" y2="1"><stop offset="0" stop-color="#6cc4bb"/><stop offset=".55" stop-color="#3a9592"/><stop offset="1" stop-color="#23696b"/></linearGradient>
+      <clipPath id="fabClip"><circle cx="24" cy="24" r="22"/></clipPath>
+    </defs>
+    <circle cx="24" cy="24" r="22" fill="url(#fabPaper)"/>
+    <g clip-path="url(#fabClip)">
+      <!-- 底下一汪彩池水色，和两道浅色池沿 -->
+      <path filter="url(#fabBleed)" d="M-2 36c5-2.6 9.6-2.2 14-3.2 1.6 4.2 0 9 0 15H-2ZM36 32.6c4.6.6 8.2 2.2 14 3.4V50H36c-.6-5.8-1.4-11.6 0-17.4Z" fill="url(#fabPool)" opacity=".6"/>
+      <path filter="url(#fabBleed)" d="M30 6.5c4.2-1 8.6.6 10.6 3.8 1.6 2.6.4 5.4-2.6 5.7-3.4.4-5.3-2-7.6-3.2-2.6-1.3-3.6-5.4-.4-6.3Z" fill="#f0cf74" opacity=".5"/>
+      <path filter="url(#fabBleed)" d="M5 12.5c1.8-3 5.4-4.2 7.6-2.4 1.8 1.5.8 4.2-1.6 5-2.6.9-4.6.6-5.8-.4-.8-.7-.7-1.4-.2-2.2Z" fill="#a8dccf" opacity=".55"/>
+      <g class="fab-rim" fill="none" stroke="#fbf6e6" stroke-linecap="round" opacity=".85" filter="url(#fabWc)">
+        <path d="M2 38.5c5-2.6 10-3 14.6-1.3" stroke-width="1.4"/><path d="M29 36.8c5.6-2 11-1.6 17 .8" stroke-width="1.4"/><path d="M7 44.5c6-2.4 11.6-2.6 17-.8s11.6 2 17.6-.4" stroke-width="1.1"/>
+      </g>
+      <!-- 默认头像：一个没有五官的人形，水彩叠两层 -->
+      <g class="fab-who">
+        <g filter="url(#fabBleed)" opacity=".35" fill="#2f8584"><circle cx="24.5" cy="20.4" r="8.4"/><path d="M8.4 48c.7-9.4 7-16.4 15.8-16.4S39.6 38.6 40.2 48Z"/></g>
+        <g filter="url(#fabWc)" fill="url(#fabBody)"><circle cx="24" cy="19.6" r="7.5"/><path d="M9.4 48c.8-9 6.6-15.4 14.6-15.4S37.8 39 38.6 48Z"/></g>
+        <g filter="url(#fabWc)" fill="#eafaf5" opacity=".5"><ellipse cx="21.2" cy="16.8" rx="2.8" ry="2" transform="rotate(-30 21.2 16.8)"/><path d="M14 42.6c1.3-4 3.8-6.6 7.2-7.6-1.6 2.4-2.7 4.8-3.2 7.8Z"/></g>
+      </g>
+      <!-- 装饰：左下一枝冷杉叶、右边一朵小兰花、几粒水滴和一点光 -->
+      <g class="fab-leaf" filter="url(#fabWc)">
+        <path d="M5.5 33.5c3-2 5.6-5.2 7-9" fill="none" stroke="#4f7d4e" stroke-width=".9" stroke-linecap="round"/>
+        <g fill="#6f9e5c" opacity=".85"><ellipse cx="8.6" cy="28.6" rx="2.6" ry="1.1" transform="rotate(-62 8.6 28.6)"/><ellipse cx="11.6" cy="27.6" rx="2.3" ry="1" transform="rotate(-20 11.6 27.6)"/><ellipse cx="7" cy="31.4" rx="2.4" ry="1" transform="rotate(-88 7 31.4)"/><ellipse cx="10" cy="30.6" rx="2.2" ry=".95" transform="rotate(-8 10 30.6)"/></g>
+      </g>
+      <g class="fab-flower" filter="url(#fabWc)" transform="translate(37.6 25.4)">
+        <g fill="#e8a6b8" opacity=".9"><ellipse rx="1.6" ry="2.6" transform="rotate(-35) translate(0 -2)"/><ellipse rx="1.6" ry="2.6" transform="rotate(35) translate(0 -2)"/><ellipse rx="1.4" ry="2.2" transform="rotate(180) translate(0 -1.8)"/></g>
+        <circle r="1" fill="#f3c55a"/>
+      </g>
+      <g fill="#ffffff" opacity=".75"><circle cx="34" cy="38.6" r=".9"/><circle cx="14.4" cy="41.6" r=".7"/><circle cx="40.6" cy="33" r=".6"/></g>
+      <path class="fab-spark" d="M36.4 10.2l.7 1.7 1.7.7-1.7.7-.7 1.7-.7-1.7-1.7-.7 1.7-.7Z" fill="#fffaf0"/>
+      <circle cx="24" cy="24" r="22" fill="#fff" filter="url(#fabGrain)"/>
+    </g>
+    <circle cx="24" cy="24" r="22" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1"/>
+  </svg>

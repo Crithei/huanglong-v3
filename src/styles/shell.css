@@ -32,18 +32,45 @@
 .page[hidden] { display: none; }
 
 /* ---------- 数字人入口 ---------- */
+/* 插画小像 + 名字签（水彩无五官版留在 assets/guide/fab-watercolor.svg，冷杉叶摆动给它用）。默认停在右下；拖过以后由 features/fab.js 写 top 和左右（.is-left），松手贴边 */
 .fab {
-  position: absolute; z-index: 20; right: 14px; bottom: calc(var(--tab-h) + env(safe-area-inset-bottom) + 14px);
-  display: inline-flex; align-items: center; gap: 8px;
-  min-height: 48px; padding: 0 16px 0 6px; border-radius: 999px;
-  background: var(--ink); color: #fff; font-weight: 600; font-size: 14.5px;
-  box-shadow: 0 8px 22px rgba(15, 38, 33, .32);
+  position: absolute; z-index: 20; right: 12px; bottom: calc(var(--tab-h) + env(safe-area-inset-bottom) + 14px);
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 4px 15px 4px 4px; border-radius: 999px;
+  color: #fff; text-align: left;
+  background: linear-gradient(135deg, #1f4a42, var(--ink) 60%);
+  box-shadow: 0 10px 24px rgba(15, 38, 33, .3), 0 2px 5px rgba(15, 38, 33, .2), inset 0 0 0 1px rgba(255, 255, 255, .08);
+  touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+  transition: left .32s cubic-bezier(.3, .9, .3, 1.15), right .32s cubic-bezier(.3, .9, .3, 1.15), top .32s cubic-bezier(.3, .9, .3, 1.15), transform .18s, box-shadow .18s;
 }
-.fab .face { width: 36px; height: 36px; border-radius: 50%; background: var(--pool); display: grid; place-items: center; color: var(--ink); }
-.fab .face .i { width: 21px; height: 21px; }
-/* 游览页：停在地图右下角，不压住面板分段与列表 */
-.app[data-page="tour"] .fab { bottom: auto; top: calc((100% - var(--tab-h) - env(safe-area-inset-bottom)) * .44 - 84px); padding-right: 6px; }
+.fab-badge { position: relative; flex: none; width: 46px; height: 46px; border-radius: 50%; box-shadow: 0 0 0 2px rgba(255, 255, 255, .9), 0 3px 8px rgba(0, 0, 0, .25); }
+.fab-art { display: block; width: 100%; height: 100%; }
+.fab-dot { position: absolute; right: 0; bottom: 1px; width: 11px; height: 11px; border-radius: 50%; background: #7ee2a8; box-shadow: 0 0 0 2px var(--ink); }
+.fab-text { display: flex; flex-direction: column; line-height: 1.2; }
+.fab-text b { font-size: 14.5px; font-weight: 600; letter-spacing: .5px; }
+.fab-text small { margin-top: 2px; font-size: 11px; color: rgba(255, 255, 255, .62); }
+/* 拖到左边：和右边镜像，小像朝屏幕里侧，名字签贴边 */
+.fab.is-left { flex-direction: row-reverse; padding: 4px 4px 4px 15px; }
+.fab.is-placed { bottom: auto; }
+/* 拖动中：抬起来一点 */
+.fab.is-drag { transition: none; transform: scale(1.06); box-shadow: 0 16px 32px rgba(15, 38, 33, .35), 0 3px 6px rgba(15, 38, 33, .2); cursor: grabbing; }
+.fab:active:not(.is-drag) { transform: scale(.97); }
+/* 游览页：只留小像，默认停在地图右下角，不压住面板分段与列表 */
+.app[data-page="tour"] .fab { padding: 4px; }
+.app[data-page="tour"] .fab:not(.is-placed) { bottom: auto; top: calc((100% - var(--tab-h) - env(safe-area-inset-bottom)) * .44 - 84px); }
 .app[data-page="tour"] .fab .fab-text { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .fab-who { animation: fab-bob 4.2s ease-in-out infinite; transform-origin: 24px 46px; }
+  .fab-leaf { animation: fab-sway 5s ease-in-out infinite; transform-origin: 5.5px 33.5px; }
+  .fab-eyes { animation: fab-blink 5.5s infinite; transform-origin: 24px 24.2px; }
+  .fab-spark { animation: fab-spark 3.2s ease-in-out infinite; transform-origin: 37.5px 12.2px; }
+  .fab-dot { animation: fab-live 2.4s ease-out infinite; }
+}
+@keyframes fab-bob { 50% { transform: translateY(-.9px) rotate(-1.5deg); } }
+@keyframes fab-sway { 50% { transform: rotate(5deg); } }
+@keyframes fab-blink { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.1); } }
+@keyframes fab-spark { 0%, 100% { opacity: 0; transform: scale(.4); } 45% { opacity: 1; transform: scale(1) rotate(45deg); } }
+@keyframes fab-live { 0% { box-shadow: 0 0 0 2px var(--ink), 0 0 0 2px rgba(126, 226, 168, .6); } 100% { box-shadow: 0 0 0 2px var(--ink), 0 0 0 9px rgba(126, 226, 168, 0); } }
 
 /* ---------- 底部导航 ---------- */
 .tabbar {
