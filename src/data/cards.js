@@ -199,6 +199,18 @@ HL.data.cards = {
           "cta": "开始自然探索",
           "url": "",
           "author": ""
+        },
+        {
+          "id": "service-wishes",
+          "kind": "game",
+          "title": "黄龙祈愿小站",
+          "subtitle": "寻愿打卡 · 时光信笺 · 祈愿树",
+          "body": "合作团队做的祈愿打卡小站：沿途四处寻访集「灵印」，在后寺写一封定时启封的「时光信笺」，再到祈愿树上点一盏灯。\n在新页面打开，内容和记录都在那边的小站里，和本页的打卡、护照不互通。广场与结缘里的人数和留言是演示数据。",
+          "icon": "send",
+          "go": "",
+          "cta": "打开祈愿小站",
+          "url": "https://huanglong-wishes.app.workbuddy.host/?sharecode=WWX3PVV5OE",
+          "author": "黄龙祈愿录团队"
         }
       ]
     }
