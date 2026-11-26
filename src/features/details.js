@@ -57,9 +57,13 @@
     img.complete ? fit() : img.addEventListener('load', fit, { once: true });
     HL.badge3d.mount(c);
   };
+  /* 款式带 scene（手持实景效果图）和 fg / bg（拆好的前后两层）时，大图是一个按钮：点了进立体检视看效果图（features/depthview.js） */
   const variantsBlock = p => {
-    const v = p.variants, flip = v.some(x => x.back);
-    return `${flip ? flipCard(p, v[0]) : `<div class="sheet-media variant-main"><img id="variant-img" src="${esc(encodeURI(v[0].img))}" alt="${esc(p.title + ' · ' + v[0].label)}"></div>`}
+    const v = p.variants, flip = v.some(x => x.back), look = v[0].scene && v[0].fg && v[0].bg;
+    const main = look
+      ? `<button class="sheet-media variant-main product-look" id="variant-look" type="button" data-act="product-look" data-pid="${esc(p.id)}" data-i="0" aria-label="点击看${esc(p.title + ' · ' + v[0].label)}的手持效果图"><img id="variant-img" src="${esc(encodeURI(v[0].img))}" alt="${esc(p.title + ' · ' + v[0].label)}"><span class="bd-hint" aria-hidden="true">${icon('zoom')}点击看效果</span></button>`
+      : `<div class="sheet-media variant-main"><img id="variant-img" src="${esc(encodeURI(v[0].img))}" alt="${esc(p.title + ' · ' + v[0].label)}"></div>`;
+    return `${flip ? flipCard(p, v[0]) : main}
       ${v.length > 1 ? `<div class="variants" role="group" aria-label="款式">${v.map((x, i) =>
         `<button type="button" data-act="product-variant" data-pid="${esc(p.id)}" data-i="${i}" data-src="${esc(encodeURI(x.img))}" data-alt="${esc(p.title + ' · ' + x.label)}" aria-pressed="${i === 0}"><img src="${esc(encodeURI(x.img))}" alt="" loading="lazy"><span>${esc(x.label)}</span></button>`).join('')}</div>` : ''}
       <p class="note">商品图为设计效果图，实物以上架时为准。</p>`;
@@ -76,7 +80,10 @@
     const img = document.getElementById('variant-img');
     if (!img) return;
     img.src = el.dataset.src; img.alt = el.dataset.alt;
+    const look = document.getElementById('variant-look');
+    if (look) { look.dataset.i = el.dataset.i; look.setAttribute('aria-label', `点击看${el.dataset.alt}的手持效果图`); }
   });
+  HL.act('product-look', el => HL.depthView.openProduct(el.dataset.pid, Number(el.dataset.i)));
 
   HL.openProduct = id => {
     const p = idx.product[id], on = S.want.includes(id), url = HL.safeUrl(p.url);

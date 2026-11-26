@@ -362,6 +362,48 @@ HL.data.cards = {
       ]
     },
     {
+      "id": "shop-touka",
+      "kind": "product",
+      "title": "黄龙风物透卡",
+      "subtitle": "四张一套，举起来对着真实风景看",
+      "body": "透明卡片印着水彩风景，中间留空：举到眼前对准真实的山、寺和瀑布，画里画外连成一片。四张是扎嘎瀑布、藏式牧场、黄龙寺和扎拉寺，右上角竖排题名、钤一枚小印，边框是祥云和彩池纹。\n点商品图可以看手持效果图，倾斜手机或拖动看出前后层次。",
+      "go": "",
+      "cta": "",
+      "url": "",
+      "author": "",
+      "fit": "contain",
+      "variants": [
+        {
+          "label": "扎嘎瀑布",
+          "img": "assets/shop/touka-zhaga.webp",
+          "scene": "assets/shop/touka-zhaga-scene.webp",
+          "fg": "assets/shop/touka-zhaga-fg.webp",
+          "bg": "assets/shop/touka-zhaga-bg.webp"
+        },
+        {
+          "label": "藏式牧场",
+          "img": "assets/shop/touka-muchang.webp",
+          "scene": "assets/shop/touka-muchang-scene.webp",
+          "fg": "assets/shop/touka-muchang-fg.webp",
+          "bg": "assets/shop/touka-muchang-bg.webp"
+        },
+        {
+          "label": "黄龙寺",
+          "img": "assets/shop/touka-huanglong.webp",
+          "scene": "assets/shop/touka-huanglong-scene.webp",
+          "fg": "assets/shop/touka-huanglong-fg.webp",
+          "bg": "assets/shop/touka-huanglong-bg.webp"
+        },
+        {
+          "label": "扎拉寺",
+          "img": "assets/shop/touka-zhala.webp",
+          "scene": "assets/shop/touka-zhala-scene.webp",
+          "fg": "assets/shop/touka-zhala-fg.webp",
+          "bg": "assets/shop/touka-zhala-bg.webp"
+        }
+      ]
+    },
+    {
       "id": "shop-species-badges",
       "kind": "product",
       "title": "黄龙生灵徽章",

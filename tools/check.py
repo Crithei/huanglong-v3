@@ -167,6 +167,11 @@ if cards is not None:
                 check_asset(v["img"], "cards.products[%d] %s 款式「%s」" % (k, p.get("id", "?"), v["label"]))
                 if v.get("back"):
                     check_asset(v["back"], "cards.products[%d] %s 款式「%s」的背面" % (k, p.get("id", "?"), v["label"]))
+                if bool(v.get("scene")) != bool(v.get("fg") and v.get("bg")):
+                    err("cards.products[%d] %s 款式「%s」：scene 要和 fg、bg（前后两层）一起填" % (k, p.get("id", "?"), v["label"]))
+                for f in ("scene", "fg", "bg"):
+                    if v.get(f):
+                        check_asset(v[f], "cards.products[%d] %s 款式「%s」的 %s" % (k, p.get("id", "?"), v["label"], f))
         if p.get("fit", "cover") not in ("cover", "contain"):
             err("cards.products[%d] %s：fit 只能是 cover 或 contain" % (k, p.get("id", "?")))
     for k, c in enumerate(cards.get("mine", [])):

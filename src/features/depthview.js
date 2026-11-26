@@ -85,6 +85,10 @@
       if(ph<1.){for(int i=1;i<=28;i++){float t=1.-float(i)/28.;vec2 q=uv+off*(t-focus);float h=texture2D(dep,q).r;
         if(h>=t){float a=ph-pt,b=h-t,k=a/(a-b+1e-5);p=uv+off*(mix(pt,t,k)-focus);break;}pt=t;ph=h;p=q;}}
       gl_FragColor=texture2D(img,clamp(p,.001,.999));}`;
+  /* 两层版：后层整体平移 offB，前层（带透明度）平移 offF，再按前层的透明度叠起来。两层各自平移，交界不拉丝 */
+  const LAYER_FS = `precision mediump float;varying vec2 v;uniform sampler2D bg,fg;uniform vec2 offB,offF;uniform float zoom;
+    void main(){vec2 uv=(v-.5)/zoom+.5;vec4 f=texture2D(fg,clamp(uv+offF,.001,.999));vec3 b=texture2D(bg,clamp(uv+offB,.001,.999)).rgb;
+      gl_FragColor=vec4(mix(b,f.rgb,f.a),1.);}`;
   /* 焦平面：取景深图里最近那一成像素的深度（通常就是鸟） */
   const focusOf = (dep, pct = .92) => {
     const c = document.createElement('canvas'); c.width = 96; c.height = Math.round(96 * dep.naturalHeight / dep.naturalWidth);
@@ -94,7 +98,8 @@
     a.sort((p, q) => p - q); return a[Math.floor(a.length * pct)] || .8;
   };
 
-  /* 通用查看器：鸟和景点实景照共用。c = { head, title, sub, credit（HTML）, src, depth, pct（不动面取景深的哪个分位）, max（最大位移） } */
+  /* 通用查看器：鸟和景点实景照共用。c = { head, title, sub, credit（HTML）, src, depth, pct（不动面取景深的哪个分位）, max（最大位移） }
+     传 layers = { fg, bg, near, far } 时改用两层版：前层（带透明度）移 near，后层往反方向移 far（文创透卡用） */
   async function show(c) {
       const P = c;
       const { el, close } = layer('dv-depth', `
@@ -106,15 +111,16 @@
         <p class="dv-tip">${gyro.has() ? '倾斜手机看前后层次，也可以用手指拖' : '用手指拖动看前后层次'}</p>${gyroBtn()}`);
       const cv = el.querySelector('.dv-canvas'), g = gl(cv);
       if (!g) { el.querySelector('.dv-tip').textContent = '这个浏览器不支持 WebGL，只能看平面照片。'; cv.replaceWith(Object.assign(new Image(), { src: P.src, className: 'dv-flat' })); return; }
-      const [img, dep] = await Promise.all([load(P.src), load(P.depth)]).catch(() => []);
+      const L = c.layers;
+      const [img, dep] = await Promise.all(L ? [load(L.bg), load(L.fg)] : [load(P.src), load(P.depth)]).catch(() => []);
       if (!img || !el.isConnected) return;
       cv.width = img.naturalWidth; cv.height = img.naturalHeight;
-      const pr = program(g, DEPTH_FS);
+      const pr = program(g, L ? LAYER_FS : DEPTH_FS);
       texture(g, 0, img); texture(g, 1, dep);
-      g.uniform1i(g.getUniformLocation(pr, 'img'), 0); g.uniform1i(g.getUniformLocation(pr, 'dep'), 1);
-      g.uniform1f(g.getUniformLocation(pr, 'zoom'), 1.07);
-      g.uniform1f(g.getUniformLocation(pr, 'focus'), focusOf(dep, c.pct || .92));
-      const uOff = g.getUniformLocation(pr, 'off');
+      g.uniform1i(g.getUniformLocation(pr, L ? 'bg' : 'img'), 0); g.uniform1i(g.getUniformLocation(pr, L ? 'fg' : 'dep'), 1);
+      g.uniform1f(g.getUniformLocation(pr, 'zoom'), L ? 1 + L.far * 2.4 : 1.07);
+      if (!L) g.uniform1f(g.getUniformLocation(pr, 'focus'), focusOf(dep, c.pct || .92));
+      const uOff = g.getUniformLocation(pr, L ? 'offB' : 'off'), uOffF = L && g.getUniformLocation(pr, 'offF');
       g.viewport(0, 0, cv.width, cv.height);
 
       let tx = 0, ty = 0, x = 0, y = 0, drag = null, base = null, lastTouch = 0;
@@ -139,7 +145,8 @@
           const t = (now - t0) / 1000; tx = Math.sin(t * .6) * .55; ty = Math.sin(t * .45 + 1) * .3;
         }
         x += (tx - x) * .12; y += (ty - y) * .12;
-        g.uniform2f(uOff, -x * MAX, -y * MAX * .7);
+        if (L) { g.uniform2f(uOff, -x * L.far, -y * L.far * .7); g.uniform2f(uOffF, x * L.near, y * L.near * .7); }
+        else g.uniform2f(uOff, -x * MAX, -y * MAX * .7);
         g.drawArrays(g.TRIANGLE_STRIP, 0, 4);
         el.style.setProperty('--gx', (50 + x * 40).toFixed(1) + '%'); el.style.setProperty('--gy', (40 + y * 30).toFixed(1) + '%');
         requestAnimationFrame(frame);
@@ -164,6 +171,13 @@
       show({ head: '立体检视 · 精选景观', title: s.name, sub: s.category, src: P.src, depth: P.depth, pct: .5, max: .04,
         credit: `照片：${url ? `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(P.credit)}</a>` : esc(P.credit)}` });
     },
+  };
+  /* 文创透卡：手持实景效果图拆成前后两层（tools/depth-maps.py --shop）：手和卡一层，轻轻跟着动；卡框里外的实景一层，往反方向移得多 */
+  HL.depthView.openProduct = (pid, i) => {
+    const p = HL.idx.product[pid], v = p && p.variants && p.variants[i];
+    if (!v || !v.scene || !v.fg || !v.bg) return;
+    show({ head: '立体检视 · 文创商店', title: `${p.title} · ${v.label}`, sub: '手持效果图', src: v.scene, layers: { fg: v.fg, bg: v.bg, near: .012, far: .05 },
+      credit: '设计效果图，实物以上架时为准' });
   };
   HL.act('scene-view', el => HL.depthView.openScene(el.dataset.id));
 
